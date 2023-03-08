@@ -64,8 +64,8 @@ class Course
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private string|\DateTimeInterface $updated_at;
 
-    #[ORM\Column]
-    private ?bool $valid = false;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $valid = 0;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
