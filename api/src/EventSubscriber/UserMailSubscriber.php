@@ -53,7 +53,7 @@ class UserMailSubscriber implements EventSubscriberInterface
         $this->manager->persist($user);
         $this->manager->flush();
 
-        $link = 'http://learn.matthieucmp.eu/validate/' . $user->getToken();
+        $link = 'http://localhost:8080/validate/' . $user->getToken();
         $mail = (new Email())
             ->to($user->getMail())
             ->from('campagne.matthieu@gmail.com')

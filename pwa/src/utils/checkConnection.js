@@ -7,7 +7,6 @@ export const checkConnection = (
   withRedirectOnCatch,
   from
 ) => {
-  // console.log("debug here", from);
   if (!store.user.isConnected) {
     const tokenRaw = localStorage.getItem("TOKEN");
 

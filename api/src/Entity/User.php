@@ -57,16 +57,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     read: false,
     name: 'request_password'
 )]
-#[Put(
+#[Patch(
     controller: UpdateUserController::class,
-    security: 'is_granted("ROLE_ADMIN") or object === user'
+    // security: 'is_granted("ROLE_ADMIN") or object === user'
 )]
 #[Delete(
     security: 'is_granted("ROLE_ADMIN")'
-)]
-
-#[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object === user'
 )]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]

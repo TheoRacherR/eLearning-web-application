@@ -13,20 +13,19 @@ class UpdateUserController extends AbstractController
 {
     public function __construct(private RequestStack $requestStack, private UserPasswordHasherInterface $passwordHasher, private EntityManagerInterface $manager)
     {
-
     }
 
     public function __invoke(User $user)
     {
         $request = $this->requestStack->getCurrentRequest()->getContent();
         $datas = json_decode($request);
-        if(strlen($datas->firstname) > 0) {
+        if (strlen($datas->firstname) > 0) {
             $user->setFirstname($datas->firstname);
         }
-        if(strlen($datas->lastname) > 0) {
+        if (strlen($datas->lastname) > 0) {
             $user->setLastname($datas->lastname);
         }
-        if(strlen($datas->password) > 0) {
+        if (strlen($datas->password) > 0) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $datas->password));
         }
 

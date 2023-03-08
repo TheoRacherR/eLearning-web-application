@@ -33,7 +33,11 @@ export const login = (mail, password) => {
             }
 
             store.setConnected(true);
-            store.setUser(user);
+            store.setUser({
+              ...user,
+              isAdmin: user.roles.includes("ROLE_ADMIN"),
+            });
+            store.setToken(token);
 
             // Enregistrement du jeton dans le stockage local
             localStorage.setItem("TOKEN", `${user.user_id} ${token}`);

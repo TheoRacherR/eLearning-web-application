@@ -23,8 +23,6 @@ watchEffect(() => {
     typeof editor.value.setHTML === "function" &&
     course.value
   ) {
-    console.log("de", course.value);
-
     editor.value.setHTML(course.value.content);
   }
 });

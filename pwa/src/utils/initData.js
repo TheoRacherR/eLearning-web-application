@@ -40,7 +40,6 @@ const getItems = () => {
           });
       })
       .catch((err) => {
-        console.log("debug init data", err);
         reject(err);
       });
   });

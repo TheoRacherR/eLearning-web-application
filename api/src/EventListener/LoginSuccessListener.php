@@ -27,7 +27,8 @@ class LoginSuccessListener
             'mail' => $user->getMail(),
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
-            'valid' => $user->isValid()
+            'valid' => $user->isValid(),
+            'roles' => $user->getRoles()
         ];
         $event->setData($payload);
     }
