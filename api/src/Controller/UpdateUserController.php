@@ -19,13 +19,16 @@ class UpdateUserController extends AbstractController
     {
         $request = $this->requestStack->getCurrentRequest()->getContent();
         $datas = json_decode($request);
-        if (strlen($datas->firstname) > 0) {
+        if (isset($datas->firstname) && strlen($datas->firstname) > 0) {
             $user->setFirstname($datas->firstname);
         }
-        if (strlen($datas->lastname) > 0) {
+        if (isset($datas->lastname) && strlen($datas->lastname) > 0) {
             $user->setLastname($datas->lastname);
         }
-        if (strlen($datas->password) > 0) {
+        if (isset($datas->mail) && strlen($datas->mail) > 0) {
+            $user->setMail($datas->mail);
+        }
+        if (isset($datas->password) && strlen($datas->password) > 0) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $datas->password));
         }
 
