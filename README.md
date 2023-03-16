@@ -13,3 +13,10 @@
 3. Execute commands
 
 - <code>docker exec challenge-s1-php-1 'your command'</code>
+
+Dans Docker > php-1
+- <code>php bin/console d:s:u</code>
+
+- <code>php bin/console d:f:l</code>
+
+- <code>php bin/console lexik:jwt:generate-keypair --overwrite</code>
