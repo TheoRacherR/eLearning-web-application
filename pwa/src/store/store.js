@@ -18,7 +18,8 @@ const initStore = {
     token: "",
   },
   courses: { list: {}, selected: null },
-  cart: { list: {} }
+  cart: { list: {} },
+  listCoursesInCart: { list: {} }
 };
 
 export const store = reactive({

@@ -1,5 +1,8 @@
 <script setup>
 
+import { store } from '../store/store'
+import { ref, onMounted } from "vue"
+
 const content = [
   {
     title: "Cours de JS",
@@ -19,8 +22,14 @@ const content = [
   
 ]
 
+const listCoursesInCart = ref(store.listCoursesInCart.list);
+const totalPrice = ref(0);
+
 const sums = Object.values(content).reduce((acc, {price}) => acc + price , 0);
 
+onMounted(() => {
+  listCoursesInCart.values = store.listCoursesInCart.list;
+})
 
 </script>
 
@@ -32,7 +41,7 @@ const sums = Object.values(content).reduce((acc, {price}) => acc + price , 0);
 
       <div class="list-items">
 
-        <div v-for="c in content" class="item-sum">
+        <div v-for="c in listCoursesInCart" class="item-sum">
           <div class="container-item">
             <img src="https://via.placeholder.com/250x250" alt="image of the course">
             <div class="right-box">
@@ -47,7 +56,7 @@ const sums = Object.values(content).reduce((acc, {price}) => acc + price , 0);
       <div class="straps">
 
         <div class="list-purchase">
-          <div v-for="c in content" class="item-purchase">
+          <div v-for="c in listCoursesInCart" class="item-purchase">
             <div class="left-name">{{ c.title }}</div>
             <div class="right-price">{{ c.price }} €</div>
           </div>
@@ -56,7 +65,7 @@ const sums = Object.values(content).reduce((acc, {price}) => acc + price , 0);
 
           <div class="total-price">
             <div class="left-name">Total</div>
-            <div class="right-price">{{ sums }} €</div>
+            <div class="right-price">{{ totalPrice }} €</div>
             
           </div>
 
