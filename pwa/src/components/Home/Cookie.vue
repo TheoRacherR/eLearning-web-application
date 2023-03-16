@@ -1,11 +1,21 @@
 <script setup>
 
+if (document.getElementById("wrapperCookie") && window.localStorage.getItem("validToken")){
+  console.log("ok");
+  document.getElementById("wrapperCookie").style.display = "none";
+}
+
+const setLocalStorage = (valid) => {
+  window.localStorage.setItem("validToken", valid);
+  document.getElementById("wrapperCookie").style.display = "none";
+}
+
 </script>
 
 
 <template> 
 
-    <div style="display: none">
+    <div id="wrapperCookie">
 
         <div class="container">
             <div class="wrapper-left">
@@ -13,8 +23,8 @@
             </div>
             <div class="wrapper-right">
                 <button class="bttn bttn-yt-out">Paramètres</button>
-                <button class="bttn bttn-yt">Tout refuser</button>
-                <button class="bttn bttn-yt">OK</button>
+                <button class="bttn bttn-yt" @click="setLocalStorage(false)">Tout refuser</button>
+                <button class="bttn bttn-yt" @click="setLocalStorage(true)">OK</button>
             </div>
         </div>
 
@@ -45,7 +55,11 @@ div.container {
         flex: 4;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: end;
+
+        * {
+          margin-left: 1rem;
+        }
     }
   }
   
