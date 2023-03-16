@@ -18,6 +18,7 @@ const initStore = {
     token: "",
   },
   courses: { list: {}, selected: null },
+  cart: { list: {} }
 };
 
 export const store = reactive({
@@ -52,6 +53,17 @@ export const store = reactive({
 
   getCourses() {
     return Object.values(this.courses.list);
+  },
+
+  setCart() {
+    JSON.parse(localStorage.getItem('CART')).map(id => {
+      this.cart.list[id] =  "1"
+    })
+  },
+
+  setAddCart(courseId) {
+    this.cart.list = {...this.cart.list, [courseId] : "1"}
+    console.log("Cart : " + this.cart.list);
   },
 
   reset() {

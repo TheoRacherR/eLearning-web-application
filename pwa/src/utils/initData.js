@@ -47,6 +47,6 @@ const getItems = () => {
 
 export const initData = async () => {
   const courses = await getItems();
-
+  store.setCart();
   listCourses.value = courses;
 };
