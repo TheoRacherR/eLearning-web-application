@@ -44,6 +44,8 @@ export const checkConnection = (
           store.setConnected(true);
           store.setValid(data.valid);
 
+          store.setCart();
+          
           store.setUser({
             ...data,
             user_id: data.id,
