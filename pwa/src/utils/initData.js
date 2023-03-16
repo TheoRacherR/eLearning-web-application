@@ -37,6 +37,7 @@ const getItems = () => {
             });
 
             resolve(list);
+            
           });
       })
       .catch((err) => {
@@ -47,6 +48,15 @@ const getItems = () => {
 
 export const initData = async () => {
   const courses = await getItems();
-
+  store.setCart();
   listCourses.value = courses;
+
+  console.log(Object.keys(store.cart.list))
+  console.log(Object.values(courses))
+  store.listCoursesInCart.list = Object.values(courses).filter(course => {
+    console.log("course: " + course)
+    return Object.keys(store.cart.list).includes(course.id.toString())
+  });
+
+  console.log(store.listCoursesInCart.list)
 };
