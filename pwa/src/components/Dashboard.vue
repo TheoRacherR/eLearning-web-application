@@ -10,10 +10,10 @@ import {
 import { checkConnection } from "../utils/checkConnection";
 import { store } from "../store/store";
 
-import Cours from "./Dashboard/Cours.vue";
-import Gestion from "./Dashboard/Gestion.vue";
-import Profil from "./Dashboard/Profil.vue";
-import Avancement from "./Dashboard/Avancement.vue";
+import Cours from "./DashB/Cours.vue";
+import Gestion from "./DashB/Gestion.vue";
+import Profil from "./DashB/Profil.vue";
+import Avancement from "./DashB/Avancement.vue";
 
 const minimized = ref(true);
 
