@@ -2,7 +2,7 @@ api_platform:
     title: Hello API Platform
     version: 1.0.0
     patch_formats:
-        json: [ 'application/merge-patch+json' ]
+        json: [ 'application/json' ]
         jsonapi: [ 'application/vnd.api+json' ]
     mapping:
         paths:
