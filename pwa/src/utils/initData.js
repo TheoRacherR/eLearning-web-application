@@ -31,6 +31,7 @@ const getItems = () => {
                 title: item.title,
                 description: item.description,
                 content: item.content,
+                price: item.price,
                 possessed: possessed,
                 valid: item.valid,
               };
@@ -50,13 +51,6 @@ export const initData = async () => {
   const courses = await getItems();
   store.setCart();
   listCourses.value = courses;
+  store.setListCoursesInCart()
 
-  console.log(Object.keys(store.cart.list))
-  console.log(Object.values(courses))
-  store.listCoursesInCart.list = Object.values(courses).filter(course => {
-    console.log("course: " + course)
-    return Object.keys(store.cart.list).includes(course.id.toString())
-  });
-
-  console.log(store.listCoursesInCart.list)
 };

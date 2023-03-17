@@ -1,35 +1,25 @@
 <script setup>
 
 import { store } from '../store/store'
-import { ref, onMounted } from "vue"
+import { ref, watchEffect } from "vue"
 
-const content = [
-  {
-    title: "Cours de JS",
-    description: "Descripion",
-    price: 25.98
-  },
-  {
-    title: "PHP de A à Z",
-    description: "Descripion",
-    price: 16.05
-  },
-  {
-    title: "Avoir plus de 4 en PWA",
-    description: "Descripion",
-    price: 11.91
-  },
-  
-]
 
-const listCoursesInCart = ref(store.listCoursesInCart.list);
+const listCoursesInCart = ref(Object.values(store.listCoursesInCart.list));
 const totalPrice = ref(0);
 
-const sums = Object.values(content).reduce((acc, {price}) => acc + price , 0);
 
-onMounted(() => {
-  listCoursesInCart.values = store.listCoursesInCart.list;
+watchEffect(() => {
+  listCoursesInCart.value = Object.values(store.listCoursesInCart.list);
+  totalPrice.value = Object.values(store.listCoursesInCart.list).reduce((acc, {price}) => acc + price , 0)
+
 })
+
+const deleteOnInCart = (courseId) => {
+  let localStorageArray = localStorage.getItem("CART");
+  localStorageArray = JSON.parse(localStorageArray).filter(item => item != courseId.toString())
+  localStorage.setItem("CART", JSON.stringify(localStorageArray))
+  store.setCart();
+}
 
 </script>
 
@@ -38,15 +28,21 @@ onMounted(() => {
   <div class="container-summary">
     <h1 class="title-summary">Panier</h1>
     <div class="main-summary">
-
+      
       <div class="list-items">
-
-        <div v-for="c in listCoursesInCart" class="item-sum">
-          <div class="container-item">
-            <img src="https://via.placeholder.com/250x250" alt="image of the course">
-            <div class="right-box">
-              <div class="title-item">{{ c.title }}</div>
-              <div class="description-item">{{ c.description }}</div>
+        
+        <div v-if="listCoursesInCart.length === 0">
+          <h5>Vous n'avez rien dans votre panier...</h5>
+        </div>
+        <div v-else>
+          <div v-for="c in listCoursesInCart" class="item-sum">
+            <div class='container-item'>
+              <img src="https://via.placeholder.com/250x250" alt="image of the course">
+              <div class="right-box">
+                <div class="title-item">{{ c.id }} {{ c.title }}</div>
+                <div class="description-item">{{ c.description }}</div>
+                <button @click="deleteOnInCart(c.id)">Delete</button>
+              </div>
             </div>
           </div>
         </div>
@@ -56,15 +52,26 @@ onMounted(() => {
       <div class="straps">
 
         <div class="list-purchase">
-          <div v-for="c in listCoursesInCart" class="item-purchase">
-            <div class="left-name">{{ c.title }}</div>
-            <div class="right-price">{{ c.price }} €</div>
+          <div v-if="listCoursesInCart.length === 0">
+            <div class="item-purchase">
+              <div class="left-name">...</div>
+              <div class="right-price">0 €</div>
+            </div>
+            
           </div>
+          <div v-else>
+            <div v-for="c in listCoursesInCart" class="item-purchase">
+              <div class="left-name">{{ c.title }}</div>
+              <div class="right-price">{{ c.price }} €</div>
+            </div>
+          </div>
+          
 
           <div class="fill-purchase"></div>
 
           <div class="total-price">
             <div class="left-name">Total</div>
+            <!--<div class="right-price">{{ totalPrice }} €</div>-->
             <div class="right-price">{{ totalPrice }} €</div>
             
           </div>
