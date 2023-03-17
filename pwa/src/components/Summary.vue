@@ -96,7 +96,6 @@ div.container-summary {
   padding-top: 4rem;
   width: 100%;
 
-  
   div.main-summary {
     margin-top: 3rem;
     display: flex;
