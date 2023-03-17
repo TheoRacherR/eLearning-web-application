@@ -4,6 +4,7 @@ import { store, setBuyCourse } from "../store/store";
 import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import axios from "axios";
+import { isMemberExpressionBrowser } from "@vue/compiler-core";
 
 const { user } = store;
 
@@ -14,15 +15,32 @@ const comment = ref("");
 const commenting = ref(false);
 
 const commentsList = ref([
-  { Note: 4.5, Commentaire: "Formation complète avec tout le nécessaire pour bien commencer le Trading.. explication simple et facile a comprendre...merci beaucoup", Prénom: "Elvis", Nom: "K." },
-  { Note: 5, Commentaire: "Grand pédagogie, simplicité dans les explications, petits tips qui permettent de comprendre tellement en peu de mots. Comme je le dis souvent 'Less is more' , et cette formation est exactement ce que je recherchais. Merci", Prénom: "Marie", Nom: "C." },
-  { Note: 1, Commentaire: "Peu d'exemple et une qualité de vidéo très basse, je ne recommande pas vraiment ce cours", Prénom: "Jean", Nom: "D." },
+  {
+    Note: 4.5,
+    Commentaire:
+      "Formation complète avec tout le nécessaire pour bien commencer le Trading.. explication simple et facile a comprendre...merci beaucoup",
+    Prénom: "Elvis",
+    Nom: "K.",
+  },
+  {
+    Note: 5,
+    Commentaire:
+      "Grand pédagogie, simplicité dans les explications, petits tips qui permettent de comprendre tellement en peu de mots. Comme je le dis souvent 'Less is more' , et cette formation est exactement ce que je recherchais. Merci",
+    Prénom: "Marie",
+    Nom: "C.",
+  },
+  {
+    Note: 1,
+    Commentaire:
+      "Peu d'exemple et une qualité de vidéo très basse, je ne recommande pas vraiment ce cours",
+    Prénom: "Jean",
+    Nom: "D.",
+  },
 ]);
 
 const course = computed(() => {
   return store.courses.selected ? courses.value[store.courses.selected] : {};
 });
-
 
 watchEffect(() => {
   courses.value = store.courses.list;
@@ -93,8 +111,6 @@ const submitComment = () => {
   // });
 };
 
-
-
 watch(rating, () => {
   console.log("debug", rating.value);
 });
@@ -128,33 +144,29 @@ watch(rating, () => {
       <!--<va-data-table :items="commentsList" />-->
       <div class="container-comments">
         <div v-for="com in commentsList" class="item-comment">
-
           <div class="top-com">
             <!--<img src="https://via.placeholder.com/40x40" alt="">-->
             <div class="text-topc">
               <div>{{ com.Prénom }} {{ com.Nom }}</div>
               <div class="stars-com">
                 <div style="margin: auto 0">
-                  {{ com.Note }} 
+                  {{ com.Note }}
                 </div>
-                <va-icon name="star"/>
+                <va-icon name="star" />
               </div>
             </div>
-            
           </div>
 
           <div class="main-com">{{ com.Commentaire.slice(0, 100) }}...</div>
-
         </div>
       </div>
-      
     </div>
     <button
       v-if="!course?.possessed && store.user.isConnected"
       class="bttn bttn-succ"
       @click="handleBuy"
     >
-    <va-icon name="add_shopping_cart"/>
+      <va-icon name="add_shopping_cart" />
       Acheter ce cours
     </button>
     <div class="wrapperComment" v-if="commenting">
@@ -198,7 +210,6 @@ watch(rating, () => {
   margin: 15vh auto 3vh auto;
   width: 50%;
   text-align: left;
-
 }
 
 div.container-comments {
