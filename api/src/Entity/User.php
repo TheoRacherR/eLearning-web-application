@@ -123,6 +123,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: UserCourse::class, orphanRemoval: true)]
     private Collection $userCourses;
 
+    #[ORM\Column]
+    private ?bool $ban = false;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -313,6 +316,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $userCourse->setAccount(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isBan(): ?bool
+    {
+        return $this->ban;
+    }
+
+    public function setBan(bool $ban): self
+    {
+        $this->ban = $ban;
 
         return $this;
     }

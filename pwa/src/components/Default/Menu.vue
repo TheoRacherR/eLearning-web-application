@@ -1,8 +1,11 @@
 <script setup>
 
 import { RouterLink } from "vue-router";
+import { ref, watchEffect } from 'vue';
 
 import { store } from "../../store/store";
+
+const cartLen = ref(0);
 
 const handleLogout = () => {
   localStorage.removeItem("TOKEN");
@@ -10,6 +13,10 @@ const handleLogout = () => {
   store.reset();
   router.push("/");
 };
+
+watchEffect(() => {
+  cartLen.value = Object.keys(store.cart.list).length;
+});
 
 </script>
 
@@ -45,7 +52,7 @@ const handleLogout = () => {
         <RouterLink to="/summary" style="color: black;">
           <button class="bttn bttn-cart">
             <va-icon name="shopping_cart" style="position: absolute;"/>
-            <div class="sc-count">10</div>
+            <div class="sc-count">{{ cartLen }}</div>
           </button>
         </RouterLink>
 

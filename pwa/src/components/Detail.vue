@@ -73,6 +73,23 @@ const handleBuy = () => {
     });
 };
 
+const handleCart = () => {
+  let arr = [];
+  if (localStorage.getItem("CART") !== null) {
+    if (!localStorage.getItem("CART").includes(courseId)) {
+      arr = JSON.parse(localStorage.getItem("CART"));
+      arr.push(courseId);
+      localStorage.setItem("CART", JSON.stringify(arr)); //ajout dans le localStorage
+      store.setAddCart(courseId); //ajout dans le store
+    } else {
+      console.log("Item déjà dans le panier");
+    }
+  } else {
+    arr.push(courseId);
+    localStorage.setItem("CART", JSON.stringify(arr));
+  }
+};
+
 const handleComment = () => {
   commenting.value = !commenting.value;
 };
@@ -164,10 +181,10 @@ watch(rating, () => {
     <button
       v-if="!course?.possessed && store.user.isConnected"
       class="bttn bttn-succ"
-      @click="handleBuy"
+      @click="handleCart"
     >
       <va-icon name="add_shopping_cart" />
-      Acheter ce cours
+      Ajouter au panier
     </button>
     <div class="wrapperComment" v-if="commenting">
       <vue3-star-ratings v-model="rating" />

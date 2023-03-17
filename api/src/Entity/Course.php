@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\CreateCourseController;
 use App\Controller\PaymentCourseController;
 use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 #[GetCollection]
 #[Post(
+    controller: CreateCourseController::class,
     security: 'is_granted("ROLE_FORMER") or is_granted("ROLE_ADMIN") or is_granted("IS_AUTHENTICATED_FULLY")'
 )]
 
@@ -35,12 +37,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[Delete(
     security: 'is_granted("ROLE_ADMIN")'
-)]
-
-#[Get(
-    uriTemplate: '/course/buy/{id}',
-    controller: PaymentCourseController::class,
-    name: 'buy'
 )]
 class Course
 {
@@ -64,8 +60,8 @@ class Course
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private string|\DateTimeInterface $updated_at;
 
-    #[ORM\Column]
-    private ?bool $valid = false;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $valid = 0;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
@@ -82,6 +78,15 @@ class Course
 
     #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $image = null;
+
+    #[ORM\Column]
+    private ?int $price = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $stripeProductId = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $stripePriceId = null;
 
     public function __construct()
     {
@@ -279,6 +284,42 @@ class Course
     public function setImage($image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getStripeProductId(): ?string
+    {
+        return $this->stripeProductId;
+    }
+
+    public function setStripeProductId(string $stripeProductId): self
+    {
+        $this->stripeProductId = $stripeProductId;
+
+        return $this;
+    }
+
+    public function getStripePriceId(): ?string
+    {
+        return $this->stripePriceId;
+    }
+
+    public function setStripePriceId(string $stripePriceId): self
+    {
+        $this->stripePriceId = $stripePriceId;
 
         return $this;
     }
