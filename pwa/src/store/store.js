@@ -1,4 +1,5 @@
 import { reactive, ref, toRaw } from "vue";
+import { initData } from "../utils/initData";
 
 export const listCourses = ref({});
 
@@ -56,15 +57,32 @@ export const store = reactive({
     return Object.values(this.courses.list);
   },
 
+  setListCoursesInCart() {
+    this.listCoursesInCart.list = Object.values(this.courses.list).filter(course => {
+      if(Object.keys(this.cart.list).includes(course.id.toString())){
+      }
+      return Object.keys(this.cart.list).includes(course.id.toString())
+    });
+  },
+
   setCart() {
+    this.cart.list = {}
     JSON.parse(localStorage.getItem('CART')).map(id => {
-      this.cart.list[id] =  "1"
+      this.cart.list[id] =  "key"
     })
+    this.setListCoursesInCart()
   },
 
   setAddCart(courseId) {
     this.cart.list = {...this.cart.list, [courseId] : "1"}
-    console.log("Cart : " + this.cart.list);
+    this.setListCoursesInCart()
+
+  },
+
+  deleteCart() {
+    this.cart.list =  {}
+    this.setListCoursesInCart()
+
   },
 
   reset() {

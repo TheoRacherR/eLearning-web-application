@@ -131,31 +131,22 @@ div.message {
 
 div.close {
   flex: 1;
-  /* margin-right: 2rem; */
 }
 
-button.bttn-close {
-  /* width: 2rem;
-  height: 2rem; */
-}
 
 div.flash-message {
-  /* width: 100%; */
   margin: 1vw 15vw;
   padding: 0.3rem 0;
   background-color: red;
   text-align: center;
   display: flex;
-  /* height: 56px; */
   color: var(--color-text-light);
-  /* display: table-cell; */
   border-radius: 0.375rem;
 }
 
 div.message-flash-message {
   vertical-align: middle;
   padding: inherit;
-  /* background-color: aqua; */
   flex: 10;
 }
 
@@ -164,8 +155,6 @@ span.span-flash-message {
 }
 
 div.close-flash-message {
-  /* background-color: blue; */
   flex: 1;
-  /* margin-right: 2rem; */
 }
 </style>
