@@ -51,8 +51,6 @@ export const initData = async () => {
   const courses = await getItems();
   store.setCart();
   listCourses.value = courses;
-
-  // store.setListCoursesInCart(courses)
   store.setListCoursesInCart()
 
 };
