@@ -46,9 +46,10 @@ const link = "/detail/" + props.id;
             <img src="https://via.placeholder.com/250x250" alt="image of the course">
         </RouterLink>
         <div class="right-box">
+            <RouterLink :to="link">
                 <div class="title-item">{{ title }}</div>
                 <div class="description-item">{{ description }}</div>
-
+            </RouterLink>
             <div v-if="course?.possessed && store.user.isConnected" class="check">
                 <div class="possessed">
                     Vous possédez ce cours
@@ -72,6 +73,9 @@ const link = "/detail/" + props.id;
 
 a {
     text-decoration: none;
+    cursor: pointer;
+    color: var(--color-text-light);
+
 }
 div.container-item{
     background-color: rgb(233, 233, 233);
