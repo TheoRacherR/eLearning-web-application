@@ -1,14 +1,13 @@
 <script setup>
 if (
-  document.getElementById("wrapperCookie") &&
-  window.localStorage.getItem("validCookie")
+  document.getElementById("wrapperCookie") && window.localStorage.getItem("TOKEN_COOKIE")
 ) {
   console.log("ok");
   document.getElementById("wrapperCookie").style.display = "none";
 }
 
 const setLocalStorage = (valid) => {
-  window.localStorage.setItem("validCookie", valid);
+  window.localStorage.setItem("TOKEN_COOKIE", valid);
   document.getElementById("wrapperCookie").style.display = "none";
 };
 </script>

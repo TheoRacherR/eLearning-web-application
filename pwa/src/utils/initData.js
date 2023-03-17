@@ -53,4 +53,9 @@ export const initData = async () => {
   listCourses.value = courses;
   store.setListCoursesInCart()
 
+  let arr = [];
+  if (localStorage.getItem("CART") === null) {
+    localStorage.setItem("CART", JSON.stringify(arr));
+  }
+
 };

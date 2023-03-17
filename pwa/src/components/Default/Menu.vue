@@ -49,7 +49,7 @@ watchEffect(() => {
 
 
       <div class="item-nav left">
-        <RouterLink to="/summary" style="color: black;">
+        <RouterLink v-if="store.user.isConnected" to="/summary" style="color: black;">
           <button class="bttn bttn-cart">
             <va-icon name="shopping_cart" style="position: absolute;"/>
             <div class="sc-count">{{ cartLen }}</div>
