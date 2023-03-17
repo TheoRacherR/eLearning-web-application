@@ -70,21 +70,18 @@ export const store = reactive({
     JSON.parse(localStorage.getItem('CART')).map(id => {
       this.cart.list[id] =  "key"
     })
-    // console.log("setCart")
     this.setListCoursesInCart()
   },
 
   setAddCart(courseId) {
     this.cart.list = {...this.cart.list, [courseId] : "1"}
     this.setListCoursesInCart()
-    // console.log("setAddCart");
 
   },
 
   deleteCart() {
     this.cart.list =  {}
     this.setListCoursesInCart()
-    // console.log("deleteCart")
 
   },
 
