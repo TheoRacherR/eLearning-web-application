@@ -102,4 +102,9 @@ export const initData = async () => {
   listComments.value = comments;
   store.setListCoursesInCart()
 
+  let arr = [];
+  if (localStorage.getItem("CART") === null) {
+    localStorage.setItem("CART", JSON.stringify(arr));
+  }
+
 };
