@@ -57,29 +57,18 @@ const getComments = () => {
         axios
           .get(import.meta.env.VITE_API_URL + "/users")
           .then(({ data: { ["hydra:member"]: usersRaw } }) => {
-            // const users = usersRaw.map((item) => ({
-            //   userId:
-            //     item.account.split("/")[item.account.split("/").length - 1],
-            //   courseId:
-            //     item.course.split("/")[item.course.split("/").length - 1],
-            // }));
+
 
             data["hydra:member"].map((item) => {
-              const usr = Object.values(usersRaw).map((i) => {
+              let usr;
+              for(let i in Object.values(usersRaw)){
                 let userId = item.user_id.split("/")[item.user_id.split("/").length - 1];
-                if(parseInt(i.id) === parseInt(userId)){
-                  return i;
+                let id = Object.values(usersRaw)[i].id;
+                if(id === parseInt(userId)){
+                  usr = Object.values(usersRaw)[i];
+                  break;
                 }
-                else {
-                  break
-                };
-              });
-
-              console.log(usr)
-
-              const userL = Object.values(usersRaw).find((uc) => uc.id === item.user_id);
-
-              console.log(typeof(Object.values(usersRaw)))
+              }
 
               list[item.id] = {
                 id: item.id,
@@ -90,8 +79,8 @@ const getComments = () => {
                 created_at: item.created_at,
                 updated_at: item.updated_at,
                 valid: item.valid,
-                firstname: userL.firstname,
-                lastname: userL.lastname,
+                firstname: usr.firstname,
+                lastname: usr.lastname,
               };
             });
 
