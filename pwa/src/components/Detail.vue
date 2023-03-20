@@ -194,7 +194,7 @@ watch(rating, () => {
             </div>
           </div>
 
-          <div class="main-com">{{ com.content.slice(0, 100) }}...</div>
+          <div class="main-com">{{ com.content.slice(0, 100) }}{{ com.content.length > 103 ? '...' : '' }}</div>
         </div>
       </div>
     </div>
