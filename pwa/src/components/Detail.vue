@@ -23,7 +23,7 @@ watchEffect(() => {
   items.value = store.comments.list;
 
   for (const item in items.value) {
-    if (items.value[item].valid === 1) {
+    if (items.value[item].valid === 1 && items.value[item].id === parseInt(courseId)) {
       validComments.value = {
         ...validComments.value,
         [item]: { ...items.value[item] },
@@ -194,7 +194,7 @@ watch(rating, () => {
             </div>
           </div>
 
-          <div class="main-com">{{ com.content.slice(0, 100) }}{{ com.content.length > 103 ? '...' : '' }}</div>
+          <div class="main-com">{{ com.content.slice(0, 100) }} {{ com.content.length > 103 ? '...' : '' }}</div>
         </div>
       </div>
     </div>
