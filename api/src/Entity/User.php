@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['write']],
 )]
 #[GetCollection(
-    security: 'is_granted("ROLE_ADMIN")'
+    // security: 'is_granted("ROLE_ADMIN")'
 )]
 #[Post(
     processor: UserAccountCreate::class

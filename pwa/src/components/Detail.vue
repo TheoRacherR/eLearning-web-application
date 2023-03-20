@@ -5,6 +5,7 @@ import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import axios from "axios";
 import { isMemberExpressionBrowser } from "@vue/compiler-core";
+import { initData } from "../utils/initData";
 
 const { user } = store;
 
@@ -13,6 +14,23 @@ const courses = ref({});
 const rating = ref(2.5);
 const comment = ref("");
 const commenting = ref(false);
+
+const items = ref({});
+const validComments = ref({});
+
+
+watchEffect(() => {
+  items.value = store.comments.list;
+
+  for (const item in items.value) {
+    if (items.value[item].valid === 1) {
+      validComments.value = {
+        ...validComments.value,
+        [item]: { ...items.value[item] },
+      };
+    }
+  }
+});
 
 const commentsList = ref([
   {
@@ -108,21 +126,25 @@ const submitComment = () => {
     content: comment.value,
   };
 
-axios
-  .post(import.meta.env.VITE_API_URL + "/comments", body, {
-    headers: {
-      Authorization: `Bearer ${store.user.token}`,
-    },
-  })
-  .then(() => {
-  commentsList.value.push({
-    Note: rating.value,
-    Commentaire: comment.value,
-    Prénom: user.firstname,
-    Nom: user.lastname,
-  });
+  axios
+    .post(import.meta.env.VITE_API_URL + "/comments", body, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+  initData();
   closeCommenting();
   })
+  // .then(() => {
+  // commentsList.value.push({
+  //   Note: rating.value,
+  //   Commentaire: comment.value,
+  //   Prénom: user.firstname,
+  //   Nom: user.lastname,
+  // });
+  // closeCommenting();
+  // })
   .catch((err) => {
     console.log("dbeug", err);
   });
@@ -158,24 +180,21 @@ watch(rating, () => {
     <div class="wrapperCommentsList">
       <h4>Les commentaires:</h4>
       <div class="container-comments">
-        <div v-for="com in commentsList" class="item-comment">
-
-          <!--<div v-if="com.valid === 1">-->
-              <div class="top-com">
-                <div class="text-topc">
-                  <div>{{ com.Prénom }} {{ com.Nom }}</div>
-                  <div class="stars-com">
-                    <div style="margin: auto 0">
-                      {{ com.Note }}
-                    </div>
-                    <va-icon name="star" />
-                  </div>
+        <div v-for="com in validComments" class="item-comment">
+          <div class="top-com">
+            <!--<img src="https://via.placeholder.com/40x40" alt="">-->
+            <div class="text-topc">
+              <div>{{ com.firstname }} {{ com.lastname }}</div>
+              <div class="stars-com">
+                <div style="margin: auto 0">
+                  {{ com.star }}
                 </div>
+                <va-icon name="star" />
               </div>
-            
-              <div class="main-com">{{ com.Commentaire.slice(0, 100) }}...</div>
-          <!--</div>-->
+            </div>
+          </div>
 
+          <div class="main-com">{{ com.content.slice(0, 100) }}...</div>
         </div>
       </div>
     </div>
