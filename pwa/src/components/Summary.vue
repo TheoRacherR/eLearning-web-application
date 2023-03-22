@@ -37,11 +37,14 @@ const deleteOnInCart = (courseId) => {
         <div v-else>
           <div v-for="c in listCoursesInCart" class="item-sum">
             <div class='container-item'>
+
               <img src="https://via.placeholder.com/250x250" alt="image of the course">
               <div class="right-box">
                 <div class="text-rb">
-                  <div class="title-item">{{ c.id }} {{ c.title }}</div>
-                  <div class="description-item">{{ c.description }}</div>
+                  <RouterLink :to="'/detail/' + c.id">
+                    <div class="title-item">{{ c.id }} {{ c.title }}</div>
+                    <div class="description-item">{{ c.description }}</div>
+                  </RouterLink >
                 </div>
                 <button class="bttn bttn-dng delete-item-cart" @click="deleteOnInCart(c.id)"><va-icon name="delete" /></button>
               </div>
@@ -130,8 +133,12 @@ div.container-summary {
             text-align: left;
             display: flex;
             justify-content: space-between;
-
-            .title-item {
+            
+            a {
+              text-decoration: none;
+              color: #000;
+              
+              .title-item {
                 font-size: 1rem;
                 letter-spacing: 0px;
                 line-height: 24px;
@@ -144,6 +151,7 @@ div.container-summary {
                 font-weight: 400;
                 display: block;
             }
+          }
             .check {
                 display: flex;
                 justify-content: end;
