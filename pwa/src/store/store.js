@@ -68,11 +68,13 @@ export const store = reactive({
   },
 
   setListCoursesInCart() {
-    this.listCoursesInCart.list = Object.values(this.courses.list).filter(course => {
-      if(Object.keys(this.cart.list).includes(course.id.toString())){
+    this.listCoursesInCart.list = Object.values(this.courses.list).filter(
+      (course) => {
+        if (Object.keys(this.cart.list).includes(course.id.toString())) {
+        }
+        return Object.keys(this.cart.list).includes(course.id.toString());
       }
-      return Object.keys(this.cart.list).includes(course.id.toString())
-    });
+    );
   },
 
   setCart() {
@@ -84,15 +86,13 @@ export const store = reactive({
   },
 
   setAddCart(courseId) {
-    this.cart.list = {...this.cart.list, [courseId] : "1"}
-    this.setListCoursesInCart()
-
+    this.cart.list = { ...this.cart.list, [courseId]: "1" };
+    this.setListCoursesInCart();
   },
 
   deleteCart() {
-    this.cart.list =  {}
-    this.setListCoursesInCart()
-
+    this.cart.list = {};
+    this.setListCoursesInCart();
   },
 
   reset() {

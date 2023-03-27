@@ -63,7 +63,10 @@ const handleSubmit = async () => {
       }
     )
     .then(() => {
-      router.push("/db");
+      router.push("/db/user-list");
+    })
+    .catch((err) => {
+      console.log("debug", err);
     });
 };
 </script>
