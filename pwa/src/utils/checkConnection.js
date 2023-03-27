@@ -45,13 +45,13 @@ export const checkConnection = (
           store.setValid(data.valid);
 
           store.setCart();
-          
+
           store.setUser({
             ...data,
             user_id: data.id,
             isAdmin: data.roles.includes("ROLE_ADMIN"),
           });
-          // console.log("debug here", data);
+          // console.log("debug here", data.roles.includes("ROLE_ADMIN"));
 
           if (withRedirectOnConnect) router.push("/");
         })
