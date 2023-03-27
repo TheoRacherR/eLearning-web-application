@@ -5,6 +5,7 @@ import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import axios from "axios";
 import { isMemberExpressionBrowser } from "@vue/compiler-core";
+import { initData } from "../utils/initData";
 
 const { user } = store;
 
@@ -13,6 +14,23 @@ const courses = ref({});
 const rating = ref(2.5);
 const comment = ref("");
 const commenting = ref(false);
+
+const items = ref({});
+const validComments = ref({});
+
+
+watchEffect(() => {
+  items.value = store.comments.list;
+
+  for (const item in items.value) {
+    if (items.value[item].valid === 1 && items.value[item].id === parseInt(courseId)) {
+      validComments.value = {
+        ...validComments.value,
+        [item]: { ...items.value[item] },
+      };
+    }
+  }
+});
 
 const commentsList = ref([
   {
@@ -108,24 +126,28 @@ const submitComment = () => {
     content: comment.value,
   };
 
-  // axios
-  //   .post(import.meta.env.VITE_API_URL + "/comments", body, {
-  //     headers: {
-  //       Authorization: `Bearer ${store.user.token}`,
-  //     },
-  //   })
-  //   .then(() => {
-  commentsList.value.push({
-    Note: rating.value,
-    Commentaire: comment.value,
-    Prénom: user.firstname,
-    Nom: user.lastname,
-  });
+  axios
+    .post(import.meta.env.VITE_API_URL + "/comments", body, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+  initData();
   closeCommenting();
-  // })
-  // .catch((err) => {
-  //   console.log("dbeug", err);
+  })
+  // .then(() => {
+  // commentsList.value.push({
+  //   Note: rating.value,
+  //   Commentaire: comment.value,
+  //   Prénom: user.firstname,
+  //   Nom: user.lastname,
   // });
+  // closeCommenting();
+  // })
+  .catch((err) => {
+    console.log("dbeug", err);
+  });
 };
 
 watch(rating, () => {
@@ -157,35 +179,32 @@ watch(rating, () => {
     >
     <div class="wrapperCommentsList">
       <h4>Les commentaires:</h4>
-
-      <!--<va-data-table :items="commentsList" />-->
       <div class="container-comments">
-        <div v-for="com in commentsList" class="item-comment">
+        <div v-for="com in validComments" class="item-comment">
           <div class="top-com">
             <!--<img src="https://via.placeholder.com/40x40" alt="">-->
             <div class="text-topc">
-              <div>{{ com.Prénom }} {{ com.Nom }}</div>
+              <div>{{ com.firstname }} {{ com.lastname }}</div>
               <div class="stars-com">
                 <div style="margin: auto 0">
-                  {{ com.Note }}
+                  {{ com.star }}
                 </div>
                 <va-icon name="star" />
               </div>
             </div>
           </div>
 
-          <div class="main-com">{{ com.Commentaire.slice(0, 100) }}...</div>
+          <div class="main-com">{{ com.content.slice(0, 100) }} {{ com.content.length > 103 ? '...' : '' }}</div>
         </div>
       </div>
     </div>
-    <button
-      v-if="!course?.possessed && store.user.isConnected"
-      class="bttn bttn-succ"
-      @click="handleCart"
-    >
-      <va-icon name="add_shopping_cart" />
-      Ajouter au panier
-    </button>
+    <div v-if="store.user.isConnected && !course?.possessed">
+      <button v-if="!Object.keys(store.cart.list).includes(courseId.toString())" class="bttn bttn-succ" @click="handleCart">
+        <va-icon name="add_shopping_cart" /> Ajouter au panier
+      </button>
+      <div class="alreadyInCartDetailP" v-else-if="Object.keys(store.cart.list).includes(courseId.toString())"><p><va-icon name="done" />Ce cours se trouve dans le panier</p></div>
+    </div>
+
     <div class="wrapperComment" v-if="commenting">
       <vue3-star-ratings v-model="rating" />
       <textarea
@@ -219,6 +238,14 @@ watch(rating, () => {
   text-align: center;
 }
 
+div.alreadyInCartDetailP > p{ 
+  background-color: rgb(94, 138, 29);
+  color: var(--color-text-dark);
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 20rem;
+}
+
 .description {
   margin-bottom: 5vh;
 }
@@ -237,13 +264,12 @@ div.container-comments {
 }
 
 div.item-comment {
-  /* background-color: rgb(250, 250, 250); */
-  /* background-color: red; */
   margin: 0 1.6rem 1.6rem 0;
   width: calc(50% - 1.6rem);
   padding: 0 0 1.8rem 0;
   border-top: 1px solid grey;
 }
+
 
 div.top-com {
   margin-bottom: 1rem;

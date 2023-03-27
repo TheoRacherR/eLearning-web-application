@@ -2,6 +2,7 @@ import { reactive, ref, toRaw } from "vue";
 import { initData } from "../utils/initData";
 
 export const listCourses = ref({});
+export const listComments = ref({});
 
 const bool = false;
 
@@ -21,6 +22,7 @@ const initStore = {
   courses: { list: {}, selected: null },
   cart: { list: {} },
   listCoursesInCart: { list: {} },
+  comments: { list: {} },
 };
 
 export const store = reactive({
@@ -28,6 +30,10 @@ export const store = reactive({
   courses: {
     ...initStore.courses,
     list: listCourses,
+  },
+  comments: {
+    ...initStore.comments,
+    list: listComments,
   },
   setConnected(isConnected) {
     this.user.isConnected = isConnected;
@@ -57,6 +63,10 @@ export const store = reactive({
     return Object.values(this.courses.list);
   },
 
+  getComments() {
+    return Object.values(this.comments.list);
+  },
+
   setListCoursesInCart() {
     this.listCoursesInCart.list = Object.values(this.courses.list).filter(
       (course) => {
@@ -68,11 +78,11 @@ export const store = reactive({
   },
 
   setCart() {
-    this.cart.list = {};
-    JSON.parse(localStorage.getItem("CART"))?.map((id) => {
-      this.cart.list[id] = "key";
-    });
-    this.setListCoursesInCart();
+    this.cart.list = {}
+    JSON.parse(localStorage.getItem('CART'))?.map(id => {
+      this.cart.list[id] =  "key"
+    })
+    this.setListCoursesInCart()
   },
 
   setAddCart(courseId) {

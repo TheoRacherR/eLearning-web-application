@@ -37,11 +37,16 @@ const deleteOnInCart = (courseId) => {
         <div v-else>
           <div v-for="c in listCoursesInCart" class="item-sum">
             <div class='container-item'>
+
               <img src="https://via.placeholder.com/250x250" alt="image of the course">
               <div class="right-box">
-                <div class="title-item">{{ c.id }} {{ c.title }}</div>
-                <div class="description-item">{{ c.description }}</div>
-                <button @click="deleteOnInCart(c.id)">Delete</button>
+                <div class="text-rb">
+                  <RouterLink :to="'/detail/' + c.id">
+                    <div class="title-item">{{ c.id }} {{ c.title }}</div>
+                    <div class="description-item">{{ c.description }}</div>
+                  </RouterLink >
+                </div>
+                <button class="bttn bttn-dng delete-item-cart" @click="deleteOnInCart(c.id)"><va-icon name="delete" /></button>
               </div>
             </div>
           </div>
@@ -126,8 +131,14 @@ div.container-summary {
             color: #000;
             width: 100%;
             text-align: left;
-
-            .title-item {
+            display: flex;
+            justify-content: space-between;
+            
+            a {
+              text-decoration: none;
+              color: #000;
+              
+              .title-item {
                 font-size: 1rem;
                 letter-spacing: 0px;
                 line-height: 24px;
@@ -140,6 +151,7 @@ div.container-summary {
                 font-weight: 400;
                 display: block;
             }
+          }
             .check {
                 display: flex;
                 justify-content: end;
@@ -150,6 +162,12 @@ div.container-summary {
                     // background-color: #49961d;
 
                 }
+            }
+
+            button.delete-item-cart {
+              // position: absolute;
+              // position: right;
+              margin: auto 0;
             }
         }
     }
@@ -192,7 +210,7 @@ div.container-summary {
 
 @media (min-width: 768px){
   div.container-summary{
-    max-width: 768px;
+    max-width: 708px;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
@@ -200,7 +218,7 @@ div.container-summary {
 }
 @media (min-width: 992px){
   div.container-summary{
-    max-width: 992px;
+    max-width: 912px;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
@@ -208,7 +226,7 @@ div.container-summary {
 }
 @media (min-width: 1280px) {
   div.container-summary{
-    max-width: 1280px;
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
