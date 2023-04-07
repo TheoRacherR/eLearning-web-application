@@ -80,17 +80,17 @@ button.bttn:before, a.bttn:before {
 
 /* Primary button */
 button.bttn-prim, a.bttn-prim {
-    background: #3498db;
+    background: #154EC1;
     color: #fff;
 }
   
 button.bttn-prim:hover, a.bttn-prim:hover {
-    background: #2980b9;
+    background: #0c2e74;
     color: #fff;
 }
 
 button.bttn-prim:active, a.bttn-prim:active {
-    background: #2980b9;
+    background: #154EC1;
     color: #fff;
     top: 2px;
 }
@@ -98,20 +98,20 @@ button.bttn-prim:active, a.bttn-prim:active {
 /* Outline Primary button */
 button.bttn-prim-out, a.bttn-prim-out {
     background: transparent;
-    color: #3498db;
-    outline: 1px solid #3498db;
+    color: #154EC1;
+    outline: 1px solid #154EC1;
     outline-offset: -1px;
 
 }
 
 button.bttn-prim-out:hover, a.bttn-prim-out:hover {
     background: #0000002f;
-    color: #3498db;
+    color: #154EC1;
 }
 
 button.bttn-prim-out:active, a.bttn-prim-out:active {
     background: #0000002f;
-    color: #3498db;
+    color: #154EC1;
     top: 2px;
 }
 
