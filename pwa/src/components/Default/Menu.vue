@@ -52,6 +52,12 @@ watchEffect(() => {
           </button>
         </RouterLink>
 
+        <RouterLink to="/summary" style="color: black;">
+          <button class="bttn bttn-person">
+            <va-icon name="person"/>
+          </button>
+        </RouterLink>
+
         <div
           class="role left-item"
           v-if="store.user.isAdmin && store.user.isConnected"
