@@ -109,6 +109,10 @@ const handleSubmit = async () => {
       </div>
 
       <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
+
+      <button class="bttn bttn-wng">
+        Demander à passer professeur
+      </button>
     </div>
 
     <RightContainer page="user" />
@@ -142,9 +146,14 @@ div.total-container {
       margin-bottom: 2rem;
     }
 
-    button {
+    button.bttn-prim {
       margin: 2rem 1rem 0 auto;
       width: 100%;
+    }
+
+    button.bttn-wng {
+      margin: 2rem 1rem 0 auto;
+
     }
   }
 }
