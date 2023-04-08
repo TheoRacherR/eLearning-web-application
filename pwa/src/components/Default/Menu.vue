@@ -52,7 +52,7 @@ watchEffect(() => {
           </button>
         </RouterLink>
 
-        <RouterLink to="/summary" style="color: black;">
+        <RouterLink v-if="store.user.isConnected" to="/user" style="color: black;">
           <button class="bttn bttn-person">
             <va-icon name="person"/>
           </button>

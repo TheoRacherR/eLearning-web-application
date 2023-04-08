@@ -11,7 +11,7 @@ import RightContainer from "./RightContainer.vue";
       Vous n'avez pas de moyen de paiement d'enregistré
     </div>
 
-    <RightContainer/>
+    <RightContainer page="mypayment"/>
   </div>
 </template>
 

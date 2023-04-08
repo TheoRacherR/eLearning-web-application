@@ -1,74 +1,5 @@
 <script setup>
-import axios from "axios";
-import { ref, watch, onMounted } from "vue";
-import router from "../../router";
-import { store } from "../../store/store";
 import RightContainer from "./RightContainer.vue";
-
-const user = ref({});
-const userId = store.user.id;
-
-onMounted(async () => {
-  if (store.user.token) {
-    const { data: userRaw } = await axios
-      .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
-      })
-      .catch((err) => {
-        console.log("debug", err);
-      });
-
-    user.value = {
-      firstname: userRaw.firstname,
-      lastname: userRaw.lastname,
-      mail: userRaw.mail,
-    };
-  }
-});
-
-watch(
-  () => store.user.token,
-  async () => {
-    if (store.user.token) {
-      const { data: userRaw } = await axios
-        .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
-          headers: {
-            Authorization: `Bearer ${store.user.token}`,
-          },
-        })
-        .catch((err) => {
-          console.log("debug", err);
-        });
-
-      user.value = {
-        firstname: userRaw.firstname,
-        lastname: userRaw.lastname,
-        mail: userRaw.mail,
-      };
-    }
-  }
-);
-
-const handleSubmit = async () => {
-  axios
-    .patch(
-      import.meta.env.VITE_API_URL + "/users/" + userId,
-      { ...user.value },
-      {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
-      }
-    )
-    .then(() => {
-      router.push("/db/user-list");
-    })
-    .catch((err) => {
-      console.log("debug", err);
-    });
-};
 </script>
 
 <template>
@@ -82,7 +13,7 @@ const handleSubmit = async () => {
             <div class="item">Title</div>
           </div>
           <div class="right">
-            <RouterLink to="/summary">Détails</RouterLink>
+            <RouterLink to="/detail/271">Détails</RouterLink>
             <div>15.98€</div>
           </div>
         </div>
@@ -93,7 +24,7 @@ const handleSubmit = async () => {
             <div class="item">Title</div>
           </div>
           <div class="right">
-            <RouterLink to="/summary">Détails</RouterLink>
+            <RouterLink to="/detail/271">Détails</RouterLink>
             <div>15.98€</div>
           </div>
         </div>
@@ -104,14 +35,14 @@ const handleSubmit = async () => {
             <div class="item">Title</div>
           </div>
           <div class="right">
-            <RouterLink to="/summary">Détails</RouterLink>
+            <RouterLink to="/detail/271">Détails</RouterLink>
             <div>15.98€</div>
           </div>
         </div>
       </div>
     </div>
 
-    <RightContainer />
+    <RightContainer page="mypurchases"/>
   </div>
 </template>
 

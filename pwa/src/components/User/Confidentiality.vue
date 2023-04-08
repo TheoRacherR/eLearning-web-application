@@ -1,5 +1,6 @@
 <script setup>
 import RightContainer from "./RightContainer.vue";
+import router from "../../router";
 
 </script>
 
@@ -13,7 +14,7 @@ import RightContainer from "./RightContainer.vue";
       
     </div>
 
-    <RightContainer/>
+    <RightContainer page="confidentiality"/>
   </div>
 </template>
 

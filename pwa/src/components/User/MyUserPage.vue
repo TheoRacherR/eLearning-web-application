@@ -69,7 +69,6 @@ const handleSubmit = async () => {
       console.log("debug", err);
     });
 };
-
 </script>
 
 <template>
@@ -112,7 +111,7 @@ const handleSubmit = async () => {
       <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
     </div>
 
-    <RightContainer/>
+    <RightContainer page="user" />
   </div>
 </template>
 

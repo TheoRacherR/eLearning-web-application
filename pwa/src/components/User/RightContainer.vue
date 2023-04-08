@@ -1,25 +1,36 @@
 <script setup>
+const props = defineProps({
+  page: {
+    type: String,
+    required: true,
+  },
+});
 
 const links = [
   {
     name: "Mes achats",
     link: "mypurchases",
+    icon: "computer",
   },
   {
     name: "Données personnelles",
     link: "user",
+    icon: "fingerprint",
   },
   {
     name: "Moyens de paiement",
     link: "mypayment",
+    icon: "payments",
   },
   {
     name: "Newsletter",
     link: "newsletter",
+    icon: "mail",
   },
   {
     name: "Politique de confidentialité",
     link: "confidentiality",
+    icon: "attach_file",
   },
 ];
 </script>
@@ -28,7 +39,15 @@ const links = [
   <div class="total-container">
     <div class="right-container">
       <RouterLink v-for="l in links" :to="l.link" style="color: black">
-        <div>{{ l.name }}</div>
+        <div v-if="l.link === props.page" class="highlighted">
+          {{ l.name }}
+          <va-icon :name="l.icon" />
+        </div>
+
+        <div v-else class="normal">
+          {{ l.name }}
+          <va-icon :name="l.icon" />
+        </div>
       </RouterLink>
     </div>
   </div>
@@ -50,6 +69,14 @@ div.total-container {
 
       div {
         margin-bottom: 2rem;
+        color: rgb(175, 175, 175);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      div.highlighted {
+        // background-color: rgb(161, 161, 161);
+        color: black;
       }
     }
   }

@@ -27,7 +27,7 @@ const userId = store.user.id;
       </div>
     </div>
 
-    <RightContainer />
+    <RightContainer page="newsletter"/>
   </div>
 </template>
 
