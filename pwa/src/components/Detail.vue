@@ -159,7 +159,7 @@ watch(rating, () => {
   <div class="wrapper">
     <h1>{{ course?.title }}</h1>
 
-    <div class="description">Description: {{ course?.description }}</div>
+    <div class="description">{{ course?.description }}</div>
 
     <button
       class="bttn bttn-succ"
