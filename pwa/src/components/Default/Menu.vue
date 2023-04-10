@@ -45,8 +45,8 @@ watchEffect(() => {
           <RouterLink to="/db">Mes cours</RouterLink>
         </div>
 
-        <div class="fill" v-if="store.user.isConnected && store.user.isTeacherValid"></div>
-        <div v-if="store.user.isConnected && store.user.isTeacherValid">
+        <div class="fill" v-if="store.user.isConnected && store.user.isAdmin"></div>
+        <div v-if="store.user.isConnected && store.user.isAdmin">
           <RouterLink to="/db">Dashboard</RouterLink>
         </div>
 
