@@ -31,10 +31,17 @@ class UpdateUserController extends AbstractController
         if (isset($datas->password) && strlen($datas->password) > 0) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $datas->password));
         }
-
+        if($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            if(isset($datas->ban) && is_bool($datas->ban)) {
+                $user->setBan($datas->ban);
+            }
+            if(isset($datas->valid) && is_bool($datas->valid)) {
+                $user->setValid($datas->valid);
+            }
+        }
         $this->manager->persist($user);
         $this->manager->flush();
 
-        return new JsonResponse('Mise à jour du profil effectuée', '200');
+        return new JsonResponse('Mise à jour du profil effectuée', '204');
     }
 }
