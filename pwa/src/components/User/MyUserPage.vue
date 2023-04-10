@@ -1,12 +1,18 @@
 <script setup>
 import axios from "axios";
 import { ref, watch, onMounted } from "vue";
+import RightContainer from "./RightContainer.vue";
+import toastr from "toastr";
 import router from "../../router";
 import { store } from "../../store/store";
-import RightContainer from "./RightContainer.vue";
 
 const user = ref({});
 const userId = store.user.id;
+
+if(!store.user.isConnected){
+  router.push("/")
+  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+}
 
 onMounted(async () => {
   if (store.user.token) {
@@ -68,6 +74,9 @@ const handleSubmit = async () => {
     .catch((err) => {
       console.log("debug", err);
     });
+  
+  toastr.success("Données mises à jour", "", { timeOut: 3000 });
+
 };
 </script>
 
@@ -115,7 +124,7 @@ const handleSubmit = async () => {
       </button>
     </div>
 
-    <RightContainer page="user" />
+    <RightContainer page="personal-data" />
   </div>
 </template>
 

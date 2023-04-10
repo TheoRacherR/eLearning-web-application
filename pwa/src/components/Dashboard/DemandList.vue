@@ -3,7 +3,6 @@ import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 import axios from "axios";
 import { ref, watchEffect } from "vue";
 
-import { RouterLink } from "vue-router";
 import router from '../../router';
 import { store } from "../../store/store";
 import toastr from "toastr";
@@ -16,6 +15,7 @@ else if(!store.user.isAdmin){
   router.push("/")
   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
 }
+
 
 const users = ref({});
 
@@ -50,7 +50,7 @@ const getRole = (roles) => {
   <div class="container-dashboard">
     <LeftDashboard />
     <div class="container-commlist">
-      <h2>Liste des utilisateurs:</h2>
+      <h2>Liste des demandes pour passer en professeur:</h2>
       <div class="container-grid">
         <table>
           <thead>
@@ -86,18 +86,24 @@ const getRole = (roles) => {
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
               <td>
+                <!--Aller sur la page du user-->
                 <button class="bttn bttn-wng">
                   <RouterLink :to="`/db/user/${user.id}`"
                     ><va-icon name="last_page"
                   /></RouterLink>
                 </button>
-                <!--Aller sur la page-->
-                <button class="bttn bttn-dng-out">
-                  <va-icon name="block" />
+                
+                <!--Refuser la demande-->
+                <button class="bttn bttn-succ">
+                  <va-icon name="done" />
                 </button>
-                <!--Bannir-->
-                <button class="bttn bttn-dng"><va-icon name="delete" /></button>
-                <!--Supprimer-->
+
+                <!--Accepter la demande-->
+                <button class="bttn bttn-dng">
+                  <va-icon name="close" />
+                </button>
+
+                
               </td>
             </tr>
           </tbody>

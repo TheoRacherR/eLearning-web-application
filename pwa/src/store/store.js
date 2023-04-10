@@ -3,6 +3,7 @@ import { initData } from "../utils/initData";
 
 export const listCourses = ref({});
 export const listComments = ref({});
+export const listUsers = ref({});
 
 const bool = false;
 
@@ -22,6 +23,7 @@ const initStore = {
   courses: { list: {}, selected: null },
   cart: { list: {} },
   listCoursesInCart: { list: {} },
+  users: { list: {} },
   comments: { list: {} },
 };
 
@@ -30,6 +32,10 @@ export const store = reactive({
   courses: {
     ...initStore.courses,
     list: listCourses,
+  },
+  users: {
+    ...initStore.users,
+    list: listUsers,
   },
   comments: {
     ...initStore.comments,
@@ -61,6 +67,10 @@ export const store = reactive({
 
   getCourses() {
     return Object.values(this.courses.list);
+  },
+
+  getUsers() {
+    return Object.values(this.comments.list);
   },
 
   getComments() {
@@ -121,9 +131,4 @@ export const setBuyCourse = (id) => {
 
   store.courses.list[arrayFiltered[0][0]].possessed = true;
 
-  // store.courses.list.splice(
-  //   arrayFiltered[0][0],
-  //   1,
-  //   courses[arrayFiltered[0][0]]
-  // );
 };

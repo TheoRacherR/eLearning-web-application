@@ -1,9 +1,19 @@
 <script setup>
 import axios from "axios";
 import { ref, watch, onMounted } from "vue";
-import router from "../../router";
-import { store } from "../../store/store";
 import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
+import router from '../../router';
+import { store } from "../../store/store";
+import toastr from "toastr";
+
+if(!store.user.isConnected){
+  router.push("/")
+  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+}
+else if(!store.user.isAdmin){
+  router.push("/")
+  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
+}
 
 const user = ref({});
 const userId = router.currentRoute.value.params.id;
@@ -68,6 +78,8 @@ const handleSubmit = async () => {
     .catch((err) => {
       console.log("debug", err);
     });
+    
+  toastr.success("Données mises à jour", "", { timeOut: 3000 });
 };
 
 </script>
@@ -113,6 +125,8 @@ const handleSubmit = async () => {
 
         <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
       </div>
+
+      
     </div>
   </div>
 </template>

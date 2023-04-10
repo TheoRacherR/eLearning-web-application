@@ -41,6 +41,12 @@ watchEffect(() => {
           </div>
           <va-icon name="chevron_right" />
         </RouterLink>
+        <RouterLink to="/db/demand-list">
+          <div class="container-tab">
+            <va-icon name="group" size="small"/>Demandes professeurs
+          </div>
+          <va-icon name="chevron_right" />
+        </RouterLink>
       </div>
 
       <div class="box">

@@ -14,19 +14,19 @@ const links = [
   },
   {
     name: "Données personnelles",
-    link: "user",
+    link: "personal-data",
     icon: "fingerprint",
   },
-  {
-    name: "Moyens de paiement",
-    link: "mypayment",
-    icon: "payments",
-  },
-  {
-    name: "Newsletter",
-    link: "newsletter",
-    icon: "mail",
-  },
+  // {
+  //   name: "Moyens de paiement",
+  //   link: "mypayment",
+  //   icon: "payments",
+  // },
+  // {
+  //   name: "Newsletter",
+  //   link: "newsletter",
+  //   icon: "mail",
+  // },
   {
     name: "Politique de confidentialité",
     link: "confidentiality",
