@@ -1,10 +1,13 @@
 <script setup>
-if (
-  document.getElementById("wrapperCookie") && window.localStorage.getItem("TOKEN_COOKIE")
-) {
-  console.log("ok");
-  document.getElementById("wrapperCookie").style.display = "none";
-}
+import { ref, onMounted } from "vue";
+
+const cookie = ref(false);
+
+onMounted(() => {
+  if (window.localStorage.getItem("TOKEN_COOKIE")) {
+    cookie.value = true;
+  }
+});
 
 const setLocalStorage = (valid) => {
   window.localStorage.setItem("TOKEN_COOKIE", valid);
@@ -13,8 +16,8 @@ const setLocalStorage = (valid) => {
 </script>
 
 <template>
-  <div id="wrapperCookie">
-    <div class="container">
+  <div id="wrapperCookie" v-if="!cookie">
+    <div class="containers">
       <div class="wrapper-left">
         En cliquant sur « OK », vous acceptez de stocker des cookies sur votre
         appareil afin d'améliorer votre navigation sur le site, d'analyser votre
@@ -33,15 +36,17 @@ const setLocalStorage = (valid) => {
 </template>
 
 <style lang="scss" scoped>
-div.container {
+div.containers {
   background-color: #000;
   border: 1px solid #fff;
   color: var(--color-text-dark);
-  padding: 1rem;
+  padding: 3.5rem 2rem;
   display: flex;
   position: fixed;
   bottom: 1rem;
-  left: auto;
+  width: 100%;
+  // left: auto;
+  // margin: auto;
 
   div.wrapper-left {
     flex: 5;
@@ -56,30 +61,6 @@ div.container {
     * {
       margin-left: 1rem;
     }
-  }
-}
-
-@media (min-width: 800px) {
-  div.container {
-    max-width: 800px;
-    margin: auto;
-    width: 100%;
-  }
-}
-
-@media (min-width: 1100px) {
-  div.container {
-    max-width: 1100px;
-    margin: auto;
-    width: 100%;
-  }
-}
-
-@media (min-width: 1500px) {
-  div.container {
-    max-width: 1500px;
-    margin: auto;
-    width: 100%;
   }
 }
 </style>

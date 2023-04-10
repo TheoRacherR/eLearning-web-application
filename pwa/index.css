@@ -341,8 +341,9 @@ input.innput {
 
 
 
-  .toast {
+.toast {
     background-color: #030303 !important;
+    /* opacity: 1 !important; */
 }
 
 .toast-success {

@@ -7,6 +7,12 @@ import RightContainer from "./RightContainer.vue";
 
 const user = ref({});
 const userId = store.user.id;
+
+if(!store.user.isConnected){
+  router.push("/")
+  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+}
+
 </script>
 
 <template>

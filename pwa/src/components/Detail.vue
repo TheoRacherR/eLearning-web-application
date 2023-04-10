@@ -4,7 +4,6 @@ import { store, setBuyCourse } from "../store/store";
 import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import axios from "axios";
-import { isMemberExpressionBrowser } from "@vue/compiler-core";
 import { initData } from "../utils/initData";
 
 const { user } = store;
@@ -32,30 +31,6 @@ watchEffect(() => {
   }
 });
 
-const commentsList = ref([
-  {
-    Note: 4.5,
-    Commentaire:
-      "Formation complète avec tout le nécessaire pour bien commencer le Trading.. explication simple et facile a comprendre...merci beaucoup",
-    Prénom: "Elvis",
-    Nom: "K.",
-  },
-  {
-    Note: 5,
-    Commentaire:
-      "Grand pédagogie, simplicité dans les explications, petits tips qui permettent de comprendre tellement en peu de mots. Comme je le dis souvent 'Less is more' , et cette formation est exactement ce que je recherchais. Merci",
-    Prénom: "Marie",
-    Nom: "C.",
-  },
-  {
-    Note: 1,
-    Commentaire:
-      "Peu d'exemple et une qualité de vidéo très basse, je ne recommande pas vraiment ce cours",
-    Prénom: "Jean",
-    Nom: "D.",
-  },
-]);
-
 const course = computed(() => {
   return store.courses.selected ? courses.value[store.courses.selected] : {};
 });
@@ -69,27 +44,6 @@ onMounted(() => {
   store.selectCourse(courseId);
 });
 
-const handleBuy = () => {
-  axios
-    .post(
-      import.meta.env.VITE_API_URL + "/user_courses",
-      {
-        account: "users/" + store.user.id,
-        course: "courses/" + courseId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
-      }
-    )
-    .then(() => {
-      setBuyCourse(courseId);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
 const handleCart = () => {
   let arr = [];
@@ -136,15 +90,6 @@ const submitComment = () => {
   initData();
   closeCommenting();
   })
-  // .then(() => {
-  // commentsList.value.push({
-  //   Note: rating.value,
-  //   Commentaire: comment.value,
-  //   Prénom: user.firstname,
-  //   Nom: user.lastname,
-  // });
-  // closeCommenting();
-  // })
   .catch((err) => {
     console.log("dbeug", err);
   });
@@ -159,7 +104,7 @@ watch(rating, () => {
   <div class="wrapper">
     <h1>{{ course?.title }}</h1>
 
-    <div class="description">Description: {{ course?.description }}</div>
+    <div class="description">{{ course?.description }}</div>
 
     <button
       class="bttn bttn-succ"
