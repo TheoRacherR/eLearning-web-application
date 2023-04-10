@@ -64,7 +64,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("ROLE_ADMIN") or object === user'
 )]
 #[Delete(
-    //controller: DeleteUserController::class,
     security: 'is_granted("ROLE_ADMIN")'
 )]
 
@@ -127,11 +126,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $userCourses;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: false)]
+    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: false)]
+    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $courses;
 
