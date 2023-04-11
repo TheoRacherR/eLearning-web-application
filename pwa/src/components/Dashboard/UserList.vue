@@ -45,8 +45,6 @@ const {
     console.log("debug", err);
   });
 
-console.log("debug", usersRaw);
-
 const users = ref(
   usersRaw.map((user) => ({
     mail: user.mail,
