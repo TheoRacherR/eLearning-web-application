@@ -17,7 +17,6 @@ const getCourses = () => {
               courseId:
                 item.course.split("/")[item.course.split("/").length - 1],
             }));
-            console.log(data["hydra:member"])
 
             data["hydra:member"].map((item) => {
               const possessed = userCourses.some((uc) => {
@@ -58,7 +57,7 @@ const getUsers = () => {
       .get(import.meta.env.VITE_API_URL + "/users")
       .then(({ data }) => {
 
-        
+        console.log(data["hydra:member"])
         data["hydra:member"].map((item) => {
 
           list[item.id] = {

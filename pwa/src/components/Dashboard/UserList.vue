@@ -5,34 +5,25 @@ import { ref, watchEffect } from "vue";
 
 import { RouterLink } from "vue-router";
 import router from "../../router";
-import { store } from "../../store/store";
+import { store, listUsers } from "../../store/store";
 import toastr from "toastr";
 
 if (!store.user.isConnected) {
   router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-} else if (!store.user.isAdmin) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
-    timeOut: 3000,
-  });
 }
+// else if (!store.user.isAdmin) {
+//   router.push("/");
+//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
+//     timeOut: 3000,
+//   });
+// }
+
+const users = ref({});
 
 watchEffect(() => {
   users.value = store.users.list;
 });
-
-const users = ref(
-  usersRaw.map((user) => ({
-    mail: user.mail,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    id: user.id,
-    roles: user.roles,
-    valid: user.valid,
-    ban: user.ban,
-  }))
-);
 
 const getRole = (roles) => {
   let role = "";
@@ -40,13 +31,16 @@ const getRole = (roles) => {
   roles.map((item) => {
     switch (item) {
       case "ROLE_USER":
-        role += "Utilisateur ";
+        role += "User";
+        break;
+      case "ROLE_FORMER":
+        role += "Teacher";
         break;
       case "ROLE_ADMIN":
-        role += "Administrateur ";
+        role += "Admin ";
         break;
-
       default:
+        role = "-"
         break;
     }
   });
@@ -55,12 +49,10 @@ const getRole = (roles) => {
 };
 
 const handleBan = (userId) => {
-  const index = users.value.findIndex((user) => user.id === userId);
-
   axios
     .patch(
       import.meta.env.VITE_API_URL + "/users/" + userId,
-      { ban: true },
+      { ban: !listUsers.value[userId].ban },
       {
         headers: {
           Authorization: `Bearer ${store.user.token}`,
@@ -68,7 +60,9 @@ const handleBan = (userId) => {
       }
     )
     .then(() => {
-      console.log("debug done");
+      listUsers.value[userId].ban = !listUsers.value[userId].ban;
+
+      toastr.success("Utilisateur banni", "", { timeOut: 3000 });
     })
     .catch((err) => {
       console.log("debug", err);
@@ -76,8 +70,6 @@ const handleBan = (userId) => {
 };
 
 const handleDelete = (userId) => {
-  const index = users.value.findIndex((user) => user.id === userId);
-
   axios
     .delete(import.meta.env.VITE_API_URL + "/users/" + userId, {
       headers: {
@@ -85,7 +77,8 @@ const handleDelete = (userId) => {
       },
     })
     .then(() => {
-      user.value.splice(index, 1);
+      delete listUsers.value[userId];
+      toastr.success("Utilisateur supprimé", "", { timeOut: 3000 });
     })
     .catch((err) => {
       console.log("debug", err);
@@ -133,10 +126,8 @@ const handleDelete = (userId) => {
               </td>
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
-              <td class="verifed" v-if="user.ban === true">
-                <va-icon name="verified" />
-              </td>
-              <td class="waiting" v-else><va-icon name="close" /></td>
+              <td v-if="user.ban === true">Oui</td>
+              <td v-else>Non</td>
 
               <td>
                 <button class="bttn bttn-wng">
@@ -145,7 +136,10 @@ const handleDelete = (userId) => {
                   /></RouterLink>
                 </button>
                 <!--Aller sur la page-->
-                <button class="bttn bttn-dng-out">
+                <button class="bttn bttn-dng-out" v-if="user.ban === true">
+                  <va-icon name="refresh" @click="handleBan(user.id)" />
+                </button>
+                <button class="bttn bttn-dng-out" v-else>
                   <va-icon name="block" @click="handleBan(user.id)" />
                 </button>
                 <!--Bannir-->
@@ -185,6 +179,10 @@ div.container-dashboard {
       th,
       td {
         padding: 1rem;
+      }
+
+      td button {
+        margin-right: 1rem;
       }
 
       td.verifed {

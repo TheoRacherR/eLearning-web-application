@@ -46,7 +46,6 @@ watchEffect(() => {
                             <th>Description</th>
                             <th>Date d'ajout</th>
                             <th>Cours validé ?</th>
-                            <th>Cours validé ?</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -54,9 +53,6 @@ watchEffect(() => {
                         <tr v-for="c in items">
                             <td v-if="c.id > 0">{{ c.id }}</td>
                             <td v-else>-</td>
-
-                            <!--<td v-if="c.user_id.firstname.length > 0 || c.user_id.lastname.length > 0">{{ c.user_id.firstname + ' ' + c.user_id.lastname }}</td>
-                            <td v-else-if="c.user_id.firstname.length === 0 && c.user_id.lastname.length === 0">-</td>-->
 
                             <td>{{ c.user_id_id  }}</td>
 
@@ -70,12 +66,10 @@ watchEffect(() => {
 
                             <td class="verifed" v-if="c.valid == 1"><va-icon name="verified"/></td>
                             <td class="waiting" v-else-if="c.valid == 0"><va-icon name="hourglass_empty"/></td>
-                            <td class="refused" v-else><va-icon name="close"/></td>
+                            <td class="refused" v-else><va-icon name="cancel"/></td>
 
-                            <td>{{ c.valid }}</td>
                             <td>
                                 <button class="bttn bttn-wng"><va-icon name="last_page"/></button> <!--Aller sur le cours-->
-                                <!--<button class="bttn bttn-dng-out"><va-icon name="close"/></button>--> <!--Rejeter-->
                                 <button class="bttn bttn-dng"><va-icon name="delete"/></button> <!--Supprimer-->
                             </td>
                         </tr>
@@ -115,12 +109,20 @@ div.container-dashboard {
                 padding: 1rem;
             }
 
+            td button {
+                margin-right: 1rem;
+            }
+
             td.verifed{
                 color: #52b425;
             }
 
-            td.waiting {
+            td.refused {
                 color: rgb(168, 43, 43);
+            }
+
+            td.waiting {
+                color: #eb8c1f;
             }
 
             tbody tr:nth-child(even) {

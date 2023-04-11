@@ -138,6 +138,10 @@ div.container-dashboard {
         padding: 1rem;
       }
 
+      td button {
+        margin-right: 1rem;
+      }
+
       td.verifed {
         color: #52b425;
       }

@@ -21,10 +21,8 @@ const invalidItems = ref({});
 
 watchEffect(() => {
   items.value = store.courses.list;
-  console.log(items.value);
-
   for (const item in items.value) {
-    if (!items.value[item].valid) {
+    if (items.value[item].valid == 0) {
       invalidItems.value = {
         ...invalidItems.value,
         [item]: { ...items.value[item] },
@@ -33,12 +31,12 @@ watchEffect(() => {
   }
 });
 
-const handleAccept = async (courseId) => {
+const handleSubmit = (courseId, value) => {
   axios
     .patch(
       import.meta.env.VITE_API_URL + `/courses/${courseId}`,
       {
-        valid: 1,
+        valid: value,
       },
       {
         headers: {
@@ -47,25 +45,13 @@ const handleAccept = async (courseId) => {
       }
     )
     .then(() => {
-      toastr.success("Cours accepté", "", { timeOut: 3000 });
-    });
-};
-
-const handleRefuse = async (courseId) => {
-  axios
-    .patch(
-      import.meta.env.VITE_API_URL + `/courses/${courseId}`,
-      {
-        valid: 2,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
+      if (value == 1) {
+        toastr.success("Cours accepté", "", { timeOut: 3000 });
+      } else if (value == 2) {
+        toastr.warning("Cours refusé", "", { timeOut: 3000 });
       }
-    )
-    .then(() => {
-      toastr.warning("Cours refusé", "", { timeOut: 3000 });
+      delete invalidItems.value[courseId];
+      // delete store.courses.list[courseId];
     });
 };
 </script>
@@ -114,16 +100,14 @@ const handleRefuse = async (courseId) => {
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
               <td>
-                <button class="bttn bttn-succ" @click="handleAccept(c.id)">
+                <button class="bttn bttn-succ" @click="handleSubmit(c.id, 1)">
                   <va-icon name="done" />
                 </button>
                 <!--Valider-->
-                <button class="bttn bttn-dng" @click="handleRefuse(c.id)">
+                <button class="bttn bttn-dng" @click="handleSubmit(c.id, 2)">
                   <va-icon name="close" />
                 </button>
                 <!--Rejeter-->
-                <!--<button class="bttn bttn-dng"><va-icon name="delete"/></button>-->
-                <!--Supprimer-->
               </td>
             </tr>
           </tbody>
@@ -156,6 +140,10 @@ div.container-dashboard {
       th,
       td {
         padding: 1rem;
+      }
+
+      td button {
+        margin-right: 1rem;
       }
 
       td.verifed {

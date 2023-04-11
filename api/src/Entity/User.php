@@ -126,11 +126,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $userCourses;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Comment::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Course::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $courses;
 
@@ -170,7 +170,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if ($roles === []) {
+            $roles[] = 'ROLE_USER';
+        }
 
         return array_unique($roles);
     }
