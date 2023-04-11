@@ -73,13 +73,13 @@ const handleSubmit = async () => {
       }
     )
     .then(() => {
+      toastr.success("Données mises à jour", "", { timeOut: 3000 });
       router.push("/db/user-list");
     })
     .catch((err) => {
       console.log("debug", err);
     });
     
-  toastr.success("Données mises à jour", "", { timeOut: 3000 });
 };
 
 </script>

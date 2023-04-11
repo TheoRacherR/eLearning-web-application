@@ -11,14 +11,12 @@ let countInvalidItem = ref(0);
 
 watchEffect(() => {
   items.value = store.courses.list;
-  console.log(items.value);
 
   for (const item in items.value) {
     if (!items.value[item].valid) {
       countInvalidItem.value+=1;
     }
   }
-  console.log(countInvalidItem);
 });
 
 </script>
