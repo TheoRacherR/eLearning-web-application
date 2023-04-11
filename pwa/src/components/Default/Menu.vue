@@ -149,7 +149,8 @@ nav.navbar-nav {
       }
 
       :nth-child(3),
-      :nth-child(5) {
+      :nth-child(5),
+      :nth-child(7) {
         margin-left: 0.8rem;
       }
 
