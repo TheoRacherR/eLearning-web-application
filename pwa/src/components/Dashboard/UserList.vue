@@ -11,19 +11,28 @@ import toastr from "toastr";
 if (!store.user.isConnected) {
   router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+} else if (!store.user.isAdmin) {
+  router.push("/");
+  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
+    timeOut: 3000,
+  });
 }
-// else if (!store.user.isAdmin) {
-//   router.push("/");
-//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
-//     timeOut: 3000,
-// });
-// }
-
-const users = ref({});
 
 watchEffect(() => {
   users.value = store.users.list;
 });
+
+const users = ref(
+  usersRaw.map((user) => ({
+    mail: user.mail,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    id: user.id,
+    roles: user.roles,
+    valid: user.valid,
+    ban: user.ban,
+  }))
+);
 
 const getRole = (roles) => {
   let role = "";
@@ -44,6 +53,44 @@ const getRole = (roles) => {
 
   return role;
 };
+
+const handleBan = (userId) => {
+  const index = users.value.findIndex((user) => user.id === userId);
+
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + "/users/" + userId,
+      { ban: true },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      console.log("debug done");
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
+
+const handleDelete = (userId) => {
+  const index = users.value.findIndex((user) => user.id === userId);
+
+  axios
+    .delete(import.meta.env.VITE_API_URL + "/users/" + userId, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+      user.value.splice(index, 1);
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
 </script>
 
 <template>
@@ -60,7 +107,8 @@ const getRole = (roles) => {
               <th>Nom</th>
               <th>Mail</th>
               <th>Role</th>
-              <th>Compte Validé ?</th>
+              <th>Compte Validé</th>
+              <th>Banni</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -85,6 +133,11 @@ const getRole = (roles) => {
               </td>
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
+              <td class="verifed" v-if="user.ban === true">
+                <va-icon name="verified" />
+              </td>
+              <td class="waiting" v-else><va-icon name="close" /></td>
+
               <td>
                 <button class="bttn bttn-wng">
                   <RouterLink :to="`/db/user/${user.id}`"
@@ -93,10 +146,12 @@ const getRole = (roles) => {
                 </button>
                 <!--Aller sur la page-->
                 <button class="bttn bttn-dng-out">
-                  <va-icon name="block" />
+                  <va-icon name="block" @click="handleBan(user.id)" />
                 </button>
                 <!--Bannir-->
-                <button class="bttn bttn-dng"><va-icon name="delete" /></button>
+                <button class="bttn bttn-dng">
+                  <va-icon name="delete" @click="handleDelete(user.id)" />
+                </button>
                 <!--Supprimer-->
               </td>
             </tr>

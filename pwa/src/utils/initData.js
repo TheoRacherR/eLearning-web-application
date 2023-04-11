@@ -35,11 +35,13 @@ const getCourses = () => {
                 price: item.price,
                 possessed: possessed,
                 valid: item.valid,
+                stripeProductId: item.stripeProductId,
+                stripePriceId: item.stripePriceId,
               };
             });
 
             resolve(list);
-            
+
           });
       })
       .catch((err) => {
@@ -120,7 +122,7 @@ const getComments = () => {
             });
 
             resolve(list);
-            
+
           });
       })
       .catch((err) => {
