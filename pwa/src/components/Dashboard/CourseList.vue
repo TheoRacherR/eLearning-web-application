@@ -55,7 +55,6 @@ const handleDelete = (courseId) => {
               <th>Description</th>
               <th>Date d'ajout</th>
               <th>Cours validé ?</th>
-              <th>Cours validé ?</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -86,8 +85,6 @@ const handleDelete = (courseId) => {
                 <va-icon name="hourglass_empty" />
               </td>
               <td class="refused" v-else><va-icon name="close" /></td>
-
-              <td>{{ course.valid }}</td>
               <td>
                 <button class="bttn bttn-wng">
                   <RouterLink :to="`/db/course/${course.id}`"
@@ -150,7 +147,7 @@ div.container-dashboard {
       td.waiting {
         color: #eb8c1f;
       }
-      
+
       td button a {
         text-decoration: none;
         color: #fff;
