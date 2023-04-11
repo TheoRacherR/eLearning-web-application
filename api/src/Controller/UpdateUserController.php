@@ -13,26 +13,35 @@ class UpdateUserController extends AbstractController
 {
     public function __construct(private RequestStack $requestStack, private UserPasswordHasherInterface $passwordHasher, private EntityManagerInterface $manager)
     {
-
     }
 
     public function __invoke(User $user)
     {
         $request = $this->requestStack->getCurrentRequest()->getContent();
         $datas = json_decode($request);
-        if(strlen($datas->firstname) > 0) {
+        if (isset($datas->firstname) && strlen($datas->firstname) > 0) {
             $user->setFirstname($datas->firstname);
         }
-        if(strlen($datas->lastname) > 0) {
+        if (isset($datas->lastname) && strlen($datas->lastname) > 0) {
             $user->setLastname($datas->lastname);
         }
-        if(strlen($datas->password) > 0) {
+        if (isset($datas->mail) && strlen($datas->mail) > 0) {
+            $user->setMail($datas->mail);
+        }
+        if (isset($datas->password) && strlen($datas->password) > 0) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $datas->password));
         }
-
+        if($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            if(isset($datas->ban) && is_bool($datas->ban)) {
+                $user->setBan($datas->ban);
+            }
+            if(isset($datas->valid) && is_bool($datas->valid)) {
+                $user->setValid($datas->valid);
+            }
+        }
         $this->manager->persist($user);
         $this->manager->flush();
 
-        return new JsonResponse('Mise à jour du profil effectuée', '200');
+        return new JsonResponse('Mise à jour du profil effectuée', '204');
     }
 }

@@ -3,41 +3,37 @@
     <div v-show="errorShown" class="alert alert-danger" role="alert">
       {{ errorMessage }}
     </div>
+
     <div class="form-group">
-      <label for="mail">mail</label>
-      <input
-        type="mail"
-        class="form-control"
-        id="mail"
-        required
-        v-model="initialValue.mail"
-      />
+      <label for="mail">Adresse Mail</label>
+      <input type="mail" class="form-control" id="mail" required v-model="initialValue.mail"/>
     </div>
+
     <div class="form-group mb-3">
       <label for="password">Mot de passe</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        required
-        v-model="initialValue.password"
-      />
+      <input type="password" class="form-control" id="password" required v-model="initialValue.password"/>
     </div>
   </div>
+
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-primary"
-      @click="navigateRegister"
-    >
-      Se créer un compte
-    </button>
-    <button type="button" class="btn btn-secondary" @click="props.closeModal">
-      Close
-    </button>
-    <button class="btn btn-primary" @click="handleSubmit">Se connecter</button>
+    <button type="button" class="bttn bttn-prim-out bttn-signin" @click="navigateRegister">Se créer un compte</button>
+    <button type="button" class="bttn bttn-prim bttn-submit" @click="handleSubmit">Se connecter</button>
   </div>
+
+
 </template>
+
+<style scoped>
+
+button.bttn-signin {
+  margin-right: .7rem;
+}
+
+
+</style>
+
+
+
 
 <script setup>
 import { login } from "../utils/login";

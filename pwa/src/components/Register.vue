@@ -2,12 +2,32 @@
   <div class="container mt-4">
     <form @submit.prevent="handleSubmit">
       <div class="form-group mb-3">
-        <label for="mail">mail</label>
+        <label for="mail">Adresse Mail</label>
         <input
           type="mail"
           class="form-control"
           id="mail"
           v-model="initialValue.mail"
+          required
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="firstname">Prénom</label>
+        <input
+          type="firstname"
+          class="form-control"
+          id="firstname"
+          v-model="initialValue.firstname"
+          required
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="lastname">Nom</label>
+        <input
+          type="lastname"
+          class="form-control"
+          id="lastname"
+          v-model="initialValue.lastname"
           required
         />
       </div>
@@ -21,30 +41,18 @@
           required
         />
       </div>
-      <div class="form-group mb-3">
-        <label for="firstname">firstname</label>
-        <input
-          type="firstname"
-          class="form-control"
-          id="firstname"
-          v-model="initialValue.firstname"
-          required
-        />
-      </div>
-      <div class="form-group mb-3">
-        <label for="lastname">lastname</label>
-        <input
-          type="lastname"
-          class="form-control"
-          id="lastname"
-          v-model="initialValue.lastname"
-          required
-        />
-      </div>
-      <button type="submit" class="btn btn-primary">Créer le compte</button>
+      <button type="submit" class="bttn bttn-prim bttn-submit">Créer le compte</button>
     </form>
   </div>
+
+  
 </template>
+
+<style scoped>
+
+
+</style>
+
 
 <script setup>
 import axios from "axios";

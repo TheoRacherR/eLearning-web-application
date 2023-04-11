@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\CreateCourseController;
 use App\Controller\PaymentCourseController;
 use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 #[GetCollection]
 #[Post(
+    controller: CreateCourseController::class,
     security: 'is_granted("ROLE_FORMER") or is_granted("ROLE_ADMIN") or is_granted("IS_AUTHENTICATED_FULLY")'
 )]
 
@@ -35,12 +37,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[Delete(
     security: 'is_granted("ROLE_ADMIN")'
-)]
-
-#[Get(
-    uriTemplate: '/course/buy/{id}',
-    controller: PaymentCourseController::class,
-    name: 'buy'
 )]
 class Course
 {
@@ -59,13 +55,13 @@ class Course
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $createdAt = 'NOW';
+    private string|\DateTimeInterface $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $updated_at = 'NOW';
+    private string|\DateTimeInterface $updated_at;
 
-    #[ORM\Column]
-    private ?bool $valid = null;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $valid = 0;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
@@ -80,11 +76,25 @@ class Course
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: UserCourse::class, orphanRemoval: true)]
     private Collection $userCourses;
 
+    #[ORM\Column(type: Types::BLOB, nullable: true)]
+    private $image = null;
+
+    #[ORM\Column]
+    private ?int $price = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $stripeProductId = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $stripePriceId = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->questions = new ArrayCollection();
         $this->userCourses = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->updated_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -262,6 +272,54 @@ class Course
                 $userCourse->setCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getStripeProductId(): ?string
+    {
+        return $this->stripeProductId;
+    }
+
+    public function setStripeProductId(string $stripeProductId): self
+    {
+        $this->stripeProductId = $stripeProductId;
+
+        return $this;
+    }
+
+    public function getStripePriceId(): ?string
+    {
+        return $this->stripePriceId;
+    }
+
+    public function setStripePriceId(string $stripePriceId): self
+    {
+        $this->stripePriceId = $stripePriceId;
 
         return $this;
     }

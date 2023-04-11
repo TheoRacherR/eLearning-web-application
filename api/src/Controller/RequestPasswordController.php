@@ -15,36 +15,35 @@ class RequestPasswordController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $manager, private MailerInterface $mailer)
     {
-
     }
 
     public function __invoke()
     {
         $mail = $_GET['mail'];
         try {
-            if(false === $mail) {
+            if (false === $mail) {
                 throw new \Exception('Le mail est manquant');
             }
             /**
              * @var User $user
              */
             $user = $this->manager->getRepository(User::class)->findOneBy(['mail' => $mail]);
-            if(!$user) {
+            if (!$user) {
                 throw new \Exception('Le mail est invalide');
             }
             $user->setToken(bin2hex(random_bytes(20)));
             $this->manager->persist($user);
             $this->manager->flush();
 
-            $link = 'http://learn.matthieucmp.eu/reset_password?token='.$user->getToken();
+            $link = 'http://localhost:8080/reset_password?token=' . $user->getToken();
             $mail = (new Email())
-                ->from('no-reply@challenge.fr')
+                ->from('campagne.matthieu@gmail.com')
                 ->to($user->getMail())
                 ->subject('eLearning - Votre demande de changement de mot de passe')
                 ->html(
-                    'Cliquez sur le lien suivant pour réinitialiser votre mot de passe : <a href="'.$link.'">Réinitialisez votre mot de passe</a>'
+                    'Cliquez sur le lien suivant pour réinitialiser votre mot de passe : <a href="' . $link . '">Réinitialisez votre mot de passe</a>'
                 );
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), '404');
         }
         return new JsonResponse('Un email vous a été envoyé, avec un lien pour réinitialiser votre mot de passe', '200');

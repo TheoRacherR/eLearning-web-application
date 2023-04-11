@@ -23,6 +23,9 @@ class CourseFixtures extends Fixture implements DependentFixtureInterface
                 ->setTitle($faker->name)
                 ->setDescription('Description')
                 ->setContent('Content')
+                ->setPrice($faker->randomNumber(2))
+                ->setStripePriceId('price_1234567')
+                ->setStripeProductId('prod_1234567')
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())
                 ->setValid(true);

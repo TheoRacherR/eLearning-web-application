@@ -7,7 +7,6 @@ export const checkConnection = (
   withRedirectOnCatch,
   from
 ) => {
-  // console.log("debug here", from);
   if (!store.user.isConnected) {
     const tokenRaw = localStorage.getItem("TOKEN");
 
@@ -45,12 +44,14 @@ export const checkConnection = (
           store.setConnected(true);
           store.setValid(data.valid);
 
+          store.setCart();
+
           store.setUser({
             ...data,
             user_id: data.id,
             isAdmin: data.roles.includes("ROLE_ADMIN"),
           });
-          // console.log("debug here", data);
+          // console.log("debug here", data.roles.includes("ROLE_ADMIN"));
 
           if (withRedirectOnConnect) router.push("/");
         })

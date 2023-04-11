@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\DeleteUserController;
 use App\Controller\RequestPasswordController;
 use App\Controller\UpdateUserController;
 use App\Controller\ValidateAccountController;
@@ -18,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Phalcon\Forms\Form;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['write']],
 )]
 #[GetCollection(
-    security: 'is_granted("ROLE_ADMIN")'
+    // security: 'is_granted("ROLE_ADMIN")'
 )]
 #[Post(
     processor: UserAccountCreate::class
@@ -57,16 +59,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     read: false,
     name: 'request_password'
 )]
-#[Put(
+#[Patch(
     controller: UpdateUserController::class,
     security: 'is_granted("ROLE_ADMIN") or object === user'
 )]
 #[Delete(
     security: 'is_granted("ROLE_ADMIN")'
-)]
-
-#[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object === user'
 )]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -106,15 +104,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['read'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $createdAt = 'NOW';
+    private string|\DateTimeInterface $createdAt;
 
     #[Groups(['read'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $updatedAt = 'NOW';
+    private string|\DateTimeInterface $updatedAt;
 
     #[Groups(['read'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastActivity = null;
+    private ?\DateTimeInterface $lastActivity;
 
     #[Groups(['read'])]
     #[ORM\Column]
@@ -125,13 +123,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['read'])]
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: UserCourse::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $userCourses;
+
+    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private Collection $comments;
+
+    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private Collection $courses;
+
+    #[Groups(['read'])]
+    #[ORM\Column]
+    private ?bool $ban = false;
 
     public function __construct()
     {
         $this->courses = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->userCourses = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+        $this->lastActivity = new \DateTime();
     }
 
     public function getId(): ?int
@@ -314,6 +328,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $userCourse->setAccount(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isBan(): ?bool
+    {
+        return $this->ban;
+    }
+
+    public function setBan(bool $ban): self
+    {
+        $this->ban = $ban;
 
         return $this;
     }

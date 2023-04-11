@@ -56,10 +56,18 @@ class Comment
     private ?int $star = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $createdAt = 'NOW';
+    private string|\DateTimeInterface $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $updatedAt = 'NOW';
+    private string|\DateTimeInterface $updatedAt;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $valid = 0;
+
+    public function __construct() {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -134,6 +142,18 @@ class Comment
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getValid(): ?int
+    {
+        return $this->valid;
+    }
+
+    public function setValid(int $valid): self
+    {
+        $this->valid = $valid;
 
         return $this;
     }

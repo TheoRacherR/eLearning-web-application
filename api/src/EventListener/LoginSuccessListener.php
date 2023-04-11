@@ -21,13 +21,18 @@ class LoginSuccessListener
         if (false === $user->isValid()) {
             throw new AccessDeniedHttpException('Please confirm your account with the email we sent you', null, '403');
         }
+        if(true === $user->isBan()) {
+            throw new AccessDeniedHttpException('Your account is banned');
+        }
         // Add information to user payload
         $payload += [
             'user_id' => $user->getId(),
             'mail' => $user->getMail(),
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
-            'valid' => $user->isValid()
+            'valid' => $user->isValid(),
+            'ban' => $user->isBan(),
+            'roles' => $user->getRoles()
         ];
         $event->setData($payload);
     }

@@ -12,36 +12,37 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\FormerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable;
 
 #[ORM\Entity(repositoryClass: FormerRepository::class)]
 #[ApiResource]
 
 #[GetCollection(
-    // security: 'is_granted("ROLE_ADMIN")'
+    // security: ':("ROLE_ADMIN")'
 )]
 
 #[Get(
-    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
+    security: 'object.user_id === user or :("ROLE_ADMIN")'
 )]
 
 
 #[Post(
-    // security: 'is_granted("IS_AUTHENTICATED_FULLY") or is_granted("ROLE_ADMIN")'
+    security: ':("IS_AUTHENTICATED_FULLY") or :("ROLE_ADMIN")'
 )]
 
 
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN")'
+    security: ':("ROLE_ADMIN")'
 )]
 
 
 #[Put(
-    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
+    security: 'object.user_id === user or :("ROLE_ADMIN")'
 )]
 
 
 #[Patch(
-    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
+    security: 'object.user_id === user or :("ROLE_ADMIN")'
 )]
 
 
@@ -57,8 +58,8 @@ class Former
     #[ORM\JoinColumn(nullable: false)]
     public ?User $user_id = null;
 
-    #[ORM\Column]
-    private ?bool $valid = null;
+    #[ORM\Column()]
+    private ?bool $valid = false;
 
     #[ORM\Column(length: 255)]
     private ?string $accountOwner = null;
@@ -70,11 +71,18 @@ class Former
     private ?string $accountBankName = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $createdAt = 'NOW';
+    private string|\DateTimeInterface $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private string|null|\DateTimeInterface $updated_at = 'NOW';
+    private string|null|\DateTimeInterface $updated_at;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $refused = null;
+
+    public function __construct() {
+        $this->createdAt = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -160,6 +168,18 @@ class Former
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function isRefused(): ?bool
+    {
+        return $this->refused;
+    }
+
+    public function setRefused(?bool $refused): self
+    {
+        $this->refused = $refused;
 
         return $this;
     }

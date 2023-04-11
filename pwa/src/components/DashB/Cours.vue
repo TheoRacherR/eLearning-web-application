@@ -200,16 +200,14 @@ const resetCreate = () => {
   };
   creatingCourse.value = false;
 };
+
+getElementByClass("va-modal__default-cancel-button").classList.add('bttn bttn-prim-out');
+
 </script>
 
 <template>
   <div class="wrapperPage">
-    <h1
-      v-if="
-        (store.user.isTeacherValid && store.user.isTeacher) ||
-        store.user.isAdmin
-      "
-    >
+    <h1 v-if="(store.user.isTeacherValid && store.user.isTeacher) || store.user.isAdmin">
       Gérer les cours
     </h1>
     <h1 v-else-if="store.user.isTeacherValid && store.user.isTeacher">
@@ -217,74 +215,22 @@ const resetCreate = () => {
     </h1>
     <h1 v-else>Un administrateur va valider votre demande.</h1>
 
-    <va-button
-      @click="
-        () => {
-          creatingCourse = !creatingCourse;
-        }
-      "
-      >Ajouter un cours</va-button
-    >
-    <va-modal
-      class="modalCreateCourse"
-      :model-value="creatingCourse"
-      title="Create Course"
-      size="small"
-      @ok="handleCreate"
-      @cancel="resetCreate"
-    >
-      <va-input
-        v-for="key in Object.keys(createCourse)"
-        :key="key"
-        class="my-3"
-        :label="key"
-        v-model="createCourse[key]"
-      />
+    <button class="bttn bttn-drk" @click="() => { creatingCourse = !creatingCourse;}">Ajouter un cours</button>
+    <va-modal class="modalCreateCourse" :model-value="creatingCourse" title="Create Course" size="small" @ok="handleCreate" @cancel="resetCreate">
+      <va-input v-for="key in Object.keys(createCourse)" :key="key" class="my-3" :label="key" v-model="createCourse[key]"/>
       <QuillEditor ref="createEditor" theme="snow" />
     </va-modal>
 
-    <va-data-table
-      :items="courses"
-      :columns="columns"
-      :wrapper-size="500"
-      :item-size="46"
-      virtual-scroller
-      ><template #cell(actions)="{ rowIndex }">
-        <va-button
-          v-if="!courses[rowIndex].isValid && store.user.isAdmin"
-          preset="plain"
-          icon="check"
-          @click="reviewCourse(true, courses[rowIndex].id, rowIndex)"
-        />
-        <va-button
-          v-if="!courses[rowIndex].isValid && store.user.isAdmin"
-          preset="plain"
-          icon="close"
-          @click="reviewCourse(false, courses[rowIndex].id, rowIndex)"
-        />
-        <va-button
-          v-else
-          preset="plain"
-          icon="edit"
-          @click="openModalToEditItemById(rowIndex)"
-        /> </template
-    ></va-data-table>
+    <va-data-table :items="courses" :columns="columns" :wrapper-size="500" :item-size="46" virtual-scroller>
+      <template #cell(actions)="{ rowIndex }">
+        <va-button v-if="!courses[rowIndex].isValid && store.user.isAdmin" preset="plain" icon="check" @click="reviewCourse(true, courses[rowIndex].id, rowIndex)"/>
+        <va-button v-if="!courses[rowIndex].isValid && store.user.isAdmin" preset="plain" icon="close" @click="reviewCourse(false, courses[rowIndex].id, rowIndex)"/>
+        <va-button v-else preset="plain" icon="edit" @click="openModalToEditItemById(rowIndex)"/>
+      </template>
+    </va-data-table>
 
-    <va-modal
-      class="modalEditCourse"
-      :model-value="!!editedCourse"
-      title="Edit item"
-      size="small"
-      @ok="editCourse"
-      @cancel="resetEditedCourse"
-    >
-      <va-input
-        v-for="key in Object.keys(editedCourse)"
-        :key="key"
-        class="my-3"
-        :label="key"
-        v-model="editedCourse[key]"
-      />
+    <va-modal class="modalEditCourse" :model-value="!!editedCourse" title="Edit item" size="small" @ok="editCourse" @cancel="resetEditedCourse">
+      <va-input v-for="key in Object.keys(editedCourse)" :key="key" class="my-3" :label="key" v-model="editedCourse[key]"/>
       <QuillEditor ref="myEditor" theme="snow" />
     </va-modal>
   </div>
@@ -293,8 +239,8 @@ const resetCreate = () => {
 <style lang="scss" scoped>
 .wrapperPage {
   display: flex;
-
   flex-direction: column;
+  padding: 3rem 5rem;
 }
 
 .modalEditCourse {
@@ -307,4 +253,9 @@ const resetCreate = () => {
     display: block;
   }
 }
+
+button.va-modal__default-cancel-button > span{
+  color: wheat;
+}
+
 </style>

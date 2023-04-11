@@ -26,20 +26,13 @@ const isDifferent = computed(() => {
 
 <template>
   <div class="wrapperForm">
-    <h1>Modifier votre Profil</h1>
+    <h1>Modifier mon profil</h1>
     <va-form style="width: 300px">
-      <va-input
-        v-for="key in Object.keys(currentUser)"
-        :key="key"
-        class="my-3"
-        :label="key"
-        v-model="currentUser[key]"
-      />
-
-      <button class="btn btn-primary" :disabled="!isDifferent">Valider</button>
+      <va-input v-for="key in Object.keys(currentUser)" :key="key" class="my-3" :label="key" v-model="currentUser[key]"/>
+      <button class="bttn bttn-prim" :disabled="!isDifferent">Valider</button>
     </va-form>
-    <button class="btn btn-outline-primary requestProf" v-if="!isTeacher">
-      Demande pour passer Prof
+    <button class="bttn bttn-prim-out requestProf" v-if="!isTeacher">
+      Demande pour passer Professeur
     </button>
   </div>
 </template>
@@ -47,9 +40,17 @@ const isDifferent = computed(() => {
 <style lang="scss" scoped>
 .wrapperForm {
   display: block;
+  padding: 3rem 5rem;
 }
 
 .requestProf {
   margin-top: 2vh;
 }
+
+// button.button-validate {
+//   color: #fff;
+//   background-color: #e28743;
+//   border: 1px solid #e28743;
+//   height: 3rem;
+// }
 </style>
