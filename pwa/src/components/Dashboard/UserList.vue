@@ -49,7 +49,7 @@ const handleBan = (userId) => {
   axios
     .patch(
       import.meta.env.VITE_API_URL + "/users/" + userId,
-      { ban: true },
+      { ban: !listUsers.value[userId].ban },
       {
         headers: {
           Authorization: `Bearer ${store.user.token}`,
@@ -57,7 +57,7 @@ const handleBan = (userId) => {
       }
     )
     .then(() => {
-      listUsers.value[userId].ban = true;
+      listUsers.value[userId].ban = !listUsers.value[userId].ban;
 
       toastr.success("Utilisateur banni", "", { timeOut: 3000 });
     })
@@ -135,7 +135,10 @@ const handleDelete = (userId) => {
                   /></RouterLink>
                 </button>
                 <!--Aller sur la page-->
-                <button class="bttn bttn-dng-out">
+                <button class="bttn bttn-dng-out" v-if="user.ban === true">
+                  <va-icon name="refresh" @click="handleBan(user.id)" />
+                </button>
+                <button class="bttn bttn-dng-out" v-else>
                   <va-icon name="block" @click="handleBan(user.id)" />
                 </button>
                 <!--Bannir-->
