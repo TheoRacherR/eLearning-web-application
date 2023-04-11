@@ -136,10 +136,10 @@ const handleDelete = (userId) => {
                   /></RouterLink>
                 </button>
                 <!--Aller sur la page-->
-                <button class="bttn bttn-dng-out" v-if="user.ban === true">
+                <button class="bttn bttn-succ-out banned" v-if="user.ban === true">
                   <va-icon name="refresh" @click="handleBan(user.id)" />
                 </button>
-                <button class="bttn bttn-dng-out" v-else>
+                <button class="bttn bttn-dng-out not-banned" v-else>
                   <va-icon name="block" @click="handleBan(user.id)" />
                 </button>
                 <!--Bannir-->
@@ -191,6 +191,10 @@ div.container-dashboard {
 
       td.waiting {
         color: rgb(168, 43, 43);
+      }
+      
+      td button.banned {
+        color: #52b425;
       }
 
       td button a {
