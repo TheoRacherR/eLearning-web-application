@@ -61,6 +61,19 @@ export const store = reactive({
     this.user.isTeacher = isTeacher;
     this.user.isTeacherValid = isValid;
   },
+  setCart() {
+    this.cart.list = {};
+    JSON.parse(localStorage.getItem("CART"))?.map((id) => {
+      this.cart.list[id] = "key";
+    });
+    this.setListCoursesInCart();
+  },
+
+  setAddCart(courseId) {
+    this.cart.list = { ...this.cart.list, [courseId]: "1" };
+    this.setListCoursesInCart();
+  },
+
   selectCourse(id) {
     this.courses.selected = id;
   },
@@ -85,19 +98,6 @@ export const store = reactive({
         return Object.keys(this.cart.list).includes(course.id.toString());
       }
     );
-  },
-
-  setCart() {
-    this.cart.list = {}
-    JSON.parse(localStorage.getItem('CART'))?.map(id => {
-      this.cart.list[id] =  "key"
-    })
-    this.setListCoursesInCart()
-  },
-
-  setAddCart(courseId) {
-    this.cart.list = { ...this.cart.list, [courseId]: "1" };
-    this.setListCoursesInCart();
   },
 
   deleteCart() {
@@ -130,5 +130,4 @@ export const setBuyCourse = (id) => {
   });
 
   store.courses.list[arrayFiltered[0][0]].possessed = true;
-
 };
