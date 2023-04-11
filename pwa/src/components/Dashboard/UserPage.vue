@@ -91,34 +91,19 @@ const handleSubmit = async () => {
         <div class="firstline">
           <div class="input-item">
             <label :for="user.firstname">Prénom</label>
-            <input
-              class="innput"
-              :key="user.firstname"
-              :label="user.firstname"
-              v-model="user.firstname"
-            />
+            <input class="innput" v-model="user.firstname" />
           </div>
 
           <div class="input-item">
             <label :for="user.lastname">Nom</label>
-            <input
-              class="innput"
-              :key="user.lastname"
-              :label="user.lastname"
-              v-model="user.lastname"
-            />
+            <input class="innput" v-model="user.lastname" />
           </div>
         </div>
 
         <div class="input-item">
           <label :for="user.mail">Adresse mail</label>
 
-          <input
-            class="innput"
-            :key="user.mail"
-            :label="user.mail"
-            v-model="user.mail"
-          />
+          <input class="innput" v-model="user.mail" />
         </div>
 
         <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
