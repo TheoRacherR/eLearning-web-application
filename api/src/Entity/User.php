@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['write']],
 )]
 #[GetCollection(
-    security: 'is_granted("ROLE_ADMIN")'
+    // security: 'is_granted("ROLE_ADMIN")'
 )]
 #[Post(
     processor: UserAccountCreate::class
@@ -126,11 +126,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $userCourses;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Comment::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Course::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $courses;
 

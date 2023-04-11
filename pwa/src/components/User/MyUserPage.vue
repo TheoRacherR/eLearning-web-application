@@ -7,19 +7,31 @@ import router from "../../router";
 import { store } from "../../store/store";
 
 const user = ref({});
-const userId = store.user.id;
 
-if(!store.user.isConnected){
-  router.push("/")
+const {
+  user: {
+    id: userId,
+    isValid,
+    isAdmin,
+    isConnected,
+    isTeacher,
+    isTeacherValid,
+    token,
+    ...infos
+  },
+} = store;
+
+if (!isConnected) {
+  router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
 }
 
 onMounted(async () => {
-  if (store.user.token) {
+  if (token) {
     const { data: userRaw } = await axios
       .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
         headers: {
-          Authorization: `Bearer ${store.user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .catch((err) => {
@@ -35,13 +47,13 @@ onMounted(async () => {
 });
 
 watch(
-  () => store.user.token,
+  () => token,
   async () => {
-    if (store.user.token) {
+    if (token) {
       const { data: userRaw } = await axios
         .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
           headers: {
-            Authorization: `Bearer ${store.user.token}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .catch((err) => {
@@ -57,26 +69,23 @@ watch(
   }
 );
 
-const handleSubmit = async () => {
+const handleSubmit = () => {
   axios
     .patch(
       import.meta.env.VITE_API_URL + "/users/" + userId,
       { ...user.value },
       {
         headers: {
-          Authorization: `Bearer ${store.user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     )
     .then(() => {
-      router.push("/db/user-list");
+      toastr.success("Données mises à jour", "", { timeOut: 3000 });
     })
     .catch((err) => {
       console.log("debug", err);
     });
-  
-  toastr.success("Données mises à jour", "", { timeOut: 3000 });
-
 };
 </script>
 
@@ -87,41 +96,24 @@ const handleSubmit = async () => {
       <div class="firstline">
         <div class="input-item">
           <label :for="user.firstname">Prénom</label>
-          <input
-            class="innput"
-            :key="user.firstname"
-            :label="user.firstname"
-            v-model="user.firstname"
-          />
+          <input class="innput" v-model="user.firstname" />
         </div>
 
         <div class="input-item">
           <label :for="user.lastname">Nom</label>
-          <input
-            class="innput"
-            :key="user.lastname"
-            :label="user.lastname"
-            v-model="user.lastname"
-          />
+          <input class="innput" v-model="user.lastname" />
         </div>
       </div>
 
       <div class="input-item">
         <label :for="user.mail">Adresse mail</label>
 
-        <input
-          class="innput"
-          :key="user.mail"
-          :label="user.mail"
-          v-model="user.mail"
-        />
+        <input class="innput" v-model="user.mail" />
       </div>
 
       <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
 
-      <button class="bttn bttn-wng">
-        Demander à passer professeur
-      </button>
+      <button class="bttn bttn-wng">Demander à passer professeur</button>
     </div>
 
     <RightContainer page="personal-data" />
@@ -162,7 +154,6 @@ div.total-container {
 
     button.bttn-wng {
       margin: 2rem 1rem 0 auto;
-
     }
   }
 }
