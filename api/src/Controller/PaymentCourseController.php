@@ -25,17 +25,6 @@ class PaymentCourseController extends AbstractController
         $stripe = new \Stripe\StripeClient(
             'sk_test_51MRvy2I8On5YmTNNSW1T6vjY1Qf27P8l62eZgOEECJYbSKaRXlP6HoBHnHmHB7adcGZHNfbuCnTjROFEQOXjummg00kZ0bQcBv'
         );
-        /*$stripe = new \Stripe\StripeClient(
-            'sk_test_51MRvy2I8On5YmTNNSW1T6vjY1Qf27P8l62eZgOEECJYbSKaRXlP6HoBHnHmHB7adcGZHNfbuCnTjROFEQOXjummg00kZ0bQcBv'
-        );
-        return $stripe->paymentLinks->create([
-            'line_items' => [
-                [
-                    'price' => 'price_1MmEtoI8On5YmTNNAsVgqKvj',
-                    'quantity' => 1,
-                ],
-            ],
-        ]);*/
         $response = $requestStack->getCurrentRequest()->getContent();
         $products_tab = json_decode($response);
         $tab = [];
@@ -50,6 +39,6 @@ class PaymentCourseController extends AbstractController
             'mode' => 'payment',
         ]);
 
-        return new JsonResponse($link->url, '200');
+        return new JsonResponse($link, '200');
     }
 }
