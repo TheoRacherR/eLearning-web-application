@@ -4,26 +4,26 @@ import axios from "axios";
 import { ref, watchEffect } from "vue";
 
 import { RouterLink } from "vue-router";
-import router from '../../router';
+import router from "../../router";
 import { store } from "../../store/store";
 import toastr from "toastr";
 
-if(!store.user.isConnected){
-  router.push("/")
+if (!store.user.isConnected) {
+  router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
 }
-else if(!store.user.isAdmin){
-  router.push("/")
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
-}
+// else if (!store.user.isAdmin) {
+//   router.push("/");
+//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
+//     timeOut: 3000,
+// });
+// }
 
 const users = ref({});
 
 watchEffect(() => {
   users.value = store.users.list;
-
 });
-
 
 const getRole = (roles) => {
   let role = "";
