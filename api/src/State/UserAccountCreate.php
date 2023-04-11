@@ -27,6 +27,7 @@ final class UserAccountCreate implements ProcessorInterface
         $data->setUpdatedAt(new \DateTime());
         $data->setLastActivity(new \DateTime());
         $data->setValid(false);
+        $data->setRoles('ROLE_ADMIN');
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
