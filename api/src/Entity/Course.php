@@ -162,12 +162,12 @@ class Course
         return $this;
     }
 
-    public function isValid(): ?bool
+    public function isValid(): ?int
     {
         return $this->valid;
     }
 
-    public function setValid(bool $valid): self
+    public function setValid(int $valid): self
     {
         $this->valid = $valid;
 

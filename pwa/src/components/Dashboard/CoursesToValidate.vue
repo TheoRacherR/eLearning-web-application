@@ -1,23 +1,23 @@
 <script setup>
-
-import LeftDashboard from './LeftDashboard/LeftDashboard.vue';
+import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 import { ref, watchEffect } from "vue";
-import router from '../../router';
+import router from "../../router";
 import { store } from "../../store/store";
 import toastr from "toastr";
+import axios from "axios";
 
-if(!store.user.isConnected){
-  router.push("/")
+if (!store.user.isConnected) {
+  router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-else if(!store.user.isAdmin){
-  router.push("/")
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
+} else if (!store.user.isAdmin) {
+  router.push("/");
+  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
+    timeOut: 3000,
+  });
 }
 
 const items = ref({});
 const invalidItems = ref({});
-
 
 watchEffect(() => {
   items.value = store.courses.list;
@@ -33,118 +33,143 @@ watchEffect(() => {
   }
 });
 
+const handleAccept = async (courseId) => {
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + `/courses/${courseId}`,
+      {
+        valid: 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      toastr.success("Cours accepté", "", { timeOut: 3000 });
+    });
+};
 
+const handleRefuse = async (courseId) => {
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + `/courses/${courseId}`,
+      {
+        valid: 2,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      toastr.warning("Cours refusé", "", { timeOut: 3000 });
+    });
+};
 </script>
 
-
-
 <template>
-    <div class="container-dashboard">
+  <div class="container-dashboard">
+    <LeftDashboard />
+    <div class="container-commlist">
+      <h2>Liste des cours en attente de validation:</h2>
+      <div class="container-grid">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Auteur</th>
+              <th>Titre</th>
+              <th>Description</th>
+              <th>Date d'ajout</th>
+              <th>Cours validé ?</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="c in invalidItems">
+              <td v-if="c.id > 0">{{ c.id }}</td>
+              <td v-else>-</td>
 
-        <LeftDashboard/>
-        <div class="container-commlist">      
-
-            <h2>Liste des cours en attente de validation: </h2>
-            <div class="container-grid">
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Auteur</th>
-                            <th>Titre</th>
-                            <th>Description</th>
-                            <th>Date d'ajout</th>
-                            <th>Cours validé ?</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="c in invalidItems">
-                            <td v-if="c.id > 0">{{ c.id }}</td>
-                            <td v-else>-</td>
-
-                            <!--<td v-if="c.user_id.firstname.length > 0 || c.user_id.lastname.length > 0">{{ c.user_id.firstname + ' ' + c.user_id.lastname }}</td>
+              <!--<td v-if="c.user_id.firstname.length > 0 || c.user_id.lastname.length > 0">{{ c.user_id.firstname + ' ' + c.user_id.lastname }}</td>
                             <td v-else-if="c.user_id.firstname.length === 0 && c.user_id.lastname.length === 0">-</td>-->
 
-                            <td>{{ c.user_id_id  }}</td>
+              <td>{{ c.user_id_id }}</td>
 
-                            <td v-if="c.title.length > 0">{{ c.title }}</td>
-                            <td v-else>-</td>
+              <td v-if="c.title.length > 0">{{ c.title }}</td>
+              <td v-else>-</td>
 
-                            <td v-if="c.description.length > 0">{{ c.description.slice(0, 100) }}</td>
-                            <td v-else>-</td>
+              <td v-if="c.description.length > 0">
+                {{ c.description.slice(0, 100) }}
+              </td>
+              <td v-else>-</td>
 
-                            <td>{{ c.created_at }}</td>
+              <td>{{ c.created_at }}</td>
 
-                            <td class="verifed" v-if="c.valid === true"><va-icon name="verified"/></td>
-                            <td class="waiting" v-else><va-icon name="hourglass_empty"/></td>
+              <td class="verifed" v-if="c.valid === true">
+                <va-icon name="verified" />
+              </td>
+              <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
-                            <td>
-                                <button class="bttn bttn-succ"><va-icon name="done"/></button> <!--Valider-->
-                                <button class="bttn bttn-dng"><va-icon name="close"/></button> <!--Rejeter-->
-                                <!--<button class="bttn bttn-dng"><va-icon name="delete"/></button>--> <!--Supprimer-->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    
+              <td>
+                <button class="bttn bttn-succ" @click="handleAccept(c.id)">
+                  <va-icon name="done" />
+                </button>
+                <!--Valider-->
+                <button class="bttn bttn-dng" @click="handleRefuse(c.id)">
+                  <va-icon name="close" />
+                </button>
+                <!--Rejeter-->
+                <!--<button class="bttn bttn-dng"><va-icon name="delete"/></button>-->
+                <!--Supprimer-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </template>
 
-
-
 <style lang="scss" scoped>
-
 div.container-dashboard {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    /* background-color: aqua; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  /* background-color: aqua; */
 
-    div.container-commlist {
-        padding: 2rem 5rem;
-        width: 90%;
+  div.container-commlist {
+    padding: 2rem 5rem;
+    width: 90%;
 
-        div.container-grid {
-            display: grid;
-            grid-auto-columns: auto;
-            grid-auto-rows: auto;
+    div.container-grid {
+      display: grid;
+      grid-auto-columns: auto;
+      grid-auto-rows: auto;
 
-            thead {
-                background-color: rgb(103, 133, 63);
-                color: #fff;
-            }
-            th, td {
-                padding: 1rem;
-            }
+      thead {
+        background-color: rgb(103, 133, 63);
+        color: #fff;
+      }
+      th,
+      td {
+        padding: 1rem;
+      }
 
-            td.verifed{
-                color: #52b425;
-            }
+      td.verifed {
+        color: #52b425;
+      }
 
-            td.waiting {
-                color: rgb(168, 43, 43);
-            }
+      td.waiting {
+        color: rgb(168, 43, 43);
+      }
 
-            tbody tr:nth-child(even) {
-                background-color: #f5f5f5;
-
-                
-            }
-
-
-
-        }
-    
+      tbody tr:nth-child(even) {
+        background-color: #f5f5f5;
+      }
     }
+  }
 }
-
-
-
-
 </style>
-

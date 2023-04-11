@@ -46,6 +46,7 @@ watchEffect(() => {
                             <th>Description</th>
                             <th>Date d'ajout</th>
                             <th>Cours validé ?</th>
+                            <th>Cours validé ?</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -67,9 +68,11 @@ watchEffect(() => {
 
                             <td>{{ c.created_at }}</td>
 
-                            <td class="verifed" v-if="c.valid === true"><va-icon name="verified"/></td>
-                            <td class="waiting" v-else><va-icon name="hourglass_empty"/></td>
+                            <td class="verifed" v-if="c.valid == 1"><va-icon name="verified"/></td>
+                            <td class="waiting" v-else-if="c.valid == 0"><va-icon name="hourglass_empty"/></td>
+                            <td class="refused" v-else><va-icon name="close"/></td>
 
+                            <td>{{ c.valid }}</td>
                             <td>
                                 <button class="bttn bttn-wng"><va-icon name="last_page"/></button> <!--Aller sur le cours-->
                                 <!--<button class="bttn bttn-dng-out"><va-icon name="close"/></button>--> <!--Rejeter-->

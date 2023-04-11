@@ -28,7 +28,7 @@ class CourseFixtures extends Fixture implements DependentFixtureInterface
                 ->setStripeProductId('prod_1234567')
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())
-                ->setValid(true);
+                ->setValid(1);
 
             $manager->persist($course);
             $manager->flush();
