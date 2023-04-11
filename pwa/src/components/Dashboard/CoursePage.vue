@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref, watch, onMounted } from "vue";
 import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 import router from "../../router";
-import { store } from "../../store/store";
+import { store, listCourses } from "../../store/store";
 import toastr from "toastr";
 
 if (!store.user.isConnected) {
@@ -71,8 +71,12 @@ const handleSubmit = async () => {
       }
     )
     .then(() => {
+      listCourses.value[courseId] = {
+        ...listCourses.value[courseId],
+        ...course.value,
+      };
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
-      router.push("/db/user-list");
+      router.push("/db/course-list");
     })
     .catch((err) => {
       console.log("debug", err);

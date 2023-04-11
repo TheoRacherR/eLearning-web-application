@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref, watch, onMounted } from "vue";
 import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 import router from "../../router";
-import { store } from "../../store/store";
+import { listUsers, store } from "../../store/store";
 import toastr from "toastr";
 
 if (!store.user.isConnected) {
@@ -73,6 +73,10 @@ const handleSubmit = async () => {
       }
     )
     .then(() => {
+      listUsers.value[userId] = {
+        ...listUsers.value[userId],
+        ...user.value,
+      };
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
       router.push("/db/user-list");
     })
