@@ -5,34 +5,25 @@ import { ref, watchEffect } from "vue";
 
 import { RouterLink } from "vue-router";
 import router from "../../router";
-import { store } from "../../store/store";
+import { store, listUsers } from "../../store/store";
 import toastr from "toastr";
 
 if (!store.user.isConnected) {
   router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-} else if (!store.user.isAdmin) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
-    timeOut: 3000,
-  });
 }
+// else if (!store.user.isAdmin) {
+//   router.push("/");
+//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
+//     timeOut: 3000,
+//   });
+// }
+
+const users = ref({});
 
 watchEffect(() => {
   users.value = store.users.list;
 });
-
-const users = ref(
-  usersRaw.map((user) => ({
-    mail: user.mail,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    id: user.id,
-    roles: user.roles,
-    valid: user.valid,
-    ban: user.ban,
-  }))
-);
 
 const getRole = (roles) => {
   let role = "";
@@ -55,8 +46,6 @@ const getRole = (roles) => {
 };
 
 const handleBan = (userId) => {
-  const index = users.value.findIndex((user) => user.id === userId);
-
   axios
     .patch(
       import.meta.env.VITE_API_URL + "/users/" + userId,
@@ -68,7 +57,9 @@ const handleBan = (userId) => {
       }
     )
     .then(() => {
-      console.log("debug done");
+      listUsers.value[userId].ban = true;
+
+      toastr.success("Utilisateur banni", "", { timeOut: 3000 });
     })
     .catch((err) => {
       console.log("debug", err);
@@ -76,8 +67,6 @@ const handleBan = (userId) => {
 };
 
 const handleDelete = (userId) => {
-  const index = users.value.findIndex((user) => user.id === userId);
-
   axios
     .delete(import.meta.env.VITE_API_URL + "/users/" + userId, {
       headers: {
@@ -85,7 +74,8 @@ const handleDelete = (userId) => {
       },
     })
     .then(() => {
-      user.value.splice(index, 1);
+      delete listUsers.value[userId];
+      toastr.success("Utilisateur supprimé", "", { timeOut: 3000 });
     })
     .catch((err) => {
       console.log("debug", err);
