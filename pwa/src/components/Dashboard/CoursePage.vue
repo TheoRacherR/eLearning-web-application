@@ -15,13 +15,13 @@ if (!store.user.isConnected) {
 //   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
 // }
 
-const user = ref({});
-const userId = router.currentRoute.value.params.id;
+const course = ref({});
+const courseId = router.currentRoute.value.params.id;
 
 onMounted(async () => {
   if (store.user.token) {
-    const { data: userRaw } = await axios
-      .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
+    const { data: courseRaw } = await axios
+      .get(import.meta.env.VITE_API_URL + "/courses/" + courseId, {
         headers: {
           Authorization: `Bearer ${store.user.token}`,
         },
@@ -30,10 +30,9 @@ onMounted(async () => {
         console.log("debug", err);
       });
 
-    user.value = {
-      firstname: userRaw.firstname,
-      lastname: userRaw.lastname,
-      mail: userRaw.mail,
+    course.value = {
+      title: courseRaw.title,
+      description: courseRaw.description,
     };
   }
 });
@@ -42,8 +41,8 @@ watch(
   () => store.user.token,
   async () => {
     if (store.user.token) {
-      const { data: userRaw } = await axios
-        .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
+      const { data: courseRaw } = await axios
+        .get(import.meta.env.VITE_API_URL + "/users/" + courseId, {
           headers: {
             Authorization: `Bearer ${store.user.token}`,
           },
@@ -52,10 +51,9 @@ watch(
           console.log("debug", err);
         });
 
-      user.value = {
-        firstname: userRaw.firstname,
-        lastname: userRaw.lastname,
-        mail: userRaw.mail,
+      course.value = {
+        title: courseRaw.title,
+        description: courseRaw.description,
       };
     }
   }
@@ -64,8 +62,8 @@ watch(
 const handleSubmit = async () => {
   axios
     .patch(
-      import.meta.env.VITE_API_URL + "/users/" + userId,
-      { ...user.value },
+      import.meta.env.VITE_API_URL + "/courses/" + courseId,
+      { ...course.value },
       {
         headers: {
           Authorization: `Bearer ${store.user.token}`,
@@ -86,24 +84,18 @@ const handleSubmit = async () => {
   <div class="container-dashboard">
     <LeftDashboard />
     <div class="main-page">
-      <h2>Modification des informations de l'utilisateur n°{{ userId }}</h2>
+      <h2>Modification des informations du cours n°{{ courseId }}</h2>
       <div class="container-input">
         <div class="firstline">
           <div class="input-item">
-            <label :for="user.firstname">Prénom</label>
-            <input class="innput" v-model="user.firstname" />
+            <label :for="course.title">Titre</label>
+            <input class="innput" v-model="course.title" />
           </div>
 
           <div class="input-item">
-            <label :for="user.lastname">Nom</label>
-            <input class="innput" v-model="user.lastname" />
+            <label :for="course.description">Description</label>
+            <input class="innput" v-model="course.description" />
           </div>
-        </div>
-
-        <div class="input-item">
-          <label :for="user.mail">Adresse mail</label>
-
-          <input class="innput" v-model="user.mail" />
         </div>
 
         <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
