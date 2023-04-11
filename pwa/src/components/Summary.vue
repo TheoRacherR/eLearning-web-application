@@ -2,6 +2,7 @@
 
 import { store } from '../store/store'
 import { ref, watchEffect } from "vue"
+import toastr from "toastr";
 
 
 const listCoursesInCart = ref(Object.values(store.listCoursesInCart.list));
@@ -19,6 +20,7 @@ const deleteOnInCart = (courseId) => {
   localStorageArray = JSON.parse(localStorageArray).filter(item => item != courseId.toString())
   localStorage.setItem("CART", JSON.stringify(localStorageArray))
   store.setCart();
+  toastr.success("Cours supprimé du panier", "", { timeOut: 3000 });
 }
 
 </script>

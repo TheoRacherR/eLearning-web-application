@@ -27,10 +27,10 @@ watchEffect(() => {
 
 <template>
     <div class="wrapper">
-        <h1>Liste des cours :</h1>
+        <h1>Liste de mes cours créés :</h1>
         <div class="categories"></div>
         <div class="wrapper-item" v-for="item in validItems">
-            <ItemCourse :title="item.title" :description="item.description" :id="item.id" :addToCart="true"/>
+            <ItemCourse :title="item.title" :description="item.description" :id="item.id"/>
         </div>
     </div>
 </template>

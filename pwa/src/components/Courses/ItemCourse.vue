@@ -1,6 +1,7 @@
 <script setup>
 
 import { store } from "../../store/store.js";
+import toastr from "toastr";
 
 
 const props = defineProps({
@@ -14,6 +15,10 @@ const props = defineProps({
   },
   id: {
     type: Number,
+    required: true,
+  },
+  addToCart: {
+    type: Boolean,
     required: true,
   }
 });
@@ -34,35 +39,36 @@ const handleCart = () => {
     arr.push(props.id.toString());
     localStorage.setItem("CART", JSON.stringify(arr));
   }
+  toastr.success("Cours ajouté dans le panier", "", { timeOut: 3000 });
 };
-
-const link = "/detail/" + props.id;
 
 </script>
 
 <template>
     <div class="container-item">
-        <RouterLink :to="link">
+        <RouterLink :to="`/detail/${props.id}`">
             <img src="https://via.placeholder.com/250x250" alt="image of the course">
         </RouterLink>
         <div class="right-box">
-            <RouterLink :to="link">
+            <RouterLink :to="`/detail/${props.id}`">
                 <div class="title-item">{{ title }}</div>
                 <div class="description-item">{{ description }}</div>
             </RouterLink>
-            <div v-if="course?.possessed && store.user.isConnected" class="check">
-                <div class="possessed">
-                    Vous possédez ce cours
+            <div v-if="props.addToCart === true">
+                <div v-if="course?.possessed && store.user.isConnected" class="check">
+                    <div class="possessed">
+                        Vous possédez ce cours
+                    </div>
                 </div>
-            </div>
-            <div v-else-if="!course?.possessed && store.user.isConnected" class="check">
-                <div v-if="Object.keys(store.cart.list).includes(props.id.toString())" class="alreadyInCart">
-                    Déjà dans le panier
-                </div>
-                <div v-else class="addToCart">
-                    <button class="bttn bttn-succ" @click="handleCart">
-                        <va-icon name="add_shopping_cart" />
-                    </button>
+                <div v-else-if="!course?.possessed && store.user.isConnected" class="check">
+                    <div v-if="Object.keys(store.cart.list).includes(props.id.toString())" class="alreadyInCart">
+                        Déjà dans le panier
+                    </div>
+                    <div v-else class="addToCart">
+                        <button class="bttn bttn-succ" @click="handleCart">
+                            <va-icon name="add_shopping_cart" />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -35,13 +35,21 @@ watchEffect(() => {
         <div>
           <RouterLink to="/list-courses">Tous les cours</RouterLink>
         </div>
-        <div
-          class="fill"
-          v-if="store.user.isConnected && store.user.isAdmin"
-        ></div>
+        <div class="fill" v-if="store.user.isConnected"></div>
+        <div>
+          <RouterLink v-if="store.user.isConnected" to="/list-mypurchases">Mes achats</RouterLink>
+        </div>
+
+        <div class="fill" v-if="store.user.isConnected && store.user.isTeacherValid"></div>
+        <div v-if="store.user.isConnected && store.user.isTeacherValid">
+          <RouterLink to="/db">Mes cours</RouterLink>
+        </div>
+
+        <div class="fill" v-if="store.user.isConnected && store.user.isAdmin"></div>
         <div v-if="store.user.isConnected && store.user.isAdmin">
           <RouterLink to="/db">Dashboard</RouterLink>
         </div>
+
       </div>
 
       <div class="item-nav left">
@@ -49,6 +57,12 @@ watchEffect(() => {
           <button class="bttn bttn-cart">
             <va-icon name="shopping_cart" style="position: absolute" />
             <div class="sc-count">{{ cartLen }}</div>
+          </button>
+        </RouterLink>
+
+        <RouterLink v-if="store.user.isConnected" to="/user/personal-data" style="color: black;">
+          <button class="bttn bttn-person">
+            <va-icon name="person"/>
           </button>
         </RouterLink>
 

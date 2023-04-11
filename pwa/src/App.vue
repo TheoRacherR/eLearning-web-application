@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { Modal } from "bootstrap";
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 
-import router from "./router";
-import { store } from "./store/store";
 
 import Footer from "./components/Default/Footer.vue";
 import Menu from "./components/Default/Menu.vue";
@@ -12,7 +10,6 @@ import LoginView from "./views/LoginView.vue";
 
 import { initData } from "./utils/initData";
 
-import toastr from "toastr";
 
 const modalRef = ref(null);
 const closeModal = () => Modal.getInstance(modalRef.value)?.hide();
@@ -67,15 +64,11 @@ const links3 = [
     link: "https://www.apple.com",
   },
 ];
-
-let showMessage = () => {
-  toastr.success("Ceci est un message", "", { timeOut: 100000 });
-};
 </script>
 
 <template>
   <header>
-    <Menu />
+    <Menu/>
 
     <div
       class="modal fade"
@@ -96,7 +89,7 @@ let showMessage = () => {
               aria-label="Close"
             ></button>
           </div>
-          <LoginView :closeModal="closeModal" />
+          <LoginView :closeModal="closeModal"/>
         </div>
       </div>
     </div>
@@ -106,9 +99,7 @@ let showMessage = () => {
     <Suspense> <RouterView /></Suspense>
   </main>
 
-  <button @click="showMessage">here</button>
-
-  <Footer :links1="links1" :links2="links2" :links3="links3" />
+  <Footer :links1="links1" :links2="links2" :links3="links3"/>
 </template>
 
 <style scoped>
@@ -132,7 +123,6 @@ div.message {
 div.close {
   flex: 1;
 }
-
 
 div.flash-message {
   margin: 1vw 15vw;

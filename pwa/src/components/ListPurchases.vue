@@ -10,10 +10,9 @@ const validItems = ref({});
 
 watchEffect(() => {
   items.value = store.courses.list;
-  console.log(items.value);
 
   for (const item in items.value) {
-    if (items.value[item].valid) {
+    if (items.value[item].possessed) {
       validItems.value = {
         ...validItems.value,
         [item]: { ...items.value[item] },
@@ -30,7 +29,7 @@ watchEffect(() => {
         <h1>Liste des cours :</h1>
         <div class="categories"></div>
         <div class="wrapper-item" v-for="item in validItems">
-            <ItemCourse :title="item.title" :description="item.description" :id="item.id" :addToCart="true"/>
+            <ItemCourse :title="item.title" :description="item.description" :id="item.id"/>
         </div>
     </div>
 </template>

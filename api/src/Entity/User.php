@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\DeleteUserController;
 use App\Controller\RequestPasswordController;
 use App\Controller\UpdateUserController;
 use App\Controller\ValidateAccountController;
@@ -18,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Phalcon\Forms\Form;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['write']],
 )]
 #[GetCollection(
-    // security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("ROLE_ADMIN")'
 )]
 #[Post(
     processor: UserAccountCreate::class
@@ -59,7 +61,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Patch(
     controller: UpdateUserController::class,
-    // security: 'is_granted("ROLE_ADMIN") or object === user'
+    security: 'is_granted("ROLE_ADMIN") or object === user'
 )]
 #[Delete(
     security: 'is_granted("ROLE_ADMIN")'
@@ -121,8 +123,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['read'])]
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: UserCourse::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $userCourses;
 
+    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private Collection $comments;
+
+    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private Collection $courses;
+
+    #[Groups(['read'])]
     #[ORM\Column]
     private ?bool $ban = false;
 

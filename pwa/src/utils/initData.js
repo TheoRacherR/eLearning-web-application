@@ -1,4 +1,4 @@
-import { listCourses, listComments, store } from "../store/store";
+import { listCourses, listUsers, listComments, store } from "../store/store";
 import axios from "axios";
 
 const getCourses = () => {
@@ -40,6 +40,40 @@ const getCourses = () => {
             resolve(list);
             
           });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const getUsers = () => {
+  return new Promise((resolve, reject) => {
+    const list = {};
+
+    axios
+      .get(import.meta.env.VITE_API_URL + "/users")
+      .then(({ data }) => {
+
+        
+        data["hydra:member"].map((item) => {
+
+          list[item.id] = {
+            id: item.id,
+            roles: item.roles,
+            mail: item.mail,
+            firstname: item.firstname,
+            lastname: item.lastname,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            last_activity: item.last_activity,
+            valid: item.valid,
+            ban: item.ban,
+            
+          };
+
+          resolve(list);
+        });
       })
       .catch((err) => {
         reject(err);
@@ -96,9 +130,11 @@ const getComments = () => {
 
 export const initData = async () => {
   const courses = await getCourses();
+  const users = await getUsers();  
   const comments = await getComments();
   store.setCart();
   listCourses.value = courses;
+  listUsers.value = users;  
   listComments.value = comments;
   store.setListCoursesInCart()
 
