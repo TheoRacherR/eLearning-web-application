@@ -138,6 +138,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $ban = false;
 
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Answer::class)]
+    private Collection $answers;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -146,6 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->lastActivity = new \DateTime();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -342,6 +346,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBan(bool $ban): self
     {
         $this->ban = $ban;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): self
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers->add($answer);
+            $answer->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): self
+    {
+        if ($this->answers->removeElement($answer)) {
+            // set the owning side to null (unless already changed)
+            if ($answer->getAccount() === $this) {
+                $answer->setAccount(null);
+            }
+        }
 
         return $this;
     }

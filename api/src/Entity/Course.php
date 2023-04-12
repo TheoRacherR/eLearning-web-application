@@ -88,6 +88,9 @@ class Course
     #[ORM\Column(length: 255)]
     private ?string $stripePriceId = null;
 
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $sequence = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -320,6 +323,18 @@ class Course
     public function setStripePriceId(string $stripePriceId): self
     {
         $this->stripePriceId = $stripePriceId;
+
+        return $this;
+    }
+
+    public function getSequence(): ?string
+    {
+        return $this->sequence;
+    }
+
+    public function setSequence(?string $sequence): self
+    {
+        $this->sequence = $sequence;
 
         return $this;
     }
