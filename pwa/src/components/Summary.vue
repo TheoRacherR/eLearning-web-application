@@ -143,7 +143,7 @@ const onSubmitCart = () => {
 
         </div>
 
-        <button class="bttn bttn-succ">Terminer la commande</button>
+        <button class="bttn bttn-succ" @click="onSubmitCart">Terminer la commande</button>
 
       </div>
 
