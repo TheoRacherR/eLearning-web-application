@@ -17,7 +17,7 @@ const initStore = {
     lastname: "",
     isAdmin: false,
     isTeacher: false,
-    isTeacherValid: bool,
+    teacherStatus: "",
     token: "",
   },
   courses: { list: {}, selected: null },
@@ -59,7 +59,7 @@ export const store = reactive({
   },
   setProf(isTeacher, isValid) {
     this.user.isTeacher = isTeacher;
-    this.user.isTeacherValid = isValid;
+    this.user.teacherStatus = "WAITING";
   },
   setCart() {
     this.cart.list = {};
@@ -114,7 +114,7 @@ export const store = reactive({
     this.user.lastname = initStore.lastname;
     this.user.isAdmin = initStore.user.isAdmin;
     this.user.isTeacher = initStore.user.isTeacher;
-    this.user.isTeacherValid = initStore.user.isTeacherValid;
+    this.user.teacherStatus = initStore.user.teacherStatus;
     this.user.token = initStore.user.token;
   },
 });

@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from "vue";
 import RightContainer from "./RightContainer.vue";
 import toastr from "toastr";
 import router from "../../router";
-import { store } from "../../store/store";
+import { listUsers, store } from "../../store/store";
 
 const former = ref({});
 
@@ -56,6 +56,9 @@ const handleSubmit = () => {
     .then(() => {
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
       store.setProf(true, false);
+      listUsers.value[store.user.id].teacherStatus = "WAITING";
+
+      router.push("/user/personal-data");
     })
     .catch((err) => {
       console.log("debug", err);
