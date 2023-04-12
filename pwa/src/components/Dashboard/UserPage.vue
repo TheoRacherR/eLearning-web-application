@@ -28,6 +28,8 @@ onMounted(async () => {
       })
       .catch((err) => {
         console.log("debug", err);
+        toastr.error(err.message, "", { timeOut: 3000})
+
       });
 
     user.value = {
@@ -50,6 +52,8 @@ watch(
         })
         .catch((err) => {
           console.log("debug", err);
+          toastr.error(err.message, "", { timeOut: 3000})
+
         });
 
       user.value = {
@@ -104,6 +108,8 @@ const handleSubmit = async () => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
+
     });
 };
 
@@ -126,6 +132,8 @@ const handleBanComments = (commentId) => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
+
     });
 };
 
@@ -142,6 +150,8 @@ const handleDeleteComments = (commentId) => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
+
     });
 };
 </script>

@@ -3,6 +3,7 @@ import axios from "axios";
 import { ref, watchEffect, onMounted } from "vue";
 import { store } from "../../store/store";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import toastr from "toastr";
 
 const editedCourseId = ref(null);
 const editedCourse = ref(null);
@@ -130,6 +131,7 @@ const editCourse = () => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
     });
 };
 
@@ -159,6 +161,7 @@ const reviewCourse = (isValid, id, rowIndex) => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
     });
 };
 
@@ -191,6 +194,7 @@ const handleCreate = () => {
     })
     .catch((err) => {
       console.log(err);
+      toastr.error(err.message, "", { timeOut: 3000})
     });
 };
 const resetCreate = () => {

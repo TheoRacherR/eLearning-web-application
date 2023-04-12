@@ -1,5 +1,6 @@
 import { listCourses, listUsers, listComments, store } from "../store/store";
 import axios from "axios";
+import toastr from "toastr";
 
 const getCourses = () => {
   return new Promise((resolve, reject) => {
@@ -44,6 +45,8 @@ const getCourses = () => {
       })
       .catch((err) => {
         reject(err);
+        toastr.error(err.message, "", { timeOut: 3000})
+
       });
   });
 };
@@ -96,6 +99,8 @@ const getUsers = () => {
       })
       .catch((err) => {
         reject(err);
+        toastr.error(err.message, "", { timeOut: 3000})
+
       });
   });
 };
@@ -141,6 +146,8 @@ const getComments = () => {
       })
       .catch((err) => {
         reject(err);
+        toastr.error(err.message, "", { timeOut: 3000})
+
       });
   });
 };

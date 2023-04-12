@@ -1,3 +1,60 @@
+<script setup>
+import { login } from "../utils/login";
+import { onMounted, ref } from "vue";
+import { store } from "./../store/store";
+import router from "../router";
+import { checkConnection } from "../utils/checkConnection";
+import toastr from "toastr"
+
+const props = defineProps({
+  closeModal: {
+    type: Function,
+    required: true,
+  },
+});
+
+const initObject = {
+  mail: "",
+  password: "",
+};
+const initialValue = {
+  ...initObject,
+};
+
+let errorShown = ref(false);
+let errorMessage = ref("");
+
+onMounted(() => {
+  checkConnection(false, false, "login");
+});
+
+const handleSubmit = () => {
+  login(initialValue.mail, initialValue.password)
+    .then(() => {
+      props.closeModal();
+
+      initialValue.mail = initObject.mail;
+      initialValue.password = initObject.password;
+      errorMessage.value = "";
+      errorShown.value = false;
+      toastr.success("Connecté", "", { timeOut: 3000})
+    })
+    .catch((err) => {
+      console.log("debug", err, err.response);
+      toastr.error(err.message, "", { timeOut: 3000})
+
+
+      errorShown.value = true;
+      errorMessage.value =
+        err.response?.data?.message || err.response?.data?.detail;
+    });
+};
+const navigateRegister = () => {
+  props.closeModal();
+  router.push("/register");
+};
+</script>
+
 <template>
   <div class="modal-body">
     <div v-show="errorShown" class="alert alert-danger" role="alert">
@@ -31,59 +88,3 @@ button.bttn-signin {
 
 
 </style>
-
-
-
-
-<script setup>
-import { login } from "../utils/login";
-import { onMounted, ref } from "vue";
-import { store } from "./../store/store";
-import router from "../router";
-import { checkConnection } from "../utils/checkConnection";
-
-const props = defineProps({
-  closeModal: {
-    type: Function,
-    required: true,
-  },
-});
-
-const initObject = {
-  mail: "",
-  password: "",
-};
-const initialValue = {
-  ...initObject,
-};
-
-let errorShown = ref(false);
-let errorMessage = ref("");
-
-onMounted(() => {
-  checkConnection(false, false, "login");
-});
-
-const handleSubmit = () => {
-  login(initialValue.mail, initialValue.password)
-    .then(() => {
-      props.closeModal();
-
-      initialValue.mail = initObject.mail;
-      initialValue.password = initObject.password;
-      errorMessage.value = "";
-      errorShown.value = false;
-    })
-    .catch((err) => {
-      console.log("debug", err, err.response);
-
-      errorShown.value = true;
-      errorMessage.value =
-        err.response?.data?.message || err.response?.data?.detail;
-    });
-};
-const navigateRegister = () => {
-  props.closeModal();
-  router.push("/register");
-};
-</script>

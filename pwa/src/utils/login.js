@@ -1,6 +1,7 @@
 import axios from "axios";
 import router from "./../router";
 import { store } from "../store/store";
+import toastr from "toastr";
 
 export const login = (mail, password) => {
   return new Promise((resolve, reject) => {
@@ -49,6 +50,8 @@ export const login = (mail, password) => {
       .catch((error) => {
         // Gestion des erreurs
         reject(error);
+        toastr.error(err.message, "", { timeOut: 3000})
+
       });
   });
 };

@@ -68,6 +68,8 @@ const updateStatus = (formerId, status, userId) => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
+
     });
 };
 </script>

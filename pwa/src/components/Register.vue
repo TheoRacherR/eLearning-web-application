@@ -1,3 +1,42 @@
+<script setup>
+import axios from "axios";
+import { login } from "../utils/login";
+import { onMounted } from "vue";
+import { store } from "./../store/store";
+import router from "../router";
+import { checkConnection } from "../utils/checkConnection";
+import toastr from "toastr";
+
+onMounted(() => {
+  checkConnection(true, false, "register");
+});
+
+const initialValue = {
+  password: "",
+  mail: "",
+  firstname: "",
+  lastname: "",
+};
+
+const handleSubmit = () => {
+  axios
+    .post(import.meta.env.VITE_API_URL + "/users", {
+      password: initialValue.password,
+      mail: initialValue.mail,
+      firstname: initialValue.firstname,
+      lastname: initialValue.lastname,
+    })
+    .then(() => {
+      router.push("/");
+      toastr.success("Compte créé", "", { timeOut: 3000})
+    })
+    .catch((error) => {
+      // Gestion des erreurs
+      toastr.error(error.message, "", { timeOut: 3000})
+    });
+};
+</script>
+
 <template>
   <div class="container mt-4">
     <form @submit.prevent="handleSubmit">
@@ -48,45 +87,7 @@
   
 </template>
 
+
 <style scoped>
-
-
 </style>
 
-
-<script setup>
-import axios from "axios";
-import { login } from "../utils/login";
-import { onMounted } from "vue";
-import { store } from "./../store/store";
-import router from "../router";
-import { checkConnection } from "../utils/checkConnection";
-
-onMounted(() => {
-  checkConnection(true, false, "register");
-});
-
-const initialValue = {
-  password: "",
-  mail: "",
-  firstname: "",
-  lastname: "",
-};
-
-const handleSubmit = () => {
-  axios
-    .post(import.meta.env.VITE_API_URL + "/users", {
-      password: initialValue.password,
-      mail: initialValue.mail,
-      firstname: initialValue.firstname,
-      lastname: initialValue.lastname,
-    })
-    .then(() => {
-      router.push("/");
-    })
-    .catch((error) => {
-      // Gestion des erreurs
-      console.log(error);
-    });
-};
-</script>

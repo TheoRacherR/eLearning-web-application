@@ -28,6 +28,8 @@ onMounted(async () => {
       })
       .catch((err) => {
         console.log("debug", err);
+        toastr.error(err.message, "", { timeOut: 3000})
+
       });
 
     course.value = {
@@ -49,6 +51,8 @@ watch(
         })
         .catch((err) => {
           console.log("debug", err);
+          toastr.error(err.message, "", { timeOut: 3000})
+
         });
 
       course.value = {
@@ -80,6 +84,8 @@ const handleSubmit = async () => {
     })
     .catch((err) => {
       console.log("debug", err);
+      toastr.error(err.message, "", { timeOut: 3000})
+
     });
 };
 </script>
