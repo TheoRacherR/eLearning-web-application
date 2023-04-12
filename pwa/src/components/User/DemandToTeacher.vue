@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from "vue";
 import RightContainer from "./RightContainer.vue";
 import toastr from "toastr";
 import router from "../../router";
-import { store } from "../../store/store";
+import { listUsers, store } from "../../store/store";
 
 const former = ref({});
 const validIban = ref(false);
@@ -53,6 +53,9 @@ const handleSubmit = () => {
     .then(() => {
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
       store.setProf(true, false);
+      listUsers.value[store.user.id].teacherStatus = "WAITING";
+
+      router.push("/user/personal-data");
     })
     .catch((err) => {
       console.log("debug", err);
@@ -96,13 +99,13 @@ const verifIban = () => {
       <label>IBAN</label>
       <div class="firstline">
         <div class="input-item firstIban">
-          <input class="innput" v-model="firstIban.value" placeholder="FR" />
+          <input class="innput" v-model="firstIban" placeholder="FR" />
         </div>
         <div class="input-item secondIban">
-          <input class="innput" v-model="secondIban.value" placeholder="76" />
+          <input class="innput" v-model="secondIban" placeholder="76" />
         </div>
         <div class="input-item lastIban">
-          <input class="innput" v-model="lastIban.value" placeholder="" />
+          <input class="innput" v-model="lastIban" placeholder="" />
         </div>
       </div>
       <div class="input-item">

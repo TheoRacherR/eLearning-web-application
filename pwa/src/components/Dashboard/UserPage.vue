@@ -64,7 +64,7 @@ watch(
 const courses = ref({});
 watchEffect(() => {
   const values = Object.values(store.courses.list);
-  const possessed = values.filter((item) => !item.possessed);
+  const possessed = values.filter((item) => item.possessed);
   const object = {};
   possessed.map((item) => (object[item.id] = item));
 
