@@ -89,7 +89,7 @@ const handleSubmit = async (courseId, value) => {
               <td v-else>-</td>
 
               <td v-if="c.content.length > 0">
-                {{ c.content.slice(0, 75) }}...
+                {{ c.content.slice(0, 300) }}
               </td>
               <td v-else>-</td>
 

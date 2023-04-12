@@ -5,6 +5,7 @@ import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import axios from "axios";
 import { initData } from "../utils/initData";
+import toastr from "toastr";
 
 const { user } = store;
 
@@ -74,26 +75,30 @@ const closeCommenting = () => {
 };
 
 const submitComment = () => {
-  const body = {
-    course: "courses/" + courseId,
-    userId: "users/" + user.id,
-    star: Math.round(rating.value),
-    content: comment.value,
-  };
+  if (comment.value.length > 300) {
+    toastr.error("Trop long ", "", { timeOut: 3000 });
+  } else {
+    const body = {
+      course: "courses/" + courseId,
+      userId: "users/" + user.id,
+      star: Math.round(rating.value),
+      content: comment.value,
+    };
 
-  axios
-    .post(import.meta.env.VITE_API_URL + "/comments", body, {
-      headers: {
-        Authorization: `Bearer ${store.user.token}`,
-      },
-    })
-    .then(() => {
-      initData();
-      closeCommenting();
-    })
-    .catch((err) => {
-      console.log("dbeug", err);
-    });
+    axios
+      .post(import.meta.env.VITE_API_URL + "/comments", body, {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      })
+      .then(() => {
+        initData();
+        closeCommenting();
+      })
+      .catch((err) => {
+        console.log("dbeug", err);
+      });
+  }
 };
 
 watch(rating, () => {

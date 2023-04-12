@@ -74,12 +74,10 @@ const handleDelete = (commentId) => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Cours</th>
+              <th>Commentaire</th>
               <!-- Titre du cours-->
               <th>Auteur</th>
               <!--Prénom + Nom-->
-              <th>Commentaire</th>
-              <!-- Content du commentaire slice à un nombre N-->
               <th>Note</th>
               <!--Note du commentaire: Etoiles visuels si possible sinon Int-->
               <th>Date</th>
@@ -95,7 +93,7 @@ const handleDelete = (commentId) => {
               <td v-else>-</td>
 
               <td v-if="comment.content.length > 0">
-                {{ comment.content.slice(0, 75) }}...
+                {{ comment.content.slice(0, 300) }}
               </td>
               <td v-else>-</td>
 
@@ -114,10 +112,6 @@ const handleDelete = (commentId) => {
               >
                 -
               </td>
-
-              <RouterLink :to="`/detail/${comment.course_id}`">
-                <td>Details</td>
-              </RouterLink>
 
               <td v-if="comment.star > 0">{{ comment.star }}/5</td>
               <td v-else>-</td>
