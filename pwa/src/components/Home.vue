@@ -19,7 +19,6 @@ watchEffect(() => {
   let count = 0
 
   for (const item in items.value) {
-    console.log(item);
     if (items.value[item].valid) {
       validItems.value = {
         ...validItems.value,

@@ -67,13 +67,19 @@ const router = createRouter({
       component: () => import("../components/Dashboard/UserPage.vue"),
     },
 
+    //Page d'un cours
+    {
+      path: "/db/course/:id",
+      name: "course_page",
+      component: () => import("../components/Dashboard/CoursePage.vue"),
+    },
+
     //Page de backoffice à supprimer
     {
       path: "/dashboard",
       name: "dashboard",
       component: () => import("../components/Dashboard.vue"),
     },
-
 
     //Inscription
     {
@@ -128,34 +134,34 @@ const router = createRouter({
     {
       path: "/summary",
       name: "summary",
-      component: () => import('../components/Summary.vue'),
+      component: () => import("../components/Summary.vue"),
     },
 
     //Liens les pages de son compte
     {
       path: "/user/personal-data",
       name: "user-personal-data",
-      component: () => import('../components/User/MyUserPage.vue'),
+      component: () => import("../components/User/MyUserPage.vue"),
     },
     {
       path: "/user/confidentiality",
       name: "user-confidentiality",
-      component: () => import('../components/User/Confidentiality.vue'),
+      component: () => import("../components/User/Confidentiality.vue"),
     },
     {
       path: "/user/newsletter",
       name: "user-newsletter",
-      component: () => import('../components/User/Newsletter.vue'),
+      component: () => import("../components/User/Newsletter.vue"),
     },
     {
       path: "/user/mypayment",
       name: "user-mypayment",
-      component: () => import('../components/User/Payment.vue'),
+      component: () => import("../components/User/Payment.vue"),
     },
     {
       path: "/user/mypurchases",
       name: "user-mypurchases",
-      component: () => import('../components/User/Purchases.vue'),
+      component: () => import("../components/User/Purchases.vue"),
     },
   ],
 });

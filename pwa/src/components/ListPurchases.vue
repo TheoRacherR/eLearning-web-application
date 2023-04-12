@@ -37,6 +37,7 @@ watchEffect(() => {
         <ItemCourse
           :title="item.title"
           :description="item.description"
+          :image="item.image"
           :id="item.id"
         />
       </div>

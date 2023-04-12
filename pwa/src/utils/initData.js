@@ -17,7 +17,6 @@ const getCourses = () => {
               courseId:
                 item.course.split("/")[item.course.split("/").length - 1],
             }));
-            console.log(data["hydra:member"])
 
             data["hydra:member"].map((item) => {
               const possessed = userCourses.some((uc) => {
@@ -41,7 +40,6 @@ const getCourses = () => {
             });
 
             resolve(list);
-
           });
       })
       .catch((err) => {
@@ -57,10 +55,7 @@ const getUsers = () => {
     axios
       .get(import.meta.env.VITE_API_URL + "/users")
       .then(({ data }) => {
-
-        
         data["hydra:member"].map((item) => {
-
           list[item.id] = {
             id: item.id,
             roles: item.roles,
@@ -72,7 +67,6 @@ const getUsers = () => {
             last_activity: item.last_activity,
             valid: item.valid,
             ban: item.ban,
-            
           };
 
           resolve(list);
@@ -94,14 +88,13 @@ const getComments = () => {
         axios
           .get(import.meta.env.VITE_API_URL + "/users")
           .then(({ data: { ["hydra:member"]: usersRaw } }) => {
-
-
             data["hydra:member"].map((item) => {
               let usr;
-              for(let i in Object.values(usersRaw)){
-                let userId = item.user_id.split("/")[item.user_id.split("/").length - 1];
+              for (let i in Object.values(usersRaw)) {
+                let userId =
+                  item.user_id.split("/")[item.user_id.split("/").length - 1];
                 let id = Object.values(usersRaw)[i].id;
-                if(id === parseInt(userId)){
+                if (id === parseInt(userId)) {
                   usr = Object.values(usersRaw)[i];
                   break;
                 }
@@ -109,8 +102,8 @@ const getComments = () => {
 
               list[item.id] = {
                 id: item.id,
-                user_id: item.user_id,
-                course_id: item.course_id,
+                user_id: item.user_id.split("/")[2],
+                course_id: item.course.split("/")[2],
                 content: item.content,
                 star: item.star,
                 created_at: item.created_at,
@@ -122,7 +115,6 @@ const getComments = () => {
             });
 
             resolve(list);
-
           });
       })
       .catch((err) => {
@@ -133,17 +125,16 @@ const getComments = () => {
 
 export const initData = async () => {
   const courses = await getCourses();
-  const users = await getUsers();  
+  const users = await getUsers();
   const comments = await getComments();
   store.setCart();
   listCourses.value = courses;
-  listUsers.value = users;  
+  listUsers.value = users;
   listComments.value = comments;
-  store.setListCoursesInCart()
+  store.setListCoursesInCart();
 
   let arr = [];
   if (localStorage.getItem("CART") === null) {
     localStorage.setItem("CART", JSON.stringify(arr));
   }
-
 };

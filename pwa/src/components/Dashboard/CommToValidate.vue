@@ -1,151 +1,176 @@
 <script setup>
-
-import LeftDashboard from './LeftDashboard/LeftDashboard.vue';
-import { RouterLink } from 'vue-router'
-import router from '../../router';
+import { ref, watchEffect } from "vue";
+import { RouterLink } from "vue-router";
+import router from "../../router";
 import { store } from "../../store/store";
 import toastr from "toastr";
+import axios from "axios";
 
-if(!store.user.isConnected){
-  router.push("/")
+import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
+
+if (!store.user.isConnected) {
+  router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+} else if (!store.user.isAdmin) {
+  router.push("/");
+  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
+    timeOut: 3000,
+  });
 }
-else if(!store.user.isAdmin){
-  router.push("/")
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
-}
 
+const items = ref({});
+const invalidItems = ref({});
 
-const content = [
-    {
-        id: 1,
-        user_id: {
-            id: 2,
-            firstname: "Michele",
-            lastname: "Obama",
+watchEffect(() => {
+  items.value = store.comments.list;
+
+  for (const item in items.value) {
+    if (items.value[item].valid == 0) {
+      invalidItems.value = {
+        ...invalidItems.value,
+        [item]: { ...items.value[item] },
+      };
+    }
+  }
+});
+
+const handleSubmit = async (courseId, value) => {
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + `/comments/${courseId}`,
+      {
+        valid: value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
         },
-        course: {
-            id: 1,
-            title: "Comment devenir très riche, très rapidement"
-        },
-        content: "Ce cours n'est pas vraiment approprié, je souhaite qu'il soit supprimé de la liste",
-        star: 0.5,
-        valid: false,
-        created_at: "2022-01-25 00:01:00",
-    },    
-]
-
+      }
+    )
+    .then(() => {
+      if (value == 1) {
+        toastr.success("Commentaire accepté", "", { timeOut: 3000 });
+      } else if (value == 2) {
+        toastr.warning("Commentaire refusé", "", { timeOut: 3000 });
+      }
+      delete invalidItems.value[courseId];
+    });
+};
 </script>
 
-
-
 <template>
-    <div class="container-dashboard">
+  <div class="container-dashboard">
+    <LeftDashboard />
+    <div class="container-commlist">
+      <h2>Liste des commentaires:</h2>
+      <div class="container-grid">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cours</th>
+              <!-- Titre du cours-->
+              <th>Auteur</th>
+              <!--Prénom + Nom-->
+              <th>Commentaire</th>
+              <!-- Content du commentaire slice à un nombre N-->
+              <th>Note</th>
+              <!--Note du commentaire: Etoiles visuels si possible sinon Int-->
+              <th>Date</th>
+              <!-- Created at en DD/MM/AAAA-->
+              <th>Validé ?</th>
+              <!-- Commentaire validé ?-->
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="c in invalidItems">
+              <td v-if="c.id > 0">{{ c.id }}</td>
+              <td v-else>-</td>
 
-        <LeftDashboard/>
-        <div class="container-commlist">      
+              <td v-if="c.content.length > 0">
+                {{ c.content.slice(0, 300) }}
+              </td>
+              <td v-else>-</td>
 
-            <h2>Liste des commentaires: </h2>
-            <div class="container-grid">
+              <td v-if="c.firstname.length > 0 || c.lastname.length > 0">
+                {{ c.firstname + " " + c.lastname }}
+              </td>
+              <td
+                v-else-if="c.firstname.length === 0 && c.lastname.length === 0"
+              >
+                -
+              </td>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Cours</th> <!-- Titre du cours-->
-                            <th>Auteur</th> <!--Prénom + Nom-->
-                            <th>Commentaire</th> <!-- Content du commentaire slice à un nombre N-->
-                            <th>Note</th> <!--Note du commentaire: Etoiles visuels si possible sinon Int-->
-                            <th>Date</th> <!-- Created at en DD/MM/AAAA-->
-                            <th>Validé ?</th> <!-- Commentaire validé ?-->
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="c in content">
-                            <td v-if="c.id > 0">{{ c.id }}</td>
-                            <td v-else>-</td>
+              <RouterLink :to="`/detail/${c.course_id}`">
+                <td>Details</td>
+              </RouterLink>
 
-                            <td v-if="c.content.length > 0 ">{{ c.content.slice(0, 75) }}...</td>
-                            <td v-else>-</td>
+              <td v-if="c.star > 0">{{ c.star }}/5</td>
+              <td v-else>-</td>
 
-                            <td v-if="c.user_id.firstname.length > 0 || c.user_id.lastname.length > 0">{{ c.user_id.firstname + ' ' + c.user_id.lastname }}</td>
-                            <td v-else-if="c.user_id.firstname.length === 0 && c.user_id.lastname.length === 0">-</td>
+              <td>{{ c.created_at }}</td>
 
-                            <RouterLink to="/detail/1">
-                                <td v-if="c.course.title.length > 0 ">{{ c.course.title.slice(0,20) }}...</td>
-                                <td v-else>-</td>
-                            </RouterLink>
+              <td class="waiting"><va-icon name="hourglass_empty" /></td>
 
-                            <td v-if="c.star > 0 ">{{ c.star }}</td>
-                            <td v-else>-</td>
-
-                            <td>{{ c.created_at }}</td>
-
-                            <td class="verifed" v-if="c.valid === true"><va-icon name="verified"/></td>
-                            <td class="waiting" v-else><va-icon name="hourglass_empty"/></td>
-
-                            <td>
-                                <button class="bttn bttn-succ"><va-icon name="done"/></button> <!--Autoriser le commentaire -->
-                                <button class="bttn bttn-dng"><va-icon name="close"/></button> <!--Bannir-->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    
+              <td>
+                <button class="bttn bttn-succ" @click="handleSubmit(c.id, 1)">
+                  <va-icon name="done" />
+                </button>
+                <!--Valider-->
+                <button class="bttn bttn-dng" @click="handleSubmit(c.id, 2)">
+                  <va-icon name="close" />
+                </button>
+                <!--Rejeter-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </template>
 
-
-
 <style lang="scss" scoped>
-
 div.container-dashboard {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    /* background-color: aqua; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  /* background-color: aqua; */
 
-    div.container-commlist {
-        padding: 2rem 5rem;
-        width: 90%;
+  div.container-commlist {
+    padding: 2rem 5rem;
+    width: 90%;
 
-        div.container-grid {
-            display: grid;
-            grid-auto-columns: auto;
-            grid-auto-rows: auto;
+    div.container-grid {
+      display: grid;
+      grid-auto-columns: auto;
+      grid-auto-rows: auto;
 
-            thead {
-                background-color: rgb(63, 133, 118);
-                color: #fff;
-            }
-            th, td {
-                padding: 1rem;
-            }
+      thead {
+        background-color: rgb(63, 133, 118);
+        color: #fff;
+      }
+      th,
+      td {
+        padding: 1rem;
+      }
+      td button {
+        margin-right: 1rem;
+      }
 
-            td.verifed{
-                color: #52b425;
-            }
+      td.verifed {
+        color: #52b425;
+      }
 
-            td.waiting {
-                color: rgb(168, 43, 43);
-            }
-            
-            tbody tr:nth-child(even) {
-                background-color: #f5f5f5;
-            }
+      td.waiting {
+        color: rgb(168, 43, 43);
+      }
 
-
-
-        }
-    
+      tbody tr:nth-child(even) {
+        background-color: #f5f5f5;
+      }
     }
+  }
 }
-
-
-
-
 </style>

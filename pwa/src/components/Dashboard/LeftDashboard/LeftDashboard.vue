@@ -4,15 +4,26 @@ import { RouterLink } from "vue-router";
 import { store } from "../../../store/store";
 import { ref, watchEffect } from "vue";
 
-const items = ref({});
-let countInvalidItem = ref(0);
+const itemsCourse = ref({});
+let countInvalidItemCourse = ref(0);
+
+const itemsComment = ref({});
+let countInvalidItemComment = ref(0);
 
 watchEffect(() => {
-  items.value = store.courses.list;
+  itemsCourse.value = store.courses.list;
 
-  for (const item in items.value) {
-    if (!items.value[item].valid) {
-      countInvalidItem.value += 1;
+  for (const item in itemsCourse.value) {
+    if (itemsCourse.value[item].valid == 0) {
+      countInvalidItemCourse.value += 1;
+    }
+  }
+
+  itemsComment.value = store.comments.list;
+
+  for (const item in itemsComment.value) {
+    if (itemsComment.value[item].valid == 0) {
+      countInvalidItemComment.value += 1;
     }
   }
 });
@@ -25,7 +36,9 @@ watchEffect(() => {
     </RouterLink>
     <div class="fill-title"></div>
 
-    <div class="box">
+    <button v-if="store.user.isTeacher" class="bttn bttn-succ">Créer un cours</button>
+
+    <div class="box" v-if="store.user.isAdmin">
       <h5>Utilisateurs</h5>
       <div class="fill-title"></div>
       <RouterLink to="/db/user-list">
@@ -42,7 +55,7 @@ watchEffect(() => {
       </RouterLink>
     </div>
 
-    <div class="box">
+    <div class="box" v-if="store.user.isAdmin">
       <h5>Cours</h5>
       <div class="fill-title"></div>
       <RouterLink to="/db/course-list">
@@ -52,9 +65,9 @@ watchEffect(() => {
         <va-icon name="chevron_right" />
       </RouterLink>
       <RouterLink to="/db/to-valid-course">
-        <div v-if="countInvalidItem > 0" class="container-tab">
+        <div v-if="countInvalidItemCourse > 0" class="container-tab">
           <va-icon name="menu_book" size="small" />À valider ({{
-            countInvalidItem
+            countInvalidItemCourse
           }})
         </div>
         <div v-else class="container-tab">
@@ -64,7 +77,7 @@ watchEffect(() => {
       </RouterLink>
     </div>
 
-    <div class="box">
+    <div class="box" v-if="store.user.isAdmin">
       <h5>Commentaires</h5>
       <div class="fill-title"></div>
       <RouterLink to="/db/comm-list">
@@ -74,13 +87,12 @@ watchEffect(() => {
         <va-icon name="chevron_right" />
       </RouterLink>
       <RouterLink to="/db/to-valid-comm">
-        <!--<div v-if="countInvalidItem > 0" class="container-tab">
-            <va-icon name="menu_book" size="small"/>À valider ({{ countInvalidItem }})
-          </div>
-          <div v-else class="container-tab">
-            <va-icon name="menu_book" size="small"/>À valider
-          </div>-->
-        <div class="container-tab">
+        <div v-if="countInvalidItemComment > 0" class="container-tab">
+          <va-icon name="chat" size="small" />À valider ({{
+            countInvalidItemComment
+          }})
+        </div>
+        <div v-else class="container-tab">
           <va-icon name="chat" size="small" />À valider
         </div>
         <va-icon name="chevron_right" />
@@ -91,7 +103,7 @@ watchEffect(() => {
 
 <style lang="scss" scoped>
 div.left-board {
-  width: 15vw;
+  width: 20vw;
   min-height: 100vh;
   padding-top: 1rem;
   background-color: #262c31;

@@ -31,13 +31,16 @@ const getRole = (roles) => {
   roles.map((item) => {
     switch (item) {
       case "ROLE_USER":
-        role += "Utilisateur ";
+        role += "User";
+        break;
+      case "ROLE_FORMER":
+        role += "Teacher";
         break;
       case "ROLE_ADMIN":
-        role += "Administrateur ";
+        role += "Admin ";
         break;
-
       default:
+        role = "-";
         break;
     }
   });
@@ -123,10 +126,8 @@ const handleDelete = (userId) => {
               </td>
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
-              <td class="verifed" v-if="user.ban === true">
-                <va-icon name="verified" />
-              </td>
-              <td class="waiting" v-else><va-icon name="close" /></td>
+              <td v-if="user.ban === true">Oui</td>
+              <td v-else>Non</td>
 
               <td>
                 <button class="bttn bttn-wng">
@@ -135,10 +136,10 @@ const handleDelete = (userId) => {
                   /></RouterLink>
                 </button>
                 <!--Aller sur la page-->
-                <button class="bttn bttn-dng-out" v-if="user.ban === true">
+                <button class="bttn bttn-succ-out banned" v-if="user.ban === true">
                   <va-icon name="refresh" @click="handleBan(user.id)" />
                 </button>
-                <button class="bttn bttn-dng-out" v-else>
+                <button class="bttn bttn-dng-out not-banned" v-else>
                   <va-icon name="block" @click="handleBan(user.id)" />
                 </button>
                 <!--Bannir-->
@@ -180,12 +181,20 @@ div.container-dashboard {
         padding: 1rem;
       }
 
+      td button {
+        margin-right: 1rem;
+      }
+
       td.verifed {
         color: #52b425;
       }
 
       td.waiting {
         color: rgb(168, 43, 43);
+      }
+      
+      td button.banned {
+        color: #52b425;
       }
 
       td button a {
