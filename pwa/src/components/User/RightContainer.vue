@@ -1,4 +1,6 @@
 <script setup>
+import { store } from "../../store/store";
+
 const props = defineProps({
   page: {
     type: String,
@@ -33,6 +35,16 @@ const links = [
     icon: "attach_file",
   },
 ];
+
+if (!store.user.isTeacher)
+  links = [
+    ...links,
+    {
+      name: "Demande de passange en Professeur",
+      link: "demand-teacher",
+      icon: "school",
+    },
+  ];
 </script>
 
 <template>
