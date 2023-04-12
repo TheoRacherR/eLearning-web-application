@@ -32,6 +32,11 @@ const links = [
     link: "confidentiality",
     icon: "attach_file",
   },
+  {
+    name: "Demande de passange en Professeur",
+    link: "demand-teacher",
+    icon: "school",
+  },
 ];
 </script>
 

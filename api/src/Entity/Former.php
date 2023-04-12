@@ -18,31 +18,31 @@ use Gedmo\Timestampable;
 #[ApiResource]
 
 #[GetCollection(
-    // security: ':("ROLE_ADMIN")'
+    // security: 'is_granted("ROLE_ADMIN")'
 )]
 
 #[Get(
-    security: 'object.user_id === user or :("ROLE_ADMIN")'
+    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Post(
-    security: ':("IS_AUTHENTICATED_FULLY") or :("ROLE_ADMIN")'
+    security: 'is_granted("IS_AUTHENTICATED_FULLY") or is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Delete(
-    security: ':("ROLE_ADMIN")'
+    security: 'is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Put(
-    security: 'object.user_id === user or :("ROLE_ADMIN")'
+    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Patch(
-    security: 'object.user_id === user or :("ROLE_ADMIN")'
+    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
 )]
 
 
