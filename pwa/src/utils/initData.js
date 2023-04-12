@@ -55,22 +55,44 @@ const getUsers = () => {
     axios
       .get(import.meta.env.VITE_API_URL + "/users")
       .then(({ data }) => {
-        data["hydra:member"].map((item) => {
-          list[item.id] = {
-            id: item.id,
-            roles: item.roles,
-            mail: item.mail,
-            firstname: item.firstname,
-            lastname: item.lastname,
-            created_at: item.created_at,
-            updated_at: item.updated_at,
-            last_activity: item.last_activity,
-            valid: item.valid,
-            ban: item.ban,
-          };
+        axios
+          .get(import.meta.env.VITE_API_URL + "/formers")
+          .then(({ data: { ["hydra:member"]: formerRaw } }) => {
+            const formers = formerRaw.map((item) => ({
+              id: item.id,
+              userId: parseInt(
+                item.userId.split("/")[item.userId.split("/").length - 1]
+              ),
+              status: item.status,
+            }));
 
-          resolve(list);
-        });
+            data["hydra:member"].map((item) => {
+              list[item.id] = {
+                id: item.id,
+                roles: item.roles,
+                mail: item.mail,
+                firstname: item.firstname,
+                lastname: item.lastname,
+                created_at: item.created_at,
+                updated_at: item.updated_at,
+                last_activity: item.last_activity,
+                valid: item.valid,
+                ban: item.ban,
+              };
+
+              formers.map((former) => {
+                if (former.userId === item.id) {
+                  list[item.id] = {
+                    ...list[item.id],
+                    teacherId: former.id,
+                    isTeacher: true,
+                    teacherStatus: former.status,
+                  };
+                }
+              });
+            });
+            resolve(list);
+          });
       })
       .catch((err) => {
         reject(err);
