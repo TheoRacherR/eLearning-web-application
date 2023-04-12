@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    required: false,
+  },
   id: {
     type: Number,
     required: true,
@@ -47,7 +51,8 @@ const handleCart = () => {
 <template>
     <div class="container-item">
         <RouterLink :to="`/detail/${props.id}`">
-            <img src="https://via.placeholder.com/250x250" alt="image of the course">
+            <img v-if="props.image !== null" src="../../../public/not-found.png" alt="not found image">
+            <img v-else :src="props.image" alt="image of the product" />
         </RouterLink>
         <div class="right-box">
             <RouterLink :to="`/detail/${props.id}`">
