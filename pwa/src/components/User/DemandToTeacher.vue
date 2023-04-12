@@ -7,28 +7,30 @@ import router from "../../router";
 import { store } from "../../store/store";
 
 const former = ref({});
-const validIban = ref(false);
-const validOwner = ref(false);
-const validBank = ref(false);
 
 const firstIban = ref("");
 const secondIban = ref("");
 const lastIban = ref("");
+
+const firstIbanValid = ref(false);
+const secondIbanValid = ref(false);
+const lastIbanValid = ref(false);
+
 
 if (!store.user.isConnected) {
   router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
 }
 
-onMounted(async () => {
-  if (store.user.token) {
-    former.value = {
-      accountOwner: "",
-      accountBankName: "",
-      accountIban: "",
-    };
+onMounted(() => {
+  former.value = {
+    accountOwner: "",
+    accountBankName: "",
+    accountIban: "",
+
   }
-});
+})
+
 
 const handleSubmit = () => {
   axios
@@ -59,34 +61,69 @@ const handleSubmit = () => {
     });
 };
 
-const verifIban = () => {
-  setTimeout(() => {
-    let iban = former.accountIban.toUpperCase();
-
-    if (iban.substring(0, 2) === "FR") {
-      //IBAN FR
-      //Pour fr :
-      //commence par 2 lettres
-      //taille total 27 carac
-      //pas d'espace
-      if (
-        parseInt(iban.substring(2, 2)) >= 2 &&
-        parseInt(iban.substring(2, 2)) <= 98
-      ) {
-        if (iban.substring(4).length == 27) {
-          console.log("IBAN valide");
-        }
+const focusOnNext = (e) => {
+  switch(e) {
+    case "first":
+      firstIban.value = firstIban.value.toUpperCase()
+      if(firstIban.value.length === 2){
+        document.getElementById("secondIban").focus()
       }
-    } else {
-      //IBAN non FR
-    }
+      else if(firstIban.value.length >= 2){
+        firstIban.value = firstIban.value.substring(0,2);
+      }
+      break;
 
-    //Pour autre :
-    //2 premiers: 2 lettres
-    //2 suivant: clé de controle donc 2 chiffres de 02 à 98
-    //suivant 30 max
-  }, 2000);
-};
+    case "second":
+      secondIban.value = secondIban.value.toUpperCase()
+      if(secondIban.value.length === 2){
+        document.getElementById("lastIban").focus()
+      }
+      else if(secondIban.value.length >= 2){
+        secondIban.value = secondIban.value.substring(0,2);
+      }
+      break;
+
+    case "last":
+      lastIban.value = lastIban.value.toUpperCase()
+      if(lastIban.value.length === 23){
+        document.getElementById("bankName").focus()
+      }
+      else if(lastIban.value.length >= 2){
+        lastIban.value.substring(0,2);
+      }
+      break;
+
+      case "name":
+      former.value.accountOwner = former.value.accountOwner.toUpperCase()
+      break;
+  }
+
+  former.value.accountIban = firstIban.value + secondIban.value + lastIban.value;
+}
+
+const checkSizeIban = () => {
+  switch(e) {
+    case "first":
+      if(firstIban.value.length < 2){
+        document.getElementById("secondIban").focus()
+      }
+      break;
+
+    case "second":
+      if(secondIban.value.length < 2){
+        document.getElementById("lastIban").focus()
+      }
+      break;
+
+    case "last":
+      if(lastIban.value.length < 23){
+        document.getElementById("bankName").focus()
+      }
+      break;
+  }
+}
+
+
 </script>
 
 <template>
@@ -96,23 +133,23 @@ const verifIban = () => {
       <label>IBAN</label>
       <div class="firstline">
         <div class="input-item firstIban">
-          <input class="innput" v-model="firstIban.value" placeholder="FR" />
+          <input class="innput" id="firstIban" @input="focusOnNext('first')" v-model="firstIban" placeholder="FR" />
         </div>
         <div class="input-item secondIban">
-          <input class="innput" v-model="secondIban.value" placeholder="76" />
+          <input class="innput" id="secondIban" @input="focusOnNext('second')" v-model="secondIban" placeholder="76" />
         </div>
         <div class="input-item lastIban">
-          <input class="innput" v-model="lastIban.value" placeholder="" />
+          <input class="innput" id="lastIban" @input="focusOnNext('last')" v-model="lastIban" placeholder="" />
         </div>
       </div>
       <div class="input-item">
         <label :for="former.accountBankName">Banque</label>
-        <input class="innput" v-model="former.accountBankName" />
+        <input class="innput" id="bankName" v-model="former.accountBankName" />
       </div>
 
       <div class="input-item">
         <label :for="former.accountOwner">Nom du compte banquaire</label>
-        <input class="innput" v-model="former.accountOwner" />
+        <input class="innput" @input="focusOnNext('name')" v-model="former.accountOwner" />
       </div>
 
       <button class="bttn bttn-wng" @click="handleSubmit">
