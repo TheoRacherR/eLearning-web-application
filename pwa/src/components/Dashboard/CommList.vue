@@ -2,11 +2,12 @@
 import { ref, watchEffect } from "vue";
 import { RouterLink } from "vue-router";
 import router from "../../router";
-import { store } from "../../store/store";
+import { listComments, store } from "../../store/store";
 import toastr from "toastr";
 
 import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 import ItemCourse from "../Courses/ItemCourse.vue";
+import axios from "axios";
 
 if (!store.user.isConnected) {
   router.push("/");
@@ -23,6 +24,44 @@ const items = ref({});
 watchEffect(() => {
   items.value = store.comments.list;
 });
+
+const handleBan = (commentId) => {
+  const value = listComments.value[commentId].valid === 2 ? 1 : 2;
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + "/comments/" + commentId,
+      { valid: value },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      listComments.value[commentId].valid = value;
+
+      toastr.success("Commentaire banni", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
+
+const handleDelete = (commentId) => {
+  axios
+    .delete(import.meta.env.VITE_API_URL + "/comments/" + commentId, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+      delete listComments.value[commentId];
+      toastr.success("Commentaire supprimé", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
 </script>
 
 <template>
@@ -51,51 +90,63 @@ watchEffect(() => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="c in items">
-              <td v-if="c.id > 0">{{ c.id }}</td>
+            <tr v-for="comment in items">
+              <td v-if="comment.id > 0">{{ comment.id }}</td>
               <td v-else>-</td>
 
-              <td v-if="c.content.length > 0">
-                {{ c.content.slice(0, 75) }}...
+              <td v-if="comment.content.length > 0">
+                {{ comment.content.slice(0, 75) }}...
               </td>
               <td v-else>-</td>
 
-              <td v-if="c.firstname.length > 0 || c.lastname.length > 0">
-                {{ c.firstname + " " + c.lastname }}
+              <td
+                v-if="
+                  comment.firstname.length > 0 || comment.lastname.length > 0
+                "
+              >
+                {{ comment.firstname + " " + comment.lastname }}
               </td>
               <td
-                v-else-if="c.firstname.length === 0 && c.lastname.length === 0"
+                v-else-if="
+                  comment.firstname.length === 0 &&
+                  comment.lastname.length === 0
+                "
               >
                 -
               </td>
 
-              <RouterLink :to="`/detail/${c.course_id}`">
+              <RouterLink :to="`/detail/${comment.course_id}`">
                 <td>Details</td>
               </RouterLink>
 
-              <td v-if="c.star > 0">{{ c.star }}/5</td>
+              <td v-if="comment.star > 0">{{ comment.star }}/5</td>
               <td v-else>-</td>
 
-              <td>{{ c.created_at }}</td>
+              <td>{{ comment.created_at }}</td>
 
-              <td class="verifed" v-if="c.valid == 1">
+              <td class="verifed" v-if="comment.valid == 1">
                 <va-icon name="verified" />
               </td>
-              <td class="refused" v-else-if="c.valid == 2">
+              <td class="refused" v-else-if="comment.valid == 2">
                 <va-icon name="cancel" />
               </td>
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
               <td>
-                <button class="bttn bttn-wng">
+                <!-- <button class="bttn bttn-wng">
                   <va-icon name="last_page" />
-                </button>
+                </button> -->
                 <!-- Accéder au cours pour voir le commentaire -->
-                <button class="bttn bttn-dng-out">
+                <button
+                  class="bttn bttn-dng-out"
+                  @click="handleBan(comment.id)"
+                >
                   <va-icon name="block" />
                 </button>
                 <!--Bannir-->
-                <button class="bttn bttn-dng"><va-icon name="delete" /></button>
+                <button class="bttn bttn-dng" @click="handleDelete(comment.id)">
+                  <va-icon name="delete" />
+                </button>
                 <!-- Supprimer le commentaire -->
               </td>
             </tr>
@@ -132,8 +183,8 @@ div.container-dashboard {
       }
 
       td button {
-            margin-right: 1rem;
-        }
+        margin-right: 1rem;
+      }
 
       td.verifed {
         color: #52b425;

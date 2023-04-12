@@ -64,7 +64,8 @@ class Comment
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $valid = 0;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }

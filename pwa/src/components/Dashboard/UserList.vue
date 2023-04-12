@@ -40,7 +40,7 @@ const getRole = (roles) => {
         role += "Admin ";
         break;
       default:
-        role = "-"
+        role = "-";
         break;
     }
   });
