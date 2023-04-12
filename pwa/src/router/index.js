@@ -163,6 +163,11 @@ const router = createRouter({
       name: "user-mypurchases",
       component: () => import("../components/User/Purchases.vue"),
     },
+    {
+      path: "/user/demand-teacher",
+      name: "user-demand-teacher",
+      component: () => import("../components/User/DemandToTeacher.vue"),
+    },
   ],
 });
 
