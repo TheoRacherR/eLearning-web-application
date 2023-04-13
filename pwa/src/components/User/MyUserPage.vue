@@ -8,6 +8,8 @@ import { store } from "../../store/store";
 
 const user = ref({});
 
+const loadingButton = ref(false);
+
 const {
   user: {
     id: userId,
@@ -70,6 +72,7 @@ watch(
 );
 
 const handleSubmit = () => {
+  loadingButton.value = true;
   axios
     .patch(
       import.meta.env.VITE_API_URL + "/users/" + userId,
@@ -82,6 +85,7 @@ const handleSubmit = () => {
     )
     .then(() => {
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
+      loadingButton.value = false;
     })
     .catch((err) => {
       console.log("debug", err);

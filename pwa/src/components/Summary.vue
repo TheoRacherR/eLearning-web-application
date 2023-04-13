@@ -8,6 +8,8 @@ import { checkConnection } from "../utils/checkConnection";
 const listCoursesInCart = ref(Object.values(store.listCoursesInCart.list));
 const totalPrice = ref(0);
 
+const loadingButton = ref(false);
+
 onMounted(() => {
   let stripeCheckoutId = localStorage.getItem("stripeCheckoutId");
   if (stripeCheckoutId) {
@@ -45,9 +47,7 @@ onMounted(() => {
                 const courseId = cart[i].id;
                 listCourses.value[courseId].possessed = true;
               })
-              .catch((err) => {
-                
-              });
+              .catch((err) => {});
           }
         }
       });
@@ -73,6 +73,7 @@ const deleteOnInCart = (courseId) => {
 };
 
 const onSubmitCart = () => {
+  loadingButton.value = true;
   let cart = Object.values(store.listCoursesInCart.list);
   let tempArray = [];
   for (let i = 0; i < cart.length; i++) {
@@ -93,6 +94,7 @@ const onSubmitCart = () => {
     .then((res) => {
       localStorage.setItem("stripeCheckoutId", res.data.id);
       window.location.href = res.data.url;
+      loadingButton.value = false;
     });
 };
 </script>
@@ -156,6 +158,13 @@ const onSubmitCart = () => {
         </div>
 
         <button class="bttn bttn-succ" @click="onSubmitCart">
+          <div
+            class="spinner-border spinner-border-sm"
+            role="status"
+            v-if="loadingButton"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
           Terminer la commande
         </button>
       </div>

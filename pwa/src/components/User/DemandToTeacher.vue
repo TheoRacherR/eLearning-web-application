@@ -20,6 +20,8 @@ const lastIbanValid = ref("");
 const bankNameValid = ref("");
 const ownerValid = ref("");
 
+const loadingButton = ref(false);
+
 if (!store.user.isConnected) {
   router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
@@ -34,6 +36,7 @@ onMounted(() => {
 });
 
 const handleSubmit = () => {
+  loadingButton.value = true;
   axios
     .post(
       import.meta.env.VITE_API_URL + "/formers",
@@ -302,6 +305,13 @@ const checkSize = (e) => {
         type="button"
         @click="handleSubmit"
       >
+        <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          v-if="loadingButton"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
         Envoyer la demande
       </button>
       <button v-else class="bttn bttn-wng disabled" disabled>

@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios";
 import { login } from "../utils/login";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { store } from "./../store/store";
 import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
@@ -11,6 +11,8 @@ onMounted(() => {
   checkConnection(true, false, "register");
 });
 
+const loadingButton = ref(false);
+
 const initialValue = {
   password: "",
   mail: "",
@@ -19,6 +21,7 @@ const initialValue = {
 };
 
 const handleSubmit = () => {
+  loadingButton.value = true;
   axios
     .post(import.meta.env.VITE_API_URL + "/users", {
       password: initialValue.password,
@@ -27,6 +30,7 @@ const handleSubmit = () => {
       lastname: initialValue.lastname,
     })
     .then(() => {
+      loadingButton.value = false;
       router.push("/");
       toastr.warning("Veuillez vérifier votre compte", "", { timeOut: 3000 });
       toastr.success("Compte créé", "", { timeOut: 3000 });
@@ -81,6 +85,13 @@ const handleSubmit = () => {
         />
       </div>
       <button type="submit" class="bttn bttn-prim bttn-submit">
+        <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          v-if="loadingButton"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
         Créer le compte
       </button>
     </form>

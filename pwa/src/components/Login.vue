@@ -6,6 +6,10 @@ import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import toastr from "toastr"
 
+const loadingButtonLogin = ref(false);
+const loadingButtonSignup = ref(false);
+
+
 const props = defineProps({
   closeModal: {
     type: Function,
@@ -29,8 +33,10 @@ onMounted(() => {
 });
 
 const handleSubmit = () => {
+  loadingButtonLogin.value = true;
   login(initialValue.mail, initialValue.password)
     .then(() => {
+      loadingButtonLogin.value = false;
       props.closeModal();
 
       initialValue.mail = initObject.mail;
@@ -49,7 +55,9 @@ const handleSubmit = () => {
     });
 };
 const navigateRegister = () => {
+  loadingButtonSignup.value = true;
   props.closeModal();
+  loadingButtonSignup.value = false;
   router.push("/register");
 };
 </script>
@@ -72,8 +80,24 @@ const navigateRegister = () => {
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="bttn bttn-prim-out bttn-signin" @click="navigateRegister">Se créer un compte</button>
-    <button type="button" class="bttn bttn-prim bttn-submit" @click="handleSubmit">Se connecter</button>
+    <button type="button" class="bttn bttn-prim-out bttn-signin" @click="navigateRegister">
+      <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          v-if="loadingButtonSignup"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Se créer un compte</button>
+    <button type="button" class="bttn bttn-prim bttn-submit" @click="handleSubmit">
+      <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          v-if="loadingButtonLogin"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Se connecter</button>
   </div>
 
 
