@@ -45,7 +45,6 @@ const getCourses = () => {
       })
       .catch((err) => {
         reject(err);
-
       });
   });
 };
@@ -67,7 +66,6 @@ const getUsers = () => {
               ),
               status: item.status,
             }));
-            console.log(formerRaw)
 
             data["hydra:member"].map((item) => {
               list[item.id] = {
@@ -99,7 +97,6 @@ const getUsers = () => {
       })
       .catch((err) => {
         reject(err);
-
       });
   });
 };
@@ -145,7 +142,6 @@ const getComments = () => {
       })
       .catch((err) => {
         reject(err);
-
       });
   });
 };

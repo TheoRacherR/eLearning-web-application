@@ -1,7 +1,7 @@
 import axios from "axios";
 import router from "../router";
 import { store, listUsers } from "../store/store";
-import toastr from "toastr"
+import toastr from "toastr";
 
 export const checkConnection = (
   withRedirectOnConnect,
@@ -29,7 +29,7 @@ export const checkConnection = (
                   item.userId.split("/")[item.userId.split("/").length - 1]
                 ),
                 isValid: item.valid,
-                status: item.status
+                status: item.status,
               }));
 
               if (formers.some((item) => item.userId === parseInt(data.id))) {
@@ -38,9 +38,6 @@ export const checkConnection = (
                 );
 
                 store.setProf(true, former[0].status);
-                listUsers.value[former[0].userId].teacherStatus = former[0].status;
-                console.log(former[0].status)
-
               }
             });
 
@@ -56,17 +53,14 @@ export const checkConnection = (
             user_id: data.id,
             isAdmin: data.roles.includes("ROLE_ADMIN"),
           });
-          // console.log("debug here", data.roles.includes("ROLE_ADMIN"));
 
           if (withRedirectOnConnect) router.push("/");
         })
         .catch(() => {
           if (withRedirectOnCatch) router.push("/");
-
         });
     } else {
       if (withRedirectOnCatch) router.push("/");
-
     }
   }
 };
