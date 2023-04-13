@@ -58,12 +58,10 @@ export const checkConnection = (
         })
         .catch(() => {
           if (withRedirectOnCatch) router.push("/");
-          toastr.error("Error", "", { timeOut: 3000})
 
         });
     } else {
       if (withRedirectOnCatch) router.push("/");
-      toastr.error("Error", "", { timeOut: 3000})
 
     }
   }
