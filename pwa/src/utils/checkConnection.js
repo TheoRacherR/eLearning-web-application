@@ -6,6 +6,7 @@ import toastr from "toastr";
 export const checkConnection = (
   withRedirectOnConnect,
   withRedirectOnCatch,
+  redirectIfNotTeacher,
   from
 ) => {
   if (!store.user.isConnected) {
@@ -38,7 +39,7 @@ export const checkConnection = (
                 );
 
                 store.setProf(true, former[0].status);
-              }
+              } else if (redirectIfNotTeacher) router.push("/");
             });
 
           store.setToken(token);
