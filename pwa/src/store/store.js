@@ -57,9 +57,9 @@ export const store = reactive({
   setToken(token) {
     this.user.token = token;
   },
-  setProf(isTeacher, isValid) {
+  setProf(isTeacher,status) {
     this.user.isTeacher = isTeacher;
-    this.user.teacherStatus = "WAITING";
+    this.user.teacherStatus = status;
   },
   setCart() {
     this.cart.list = {};

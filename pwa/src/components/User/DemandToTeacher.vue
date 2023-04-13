@@ -25,6 +25,13 @@ const loadingButton = ref(false);
 if (!store.user.isConnected) {
   router.push("/");
   toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+} else if (store.user.teacherStatus === "VALIDATED") {
+  router.push("/");
+  toastr.error(
+    "Vous ne pouvez pas accéder à cette action, vous êtes déjà professeur",
+    "",
+    { timeOut: 3000 }
+  );
 }
 
 onMounted(() => {
@@ -58,7 +65,7 @@ const handleSubmit = () => {
     )
     .then(() => {
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
-      store.setProf(true, false);
+      store.setProf(true, "WAITING");
       listUsers.value[store.user.id].teacherStatus = "WAITING";
 
       router.push("/user/personal-data");
@@ -186,7 +193,7 @@ const checkSize = (e) => {
 
 <template>
   <div class="total-container">
-    <div class="main-container">
+    <div class="main-container" v-if="!store.user.isTeacher">
       <h3>Demande de passage en rôle professeur</h3>
       <label>IBAN</label>
       <div class="firstline">
@@ -317,6 +324,21 @@ const checkSize = (e) => {
       <button v-else class="bttn bttn-wng disabled" disabled>
         Envoyer la demande
       </button>
+    </div>
+
+    <div
+      class="main-container"
+      v-else-if="store.user.isTeacher && store.user.teacherStatus === 'WAITING'"
+    >
+      <h3>Demande de passage en rôle professeur</h3>
+      Votre demande est en attente...
+    </div>
+    <div
+      class="main-container"
+      v-else-if="store.user.isTeacher && store.user.teacherStatus === 'REFUSED'"
+    >
+      <h3>Demande de passage en rôle professeur</h3>
+      Votre demande a été refusé.
     </div>
 
     <RightContainer page="demand-teacher" />

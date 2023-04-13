@@ -17,7 +17,7 @@ const {
     isAdmin,
     isConnected,
     isTeacher,
-    isTeacherValid,
+    teacherStatus,
     token,
     ...infos
   },
