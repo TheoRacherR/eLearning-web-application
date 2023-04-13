@@ -4,9 +4,9 @@ import { store, listUsers } from "../store/store";
 import toastr from "toastr";
 
 export const checkConnection = (
-  withRedirectOnConnect,
-  withRedirectOnCatch,
-  redirectIfNotTeacher,
+  withRedirectOnConnect, //redirigé si connecté et page resgister
+  withRedirectOnCatch, //redirigé si on a un mauvais token
+  redirectIfNotTeacher, //redirigé si pas role prof
   from
 ) => {
   if (!store.user.isConnected) {
