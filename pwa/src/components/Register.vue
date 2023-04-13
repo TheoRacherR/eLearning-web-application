@@ -28,11 +28,11 @@ const handleSubmit = () => {
     })
     .then(() => {
       router.push("/");
-      toastr.success("Compte créé", "", { timeOut: 3000})
+      toastr.warning("Veuillez vérifier votre compte", "", { timeOut: 3000 });
+      toastr.success("Compte créé", "", { timeOut: 3000 });
     })
     .catch((error) => {
       // Gestion des erreurs
-      toastr.error(error.message, "", { timeOut: 3000})
     });
 };
 </script>
@@ -80,14 +80,11 @@ const handleSubmit = () => {
           required
         />
       </div>
-      <button type="submit" class="bttn bttn-prim bttn-submit">Créer le compte</button>
+      <button type="submit" class="bttn bttn-prim bttn-submit">
+        Créer le compte
+      </button>
     </form>
   </div>
-
-  
 </template>
 
-
-<style scoped>
-</style>
-
+<style scoped></style>

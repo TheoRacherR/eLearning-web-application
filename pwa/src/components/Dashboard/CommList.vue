@@ -44,7 +44,6 @@ const handleBan = (commentId) => {
     })
     .catch((err) => {
       console.log("debug", err);
-      toastr.error(err.message, "", { timeOut: 3000})
 
     });
 };
@@ -62,7 +61,6 @@ const handleDelete = (commentId) => {
     })
     .catch((err) => {
       console.log("debug", err);
-      toastr.error(err.message, "", { timeOut: 3000})
 
     });
 };

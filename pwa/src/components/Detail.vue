@@ -97,7 +97,6 @@ const submitComment = () => {
       })
       .catch((err) => {
         console.log("dbeug", err);
-        toastr.error(err, "", { timeOut: 3000})
       });
   }
 };

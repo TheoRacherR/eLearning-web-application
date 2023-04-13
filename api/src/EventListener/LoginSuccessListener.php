@@ -19,7 +19,7 @@ class LoginSuccessListener
         }
 
         if (false === $user->isValid()) {
-            throw new AccessDeniedHttpException('Please confirm your account with the email we sent you', null, '403');
+            throw new AccessDeniedHttpException('Veuillez confirmer votre compte en cliquant sur le lien dans le mail', null, '403');
         }
         if(true === $user->isBan()) {
             throw new AccessDeniedHttpException('Your account is banned');

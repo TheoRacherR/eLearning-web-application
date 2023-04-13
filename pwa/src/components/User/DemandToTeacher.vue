@@ -62,8 +62,6 @@ const handleSubmit = () => {
     })
     .catch((err) => {
       console.log("debug", err);
-      toastr.error(err.message, "", { timeOut: 3000})
-
     });
 };
 
@@ -165,7 +163,6 @@ const checkSize = (e) => {
       break;
 
     case "name":
-      console.log(former.value.accountOwner);
       if (former.value.accountOwner.length > 0) {
         ownerValid.value = "true";
       } else {

@@ -36,8 +36,6 @@ onMounted(async () => {
       })
       .catch((err) => {
         console.log("debug", err);
-        toastr.error(err.message, "", { timeOut: 3000})
-
       });
 
     user.value = {
@@ -60,8 +58,6 @@ watch(
         })
         .catch((err) => {
           console.log("debug", err);
-          toastr.error(err.message, "", { timeOut: 3000})
-
         });
 
       user.value = {
@@ -89,8 +85,6 @@ const handleSubmit = () => {
     })
     .catch((err) => {
       console.log("debug", err);
-      toastr.error(err.message, "", { timeOut: 3000})
-
     });
 };
 </script>
@@ -117,7 +111,16 @@ const handleSubmit = () => {
         <input class="innput" v-model="user.mail" />
       </div>
 
-      <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
+      <button class="bttn bttn-prim" @click="handleSubmit">
+        <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          v-if="loadingButton"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Valider
+      </button>
     </div>
 
     <RightContainer page="personal-data" />

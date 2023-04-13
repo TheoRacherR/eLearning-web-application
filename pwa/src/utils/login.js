@@ -50,7 +50,6 @@ export const login = (mail, password) => {
       .catch((error) => {
         // Gestion des erreurs
         reject(error);
-        toastr.error(err.message, "", { timeOut: 3000})
 
       });
   });

@@ -45,7 +45,6 @@ const getCourses = () => {
       })
       .catch((err) => {
         reject(err);
-        toastr.error(err.message, "", { timeOut: 3000})
 
       });
   });
@@ -99,7 +98,6 @@ const getUsers = () => {
       })
       .catch((err) => {
         reject(err);
-        toastr.error(err.message, "", { timeOut: 3000})
 
       });
   });
@@ -146,7 +144,6 @@ const getComments = () => {
       })
       .catch((err) => {
         reject(err);
-        toastr.error(err.message, "", { timeOut: 3000})
 
       });
   });

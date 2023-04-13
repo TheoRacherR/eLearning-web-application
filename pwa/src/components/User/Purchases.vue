@@ -34,7 +34,7 @@ watchEffect(() => {
     <div class="main-container">
       <h3>Mes derniers achats</h3>
       <div class="container-purchases">
-        <div v-if="validItems">
+        <div v-if="validItems.length > 0">
           <div class="purchase-item" v-for="item in validItems">
             <div class="left">
               <img v-if="item.image !== null" src="../../../public/not-found.png" alt="not found image">
@@ -51,7 +51,7 @@ watchEffect(() => {
             </div>
           </div>
         </div>
-        <div v-else>no item</div>
+        <div v-else>Vous n'avez pas de cours acheté</div>
       </div>
     </div>
 

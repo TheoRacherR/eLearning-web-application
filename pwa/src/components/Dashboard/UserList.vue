@@ -66,8 +66,6 @@ const handleBan = (userId) => {
     })
     .catch((err) => {
       console.log("debug", err);
-      toastr.error(err.message, "", { timeOut: 3000})
-
     });
 };
 
@@ -84,8 +82,6 @@ const handleDelete = (userId) => {
     })
     .catch((err) => {
       console.log("debug", err);
-      toastr.error(err.message, "", { timeOut: 3000})
-
     });
 };
 </script>
@@ -140,7 +136,10 @@ const handleDelete = (userId) => {
                   /></RouterLink>
                 </button>
                 <!--Aller sur la page-->
-                <button class="bttn bttn-succ-out banned" v-if="user.ban === true">
+                <button
+                  class="bttn bttn-succ-out banned"
+                  v-if="user.ban === true"
+                >
                   <va-icon name="refresh" @click="handleBan(user.id)" />
                 </button>
                 <button class="bttn bttn-dng-out not-banned" v-else>
@@ -196,7 +195,7 @@ div.container-dashboard {
       td.waiting {
         color: rgb(168, 43, 43);
       }
-      
+
       td button.banned {
         color: #52b425;
       }

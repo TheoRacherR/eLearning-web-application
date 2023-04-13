@@ -8,7 +8,7 @@ const props = defineProps({
   },
 });
 
-const links = [
+let links = [
   {
     name: "Mes achats",
     link: "mypurchases",
@@ -51,14 +51,17 @@ if (!store.user.isTeacher)
   <div class="total-container">
     <div class="right-container">
       <RouterLink v-for="l in links" :to="l.link" style="color: black">
-        <div v-if="l.link === props.page" class="highlighted">
-          {{ l.name }}
-          <va-icon :name="l.icon" />
-        </div>
+        <div v-if="l.link === 'demand-teacher' && store.user.isTeacher"></div>
+        <div v-else>
+          <div v-if="l.link === props.page" class="text highlighted">
+            {{ l.name }}
+            <va-icon :name="l.icon" />
+          </div>
 
-        <div v-else class="normal">
-          {{ l.name }}
-          <va-icon :name="l.icon" />
+          <div v-else class="text normal">
+            {{ l.name }}
+            <va-icon :name="l.icon" />
+          </div>
         </div>
       </RouterLink>
     </div>
@@ -79,7 +82,7 @@ div.total-container {
     a {
       text-decoration: none;
 
-      div {
+      div.text {
         margin-bottom: 2rem;
         color: rgb(175, 175, 175);
         display: flex;

@@ -41,7 +41,6 @@ const handleSubmit = () => {
     })
     .catch((err) => {
       console.log("debug", err, err.response);
-      toastr.error(err.message, "", { timeOut: 3000})
 
 
       errorShown.value = true;

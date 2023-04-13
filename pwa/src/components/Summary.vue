@@ -46,7 +46,7 @@ onMounted(() => {
                 listCourses.value[courseId].possessed = true;
               })
               .catch((err) => {
-                toastr.error(err.message);
+                
               });
           }
         }
