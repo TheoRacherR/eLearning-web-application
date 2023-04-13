@@ -37,32 +37,53 @@ watchEffect(() => {
         </div>
         <div class="fill" v-if="store.user.isConnected"></div>
         <div>
-          <RouterLink v-if="store.user.isConnected" to="/list-mypurchases">Mes achats</RouterLink>
+          <RouterLink v-if="store.user.isConnected" to="/list-mypurchases"
+            >Mes achats</RouterLink
+          >
         </div>
 
-        <div class="fill" v-if="store.user.isConnected && store.user.isTeacherValid"></div>
-        <div v-if="store.user.isConnected && store.user.isTeacherValid">
+        <div
+          class="fill"
+          v-if="
+            store.user.isConnected && store.user.teacherStatus === 'VALIDATED'
+          "
+        ></div>
+        <div
+          v-if="
+            store.user.isConnected && store.user.teacherStatus === 'VALIDATED'
+          "
+        >
           <RouterLink to="/db">Mes cours</RouterLink>
         </div>
 
-        <div class="fill" v-if="store.user.isConnected && store.user.isAdmin"></div>
+        <div
+          class="fill"
+          v-if="store.user.isConnected && store.user.isAdmin"
+        ></div>
         <div v-if="store.user.isConnected && store.user.isAdmin">
           <RouterLink to="/db">Dashboard</RouterLink>
         </div>
-
       </div>
 
       <div class="item-nav left">
-        <RouterLink v-if="store.user.isConnected" to="/summary" style="color: black;">
+        <RouterLink
+          v-if="store.user.isConnected"
+          to="/summary"
+          style="color: black"
+        >
           <button class="bttn bttn-cart">
             <va-icon name="shopping_cart" style="position: absolute" />
             <div class="sc-count">{{ cartLen }}</div>
           </button>
         </RouterLink>
 
-        <RouterLink v-if="store.user.isConnected" to="/user/personal-data" style="color: black;">
+        <RouterLink
+          v-if="store.user.isConnected"
+          to="/user/personal-data"
+          style="color: black"
+        >
           <button class="bttn bttn-person">
-            <va-icon name="person"/>
+            <va-icon name="person" />
           </button>
         </RouterLink>
 
@@ -74,7 +95,9 @@ watchEffect(() => {
         </div>
         <div
           class="role left-item"
-          v-if="store.user.isTeacherValid && store.user.isConnected"
+          v-if="
+            store.user.teacherStatus === 'VALIDATED' && store.user.isConnected
+          "
         >
           Professeur
         </div>

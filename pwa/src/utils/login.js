@@ -19,6 +19,7 @@ export const login = (mail, password) => {
                 item.userId.split("/")[item.userId.split("/").length - 1]
               ),
               isValid: item.valid,
+              status: item.status
             }));
 
             const { token, ...user } = data;
@@ -30,7 +31,7 @@ export const login = (mail, password) => {
                 (item) => item.userId === parseInt(user.user_id)
               );
 
-              store.setProf(true, former[0].isValid);
+              store.setProf(true, former[0].status);
             }
 
             store.setConnected(true);

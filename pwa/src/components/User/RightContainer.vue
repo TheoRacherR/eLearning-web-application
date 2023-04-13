@@ -8,6 +8,8 @@ const props = defineProps({
   },
 });
 
+console.log(store.user);
+
 let links = [
   {
     name: "Mes achats",
@@ -34,24 +36,25 @@ let links = [
     link: "confidentiality",
     icon: "attach_file",
   },
-];
-
-if (!store.user.isTeacher)
-  links = [
-    ...links,
-    {
+  {
       name: "Demande de passange en Professeur",
       link: "demand-teacher",
       icon: "school",
     },
-  ];
+];
+
 </script>
 
 <template>
   <div class="total-container">
     <div class="right-container">
       <RouterLink v-for="l in links" :to="l.link" style="color: black">
-        <div v-if="l.link === 'demand-teacher' && store.user.isTeacher"></div>
+        <div
+          v-if="
+            l.link === 'demand-teacher' &&
+            store.user.teacherStatus == 'VALIDATED'
+          ">
+        </div>
         <div v-else>
           <div v-if="l.link === props.page" class="text highlighted">
             {{ l.name }}

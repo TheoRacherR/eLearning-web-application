@@ -67,6 +67,7 @@ const getUsers = () => {
               ),
               status: item.status,
             }));
+            console.log(formerRaw)
 
             data["hydra:member"].map((item) => {
               list[item.id] = {
