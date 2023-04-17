@@ -6,11 +6,6 @@ import toastr from "toastr";
 
 import ItemCourse from "./Courses/ItemCourse.vue";
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-
 const items = ref({});
 const validItems = ref({});
 

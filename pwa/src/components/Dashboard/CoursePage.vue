@@ -6,15 +6,6 @@ import router from "../../router";
 import { store, listCourses } from "../../store/store";
 import toastr from "toastr";
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-// else if(!store.user.isAdmin){
-//   router.push("/")
-//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
-// }
-
 const course = ref({});
 const courseId = router.currentRoute.value.params.id;
 
@@ -28,7 +19,6 @@ onMounted(async () => {
       })
       .catch((err) => {
         console.log("debug", err);
-
       });
 
     course.value = {
@@ -50,7 +40,6 @@ watch(
         })
         .catch((err) => {
           console.log("debug", err);
-
         });
 
       course.value = {
@@ -82,7 +71,6 @@ const handleSubmit = async () => {
     })
     .catch((err) => {
       console.log("debug", err);
-
     });
 };
 </script>

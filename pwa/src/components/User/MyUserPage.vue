@@ -23,11 +23,6 @@ const {
   },
 } = store;
 
-if (!isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-
 onMounted(async () => {
   if (token) {
     const { data: userRaw } = await axios

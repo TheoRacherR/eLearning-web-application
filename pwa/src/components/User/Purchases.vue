@@ -7,11 +7,6 @@ import { ref, watchEffect } from "vue";
 
 import ItemCourse from "../Courses/ItemCourse.vue";
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-
 const items = ref({});
 const validItems = ref({});
 
@@ -37,13 +32,16 @@ watchEffect(() => {
         <div v-if="validItems.length > 0">
           <div class="purchase-item" v-for="item in validItems">
             <div class="left">
-              <img v-if="item.image !== null" src="../../../public/not-found.png" alt="not found image">
+              <img
+                v-if="item.image !== null"
+                src="../../../public/not-found.png"
+                alt="not found image"
+              />
               <img v-else :src="item.image" alt="image of the product" />
               <div class="item">
                 <h4>{{ item.title }}</h4>
                 <p>{{ item.description }}</p>
               </div>
-
             </div>
             <div class="right">
               <RouterLink :to="`/detail/${item.id}`">Détails</RouterLink>
