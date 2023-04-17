@@ -30,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 
 #[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object.user_id === user'
+    // security: 'is_granted("ROLE_ADMIN") or object.user_id === user'
 )]
 
 #[Get]

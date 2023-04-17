@@ -3,6 +3,7 @@ import Category from "./Category.vue";
 import { RouterLink } from "vue-router";
 import { store } from "../../../store/store";
 import { ref, watchEffect } from "vue";
+import router from "../../../router";
 
 const itemsCourse = ref({});
 let countInvalidItemCourse = ref(0);
@@ -27,6 +28,15 @@ watchEffect(() => {
     }
   }
 });
+
+const handleCreateQuiz = () => {
+  const courseId = 62; // Prcq il existe
+  router.push(`/db/quiz/create/${courseId}`);
+};
+const navigateListQuiz = () => {
+  const courseId = 62; // Prcq il existe
+  router.push(`/db/quiz/list/${courseId}`);
+};
 </script>
 
 <template>
@@ -36,7 +46,23 @@ watchEffect(() => {
     </RouterLink>
     <div class="fill-title"></div>
 
-    <button v-if="store.user.isTeacher" class="bttn bttn-succ">Créer un cours</button>
+    <button v-if="store.user.isTeacher" class="bttn bttn-succ">
+      Créer un cours
+    </button>
+    <button
+      v-if="store.user.isTeacher"
+      class="bttn bttn-succ quiz"
+      @click="handleCreateQuiz"
+    >
+      Créer un Quiz (à mettre sur la page de création de cours quand length > 0)
+    </button>
+    <button
+      v-if="store.user.isTeacher"
+      class="bttn bttn-succ quiz"
+      @click="navigateListQuiz"
+    >
+      Liste quiz
+    </button>
 
     <div class="box" v-if="store.user.isAdmin">
       <h5>Utilisateurs</h5>
@@ -163,6 +189,10 @@ div.left-board {
         margin-right: 1rem;
       }
     }
+  }
+
+  .quiz {
+    margin-top: 2vh;
   }
 }
 </style>
