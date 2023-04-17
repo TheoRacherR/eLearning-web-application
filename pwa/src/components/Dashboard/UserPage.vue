@@ -6,15 +6,6 @@ import router from "../../router";
 import { listUsers, listComments, store } from "../../store/store";
 import toastr from "toastr";
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-// else if(!store.user.isAdmin){
-//   router.push("/")
-//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
-// }
-
 const user = ref({});
 const userId = router.currentRoute.value.params.id;
 

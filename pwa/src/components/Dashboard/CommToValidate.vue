@@ -8,16 +8,6 @@ import axios from "axios";
 
 import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-} else if (!store.user.isAdmin) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
-    timeOut: 3000,
-  });
-}
-
 const items = ref({});
 const invalidItems = ref({});
 

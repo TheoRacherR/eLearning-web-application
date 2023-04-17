@@ -22,18 +22,6 @@ const ownerValid = ref("");
 
 const loadingButton = ref(false);
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-} else if (store.user.teacherStatus === "VALIDATED") {
-  router.push("/");
-  toastr.error(
-    "Vous ne pouvez pas accéder à cette action, vous êtes déjà professeur",
-    "",
-    { timeOut: 3000 }
-  );
-}
-
 onMounted(() => {
   former.value = {
     accountOwner: "",
