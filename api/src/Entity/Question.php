@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 
 #[Get(
-    security: 'is_granted("IS_AUTHENTICATED_FULLY") or is_granted("ROLE_ADMIN")'
+    // security: 'is_granted("IS_AUTHENTICATED_FULLY") or is_granted("ROLE_ADMIN")'
 )]
 
 #[Post(

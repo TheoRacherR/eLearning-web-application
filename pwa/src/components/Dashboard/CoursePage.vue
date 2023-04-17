@@ -33,7 +33,7 @@ watch(
   async () => {
     if (store.user.token) {
       const { data: courseRaw } = await axios
-        .get(import.meta.env.VITE_API_URL + "/users/" + courseId, {
+        .get(import.meta.env.VITE_API_URL + "/courses/" + courseId, {
           headers: {
             Authorization: `Bearer ${store.user.token}`,
           },
