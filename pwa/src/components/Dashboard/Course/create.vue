@@ -20,6 +20,8 @@ const editChapter = ref(false);
 const chapterEditorOn = ref(false);
 const idToEdit = ref();
 
+const submitting = ref(false);
+
 const course = ref({
   title: "",
   description: "",
@@ -58,11 +60,20 @@ const resetData = async () => {
     price: "",
     chapter: {},
   };
+  chapterTitle.value = "";
+  chapter.value = "";
+  chapters.value = {};
+  nbChapter.value = 0;
+
+  editChapter.value = false;
+  chapterEditorOn.value = false;
+
 };
 
 
 const handleSubmitCourse = async () => {
   if (formerId && course.value.title.length > 0 && course.value.description.length > 0 && course.value.price.length > 0 && Object.values(chapters.value).length > 0) {
+    submitting.value = true;
     axios
     .post(
       import.meta.env.VITE_API_URL + "/courses",
@@ -87,43 +98,46 @@ const handleSubmitCourse = async () => {
         }
     )
       .then(() => {
-        console.log("Course added");
         toastr.success("Cours ajouté", "", { timeOut: 3000 });
+        submitting.value = false;
+        resetData()
 
       })
       .catch((err) => {
         console.log(err);
       });
-  } else {
-    console.log("error");
   }
 };
 
 const editOrAdd = async () => {
   if (editChapter.value) {
-    editAChapter();
+    // editAChapter();
   }
   else {
     addNewChapter();
   }
 }
 
-const clickToEdit = async (id) => {
-  idToEdit.value = id;
-  editChapter.value = true;
-  chapterEditorOn.value = true;
-  chapterTitle.value = Object.values(chapters.value)[id].title;
-  chapter.value = Object.values(chapters.value)[id].content;
-  document.getElementsByClassName("ql-editor").innerHTML = "<div>" + Object.values(chapters.value)[id].content + "</div>";
-}
+// const clickToEdit = async (id) => {
+//   idToEdit.value = id;
+//   editChapter.value = true;
+//   chapterEditorOn.value = true;
+//   chapterTitle.value = Object.values(chapters.value)[id].title;
+//   chapter.value = Object.values(chapters.value)[id].content;
+//   document.getElementsByClassName("ql-editor").innerHTML = "<div>" + Object.values(chapters.value)[id].content + "</div>";
+// }
 
 const addNewChapter = async () => {
   if (chapterTitle.value.length > 0 && chapter.value.getHTML() != "<p><br></p>") {
 
-    chapters.value[nbChapter.value] = {
-      title: chapterTitle.value,
-      content: chapter.value.getHTML(),
+    chapters.value['chapters'] = {
+      ...chapters.value['chapters'],
+      [nbChapter.value]: {
+        title: chapterTitle.value,
+        content: chapter.value.getHTML()
+      }
     };
+    console.log(chapters.value)
     chapterTitle.value = "";
     document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
     chapter.value = "";
@@ -134,9 +148,12 @@ const addNewChapter = async () => {
 };
 
 const editAChapter = async () => {
-  chapters.value[idToEdit.value] = {
-    title: chapterTitle.value,
-    content: chapter.value.getHTML(),
+  chapters.value['chapters'] = {
+    ...chapters.value['chapters'],
+    [idToEdit.value]: {
+      title: chapterTitle.value,
+      content: chapter.value.getHTML()
+    }
   };
   chapterTitle.value = "";
   document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
@@ -145,7 +162,7 @@ const editAChapter = async () => {
 }
 
 const deleteAChapter = async (id) => {
-  delete chapters.value[id];
+  delete chapters.value['chapters'][id];
   console.log(chapters.value)
   console.log("deleted")
 }
@@ -205,6 +222,13 @@ const checkNumber = () => {
             Ajouter un chapitre
           </button>
           <button class="bttn bttn-prim" @click="handleSubmitCourse">
+             <div
+              class="spinner-border spinner-border-sm"
+              role="status"
+              v-if="submitting"
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
             Valider le cours
           </button>
         </div>
@@ -229,8 +253,6 @@ const checkNumber = () => {
               'link',
               'image',
               [],
-              { color: [] },
-              { background: [] },
               { align: [] },
               { direction: 'rtl' },
               [],
@@ -255,7 +277,7 @@ const checkNumber = () => {
 
         </div>
         <div class="list-course">
-          <div v-for:="(item, index) in chapters" class="itemss">
+          <div v-for:="(item, index) in chapters['chapters']" class="itemss">
             <div>Chapitre {{ index }} "{{ item.title }}"</div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->

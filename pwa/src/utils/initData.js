@@ -38,6 +38,7 @@ const getCourses = () => {
                 valid: item.valid,
                 stripeProductId: item.stripeProductId,
                 stripePriceId: item.stripePriceId,
+                sequence: item.sequence,
               };
             });
 

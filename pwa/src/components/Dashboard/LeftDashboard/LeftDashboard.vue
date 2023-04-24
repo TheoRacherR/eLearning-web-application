@@ -29,10 +29,6 @@ watchEffect(() => {
   }
 });
 
-const handleCreateQuiz = () => {
-  const courseId = 62; // Prcq il existe
-  router.push(`/db/quiz/create/${courseId}`);
-};
 const navigateListQuiz = () => {
   const courseId = 62; // Prcq il existe
   router.push(`/db/quiz/list/${courseId}`);
@@ -66,15 +62,8 @@ const navigateListQuiz = () => {
       </RouterLink>
     </div>
 
-    <!--
-    <button
-      v-if="store.user.isTeacher"
-      class="bttn bttn-succ quiz"
-      @click="handleCreateQuiz"
-    >
-      Créer un Quiz (à mettre sur la page de création de cours quand length > 0)
-    </button>
 
+    <!--
     <button
       v-if="store.user.isTeacher"
       class="bttn bttn-succ quiz"
@@ -212,10 +201,6 @@ div.left-board {
         margin-right: 1rem;
       }
     }
-  }
-
-  .quiz {
-    margin-top: 2vh;
   }
 }
 </style>
