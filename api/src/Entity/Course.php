@@ -36,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[Get]
 
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("ROLE_ADMIN") or object.user_id === user'
 )]
 class Course
 {
