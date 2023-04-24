@@ -8,12 +8,17 @@ import { listCourses, store } from "../../../store/store";
 import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
 
+
 const chapterTitle = ref("");
 const chapter = ref("");
 const chapters = ref({});
 const nbChapter = ref(0);
 
+const number = ref("0123456789");
+
+const editChapter = ref(false);
 const chapterEditorOn = ref(false);
+const idToEdit = ref();
 
 const course = ref({
   title: "",
@@ -55,17 +60,21 @@ const resetData = async () => {
   };
 };
 
+
 const handleSubmitCourse = async () => {
-  if (formerId) {
+  if (formerId && course.value.title.length > 0 && course.value.description.length > 0 && course.value.price.length > 0 && Object.values(chapters.value).length > 0) {
     axios
-      .post(
-        import.meta.env.VITE_API_URL + "/courses",
+    .post(
+      import.meta.env.VITE_API_URL + "/courses",
         {
-          userId: store.user.id,
+          userId: "users/" + store.user.id,
+          user_id: "users/" + store.user.id,
           content: "",
-          title: course.title,
-          description: course.description,
-          price: course.price,
+          stripeProductId: "string",
+          stripePriceId: "string",
+          title: course.value.title,
+          description: course.value.description,
+          price: parseInt(course.value.price),
           valid: 0,
           createdAt: "NOW",
           updatedAt: "NOW",
@@ -73,10 +82,15 @@ const handleSubmitCourse = async () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${store.user.token}`,
+            Authorization  : `Bearer ${store.user.token}`,
           },
         }
-      )
+    )
+      .then(() => {
+        console.log("Course added");
+        toastr.success("Cours ajouté", "", { timeOut: 3000 });
+
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -85,20 +99,68 @@ const handleSubmitCourse = async () => {
   }
 };
 
+const editOrAdd = async () => {
+  if (editChapter.value) {
+    editAChapter();
+  }
+  else {
+    addNewChapter();
+  }
+}
+
+const clickToEdit = async (id) => {
+  idToEdit.value = id;
+  editChapter.value = true;
+  chapterEditorOn.value = true;
+  chapterTitle.value = Object.values(chapters.value)[id].title;
+  chapter.value = Object.values(chapters.value)[id].content;
+  document.getElementsByClassName("ql-editor").innerHTML = "<div>" + Object.values(chapters.value)[id].content + "</div>";
+}
+
 const addNewChapter = async () => {
-  console.log(chapter.value.getHTML());
-  // chapters.value = ({ chapt });
-  chapters.value[nbChapter.value] = {
+  if (chapterTitle.value.length > 0 && chapter.value.getHTML() != "<p><br></p>") {
+
+    chapters.value[nbChapter.value] = {
+      title: chapterTitle.value,
+      content: chapter.value.getHTML(),
+    };
+    chapterTitle.value = "";
+    document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
+    chapter.value = "";
+    nbChapter.value = nbChapter.value + 1;
+    chapterEditorOn.value = false;
+
+  }
+};
+
+const editAChapter = async () => {
+  chapters.value[idToEdit.value] = {
     title: chapterTitle.value,
     content: chapter.value.getHTML(),
   };
   chapterTitle.value = "";
   document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
   chapter.value = "";
-  nbChapter.value = nbChapter.value + 1;
-
   chapterEditorOn.value = false;
-};
+}
+
+const deleteAChapter = async (id) => {
+  delete chapters.value[id];
+  console.log(chapters.value)
+  console.log("deleted")
+}
+
+const cancelEditor = async () => {
+  chapterTitle.value = "";
+  document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
+  chapter.value = "";
+  chapterEditorOn.value = false;
+}
+
+const checkNumber = () => {
+  if (!number.value.includes(course.value.price.substring(course.value.price.length - 1, course.value.price.length)))
+  { course.value.price = course.value.price.substring(course.value.price.length - 1, 0) }
+}
 </script>
 
 <template>
@@ -115,7 +177,6 @@ const addNewChapter = async () => {
 
           <div class="input-item">
             <label :for="course.price">Prix du cours</label>
-
             <div class="input-group mb-3" style="margin-top: 1rem">
               <input
                 type="text"
@@ -123,6 +184,7 @@ const addNewChapter = async () => {
                 aria-label="Amount (to the nearest dollar)"
                 v-model="course.price"
                 placeholder="Prix"
+                @input='checkNumber'
               />
               <span class="input-group-text">€</span>
             </div>
@@ -140,7 +202,7 @@ const addNewChapter = async () => {
 
         <div v-if="!chapterEditorOn" class="buttons">
           <button class="bttn bttn-succ" @click="chapterEditorOn = true">
-            Ajouter un chaptire
+            Ajouter un chapitre
           </button>
           <button class="bttn bttn-prim" @click="handleSubmitCourse">
             Valider le cours
@@ -151,7 +213,7 @@ const addNewChapter = async () => {
           <input
             class="innput"
             v-model="chapterTitle"
-            placeholder="Titre du chaptire"
+            placeholder="Titre du chapitre"
           />
           <QuillEditor
             :toolbar="[
@@ -186,10 +248,20 @@ const addNewChapter = async () => {
             contentType="delta"
             placeholder="Rédigez votre cours ici..."
           />
-          <button class="bttn bttn-wng validate" @click="addNewChapter">Valider</button>
+          <div class="group-buttons">
+            <button class="bttn bttn-wng" @click="editOrAdd">Valider</button>
+            <button class="bttn bttn-dng" @click="cancelEditor">Annuler</button>
+          </div>
+
         </div>
-        <div>
-          <div v-for:="c in chapters">Chapitre "{{ c.title }}"</div>
+        <div class="list-course">
+          <div v-for:="(item, index) in chapters" class="itemss">
+            <div>Chapitre {{ index }} "{{ item.title }}"</div>
+            <div>
+              <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
+              <button class="bttn bttn-dng" @click="deleteAChapter(index)"><va-icon name="delete"/></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -234,18 +306,39 @@ div.container-dashboard {
     div.buttons {
       display: flex;
       margin-top: 2rem;
-      width: 30%;
-      margin-left: 70%;
+      width: 20%;
+      margin-left: 80%;
       justify-content: space-around;
-
+      
     }
-
-    button.validate {
+    
+    div.group-buttons{
+      display: flex;
+      justify-content: space-between;
       margin-top: 2rem;
-      width: 15%;
       margin-left: 85%;
+      button {
+        width: 46%;
+      }
     }
 
+    div.list-course {
+      margin: 5rem 0;
+
+      div.itemss {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+
+        div {
+          margin: auto 0;
+        }
+      }
+
+      div.itemss:nth-child(2n-1){
+        background-color: rgb(245, 245, 245);
+      }
+    }
   }
 }
 </style>

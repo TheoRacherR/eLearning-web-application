@@ -1,138 +1,88 @@
 <script setup>
 import axios from "axios";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, watchEffect } from "vue";
 import LeftDashboard from "./../LeftDashboard/LeftDashboard.vue";
 import router from "./../../../router";
 import toastr from "toastr";
 import { listCourses, store } from "../../../store/store";
 
-const course = ref({});
-const questions = ref([]);
 
-const courseId = router.currentRoute.value.params.id;
+const items = ref({});
+const validItems = ref({});
 
-const init = async () => {
-  const { data: courseRaw } = await axios
-    .get(import.meta.env.VITE_API_URL + "/courses/" + courseId, {
-      headers: {
-        Authorization: `Bearer ${store.user.token}`,
-      },
-    })
-    .catch((err) => {
-      console.log("debug", err);
-    });
+watchEffect(() => {
+  items.value = store.courses.list;
 
-  const sequence = JSON.parse(courseRaw.sequence);
-  console.log("debug", sequence);
 
-  course.value = {
-    sequence,
-  };
-
-  const promises = sequence.map((id) => {
-    console.log("debug", id);
-    return axios.get(import.meta.env.VITE_API_URL + "/questions/" + id, {
-      headers: {
-        Authorization: `Bearer ${store.user.token}`,
-      },
-    });
-  });
-
-  Promise.all(promises)
-    .then((responses) => {
-      responses.forEach(({ data }) => {
-        console.log("debug", JSON.parse(data.settings));
-        questions.value.push({
-          id: data.id,
-          settings: JSON.parse(data.settings),
-        });
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-onMounted(async () => {
-  if (store.user.token) {
-    init();
+  for (const item in items.value) {
+    if (items.value[item].userId === "/users/" + store.user.id) {
+      validItems.value = {
+        ...validItems.value,
+        [item]: { ...items.value[item] },
+      };
+    }
   }
 });
 
-watch(() => store.user.token, init);
-
-const handleDelete = (questionId) => {
+const deleteCourse = (courseId) => {
   axios
-    .delete(import.meta.env.VITE_API_URL + "/questions/" + questionId, {
+    .delete(import.meta.env.VITE_API_URL + "/courses/" + courseId, {
       headers: {
         Authorization: `Bearer ${store.user.token}`,
       },
     })
     .then(() => {
-      axios
-        .patch(
-          import.meta.env.VITE_API_URL + "/courses/" + courseId,
-          {
-            sequence: JSON.stringify(
-              course.value.sequence.filter((id) => id !== questionId)
-            ),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${store.user.token}`,
-            },
-          }
-        )
-        .then(() => {
-          questions.value = questions.value.filter(
-            (item) => item.id !== questionId
-          );
-          toastr.success("Question supprimée", "", { timeOut: 3000 });
-        });
+      toastr.success("Cours supprimé", "", { timeout: 3000 });
     })
     .catch((err) => {
-      console.log("debug", err);
-    });
-};
+       console.log("debug", err);
+     });
+}
+
 </script>
 
 <template>
   <div class="container-dashboard">
     <LeftDashboard />
     <div class="main-page">
-      <h2>Liste des question pour le cours n°{{ courseId }}</h2>
+      <h2>Liste de vos cours </h2>
       <div class="container-grid">
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Content</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Valide</th>
+              <th>Prix</th>
+              <th>Nombre d'achat</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="question in questions">
-              <td v-if="question.id > 0">{{ question.id }}</td>
-              <td v-else>-</td>
-
-              <td>{{ question.settings.content }}</td>
+            <tr v-for="course in validItems">
+              <td>{{ course.id }}</td>
+              <td>{{ course.title }}</td>
+              <td>{{ course.description.slice(0, 100) }} <span v-if="course.description.length >= 97">...</span></td>
+              <td class="verifed" v-if="course.valid == 1">
+                <va-icon name="verified" />
+              </td>
+              <td class="waiting" v-else-if="course.valid == 0">
+                <va-icon name="hourglass_empty" />
+              </td>
+              <td class="refused" v-else><va-icon name="close" /></td>
+              <td>{{ course.price }} €</td>
+              <td>0</td>
 
               <td>
                 <button class="bttn bttn-wng">
-                  <RouterLink :to="`/db/quiz/list/${courseId}/${question.id}`"
-                    ><va-icon name="last_page"
-                  /></RouterLink>
+                  <RouterLink :to="`/db/course/page/${course.id}`">
+                    <va-icon name="last_page"/>
+                  </RouterLink>
                 </button>
-                <!--Aller sur le cours-->
-                <!--<button class="bttn bttn-dng-out"><va-icon name="close"/></button>-->
-                <!--Rejeter-->
-                <button
-                  class="bttn bttn-dng"
-                  @click="handleDelete(question.id)"
-                >
-                  <va-icon name="delete" />
+                <button class="bttn bttn-dng" @click="deleteCourse(course.id)">
+                    <va-icon name="delete"/>
                 </button>
-                <!--Supprimer-->
               </td>
             </tr>
           </tbody>
@@ -158,7 +108,7 @@ div.container-dashboard {
       grid-auto-rows: auto;
 
       thead {
-        background-color: rgb(103, 133, 63);
+        background-color: rgb(161, 61, 21);
         color: #fff;
       }
       th,

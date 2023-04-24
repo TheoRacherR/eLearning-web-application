@@ -29,6 +29,7 @@ const getCourses = () => {
 
               list[item.id] = {
                 id: item.id,
+                userId: item.userId,
                 title: item.title,
                 description: item.description,
                 content: item.content,
