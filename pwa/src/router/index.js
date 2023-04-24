@@ -74,12 +74,34 @@ const router = createRouter({
       component: () => import("../components/Dashboard/CoursePage.vue"),
     },
 
+    //Page de creation de cours
+    {
+      path: "/db/course/create",
+      name: "course_create",
+      component: () => import("../components/Dashboard/Course/create.vue"),
+    },
+
+    //Liste des cours
+    {
+      path: "/db/course/list",
+      name: "course_list",
+      component: () => import("../components/Dashboard/Course/list.vue"),
+    },
+
+    //Page du cours
+    {
+      path: "/db/course/page/:id",
+      name: "course_page",
+      component: () => import("../components/Dashboard/Course/page.vue"),
+    },
+
     //Page de creation de quiz
     {
       path: "/db/quiz/create/:id",
       name: "quiz_create",
       component: () => import("../components/Dashboard/Quiz/create.vue"),
     },
+
     //Page des questions d'un cours
     {
       path: "/db/quiz/list/:id",

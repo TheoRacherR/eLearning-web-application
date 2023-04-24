@@ -41,6 +41,7 @@ onMounted(async () => {
     course.value = {
       sequence: JSON.parse(courseRaw.sequence),
     };
+      console.log(typeof course.value.sequence['questions'])
   }
 });
 
@@ -61,6 +62,7 @@ watch(
       course.value = {
         sequence: courseRaw.sequence ? JSON.parse(courseRaw.sequence) : [],
       };
+      console.log(course.value)
     }
   }
 );
@@ -85,14 +87,25 @@ const handleSubmit = async () => {
       }
     )
     .then(({ data: { id: questionId } }) => {
-      console.log("debug ", questionId);
-
-      course.value.sequence.push(questionId);
+      console.log([...course.value.sequence['questions']])
+      console.log([course.value.sequence['questions']])
+      console.log(Object.values(course.value.sequence['questions']))
+      // course.value.sequence['quesitons'] = [...course.value.sequence['quesitons'], questionId];
+      // Object.values(course.value.sequence['questions']).push(questionId);
+      course.value.sequence['questions'] = {
+        ...course.value.sequence['questions'],
+        [Object.values(course.value.sequence['questions']).length]: questionId,
+      }
+      console.log(course.value.sequence)
+      
 
       axios
         .patch(
           import.meta.env.VITE_API_URL + "/courses/" + courseId,
-          { sequence: JSON.stringify(course.value.sequence) },
+          {
+            sequence: JSON.stringify(course.value.sequence),
+            updatedAt: "NOW"
+          },
           {
             headers: {
               Authorization: `Bearer ${store.user.token}`,
@@ -217,6 +230,13 @@ const isDisabled = (answerId) => {
 
         <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
       </div>
+
+      <button class="bttn bttn-drk back-btn" @click="handleSubmit">
+        <RouterLink :to="`/db/course/page/${courseId}`">
+          Précédent
+        </RouterLink>
+      </button>
+
     </div>
   </div>
 </template>
@@ -253,6 +273,15 @@ div.container-dashboard {
         // padding-left: 20rem;
         // padding-right: 20rem;
         width: 100%;
+      }
+    }
+
+    button.back-btn{
+      margin-top: 7rem;
+
+      a{
+        text-decoration: none;
+        color: white;
       }
     }
   }

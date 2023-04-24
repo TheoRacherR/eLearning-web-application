@@ -29,6 +29,7 @@ const getCourses = () => {
 
               list[item.id] = {
                 id: item.id,
+                userId: item.userId,
                 title: item.title,
                 description: item.description,
                 content: item.content,
@@ -37,6 +38,7 @@ const getCourses = () => {
                 valid: item.valid,
                 stripeProductId: item.stripeProductId,
                 stripePriceId: item.stripePriceId,
+                sequence: item.sequence,
               };
             });
 

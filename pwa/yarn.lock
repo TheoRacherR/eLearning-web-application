@@ -174,10 +174,10 @@
     "@ag-grid-community/core" "^28.1.1"
     "@ag-grid-community/vue3" "^28.1.1"
 
-"@vueup/vue-quill@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@vueup/vue-quill/-/vue-quill-1.1.0.tgz"
-  integrity sha512-xr1mx2y+JZClPs/lz+qjvGOWgLqh9SWfm1V+ofsJtuvBnN/h9O/QqJBuVWmdAcB6JGFhIeQcjuA2JgzqX2STjg==
+"@vueup/vue-quill@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/@vueup/vue-quill/-/vue-quill-1.1.1.tgz"
+  integrity sha512-1INx+pr+AK/5SrfFwJIojO+VhYrv6ZHwaYCxO5Irp+vjpm/z4v8zLpUIA86ideX7cNA8Tai+nkrGlWKnAeM0RQ==
   dependencies:
     quill "^1.3.7"
     quill-delta "^4.2.2"
@@ -629,6 +629,11 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
+  integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
+
 object-is@^1.0.1:
   version "1.1.5"
   resolved "https://registry.npmjs.org/object-is/-/object-is-1.1.5.tgz"
@@ -704,7 +709,7 @@ quill-delta@^4.2.2:
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
 
-quill@^1.3.7:
+quill@^1.3.4, quill@^1.3.7:
   version "1.3.7"
   resolved "https://registry.npmjs.org/quill/-/quill-1.3.7.tgz"
   integrity sha512-hG/DVzh/TiknWtE6QmWAF/pxoZKYxfe3J/d/+ShUWkDvvkZQVTPeVmUJVu1uE6DDooC4fWTiCLh84ul89oNz5g==
@@ -824,6 +829,14 @@ vue-functional-data-merge@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz"
   integrity sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==
+
+vue-quill-editor@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.npmjs.org/vue-quill-editor/-/vue-quill-editor-3.0.6.tgz"
+  integrity sha512-g20oSZNWg8Hbu41Kinjd55e235qVWPLfg4NvsLW6d+DhgBTFbEuMpcWlUdrD6qT3+Noim6DRu18VLM9lVShXOQ==
+  dependencies:
+    object-assign "^4.1.1"
+    quill "^1.3.4"
 
 vue-router@^4.1.6:
   version "4.1.6"

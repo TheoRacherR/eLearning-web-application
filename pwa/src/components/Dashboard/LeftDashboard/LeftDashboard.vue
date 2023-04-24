@@ -29,10 +29,6 @@ watchEffect(() => {
   }
 });
 
-const handleCreateQuiz = () => {
-  const courseId = 62; // Prcq il existe
-  router.push(`/db/quiz/create/${courseId}`);
-};
 const navigateListQuiz = () => {
   const courseId = 62; // Prcq il existe
   router.push(`/db/quiz/list/${courseId}`);
@@ -46,16 +42,28 @@ const navigateListQuiz = () => {
     </RouterLink>
     <div class="fill-title"></div>
 
-    <button v-if="store.user.isTeacher" class="bttn bttn-succ">
-      Créer un cours
-    </button>
-    <button
-      v-if="store.user.isTeacher"
-      class="bttn bttn-succ quiz"
-      @click="handleCreateQuiz"
-    >
-      Créer un Quiz (à mettre sur la page de création de cours quand length > 0)
-    </button>
+
+    <!-- Liste pour les professeurs -->
+
+    <div class="box" v-if="store.user.isTeacher">
+      <h5>Mes cours</h5>
+      <div class="fill-title"></div>
+      <RouterLink to="/db/course/list">
+        <div class="container-tab">
+          <va-icon name="group" size="small" />Liste des cours
+        </div>
+        <va-icon name="chevron_right" />
+      </RouterLink>
+      <RouterLink to="/db/course/create">
+        <div class="container-tab">
+          <va-icon name="group" size="small" />Créer un cours
+        </div>
+        <va-icon name="chevron_right" />
+      </RouterLink>
+    </div>
+
+
+    <!--
     <button
       v-if="store.user.isTeacher"
       class="bttn bttn-succ quiz"
@@ -63,6 +71,10 @@ const navigateListQuiz = () => {
     >
       Liste quiz
     </button>
+    -->
+
+
+    <!-- Liste pour les admins -->
 
     <div class="box" v-if="store.user.isAdmin">
       <h5>Utilisateurs</h5>
@@ -189,10 +201,6 @@ div.left-board {
         margin-right: 1rem;
       }
     }
-  }
-
-  .quiz {
-    margin-top: 2vh;
   }
 }
 </style>
