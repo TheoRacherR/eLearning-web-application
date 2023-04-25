@@ -41,6 +41,6 @@ class CreateCourseController extends AbstractController
         $this->manager->persist($course);
         $this->manager->flush($course);
 
-        return new JsonResponse('Course has been created', '200');
+        return new JsonResponse(['course' => $course->getId(), 'message' => 'Le cours a été créé avec succès'], '200');
     }
 }
