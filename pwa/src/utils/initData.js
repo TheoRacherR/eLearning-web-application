@@ -1,5 +1,6 @@
 import { listCourses, listUsers, listComments, store } from "../store/store";
 import axios from "axios";
+import toastr from "toastr";
 
 const getCourses = () => {
   return new Promise((resolve, reject) => {
@@ -28,6 +29,7 @@ const getCourses = () => {
 
               list[item.id] = {
                 id: item.id,
+                userId: item.userId,
                 title: item.title,
                 description: item.description,
                 content: item.content,
@@ -36,11 +38,11 @@ const getCourses = () => {
                 valid: item.valid,
                 stripeProductId: item.stripeProductId,
                 stripePriceId: item.stripePriceId,
+                sequence: item.sequence,
               };
             });
 
             resolve(list);
-
           });
       })
       .catch((err) => {
@@ -56,26 +58,44 @@ const getUsers = () => {
     axios
       .get(import.meta.env.VITE_API_URL + "/users")
       .then(({ data }) => {
+        axios
+          .get(import.meta.env.VITE_API_URL + "/formers")
+          .then(({ data: { ["hydra:member"]: formerRaw } }) => {
+            const formers = formerRaw.map((item) => ({
+              id: item.id,
+              userId: parseInt(
+                item.userId.split("/")[item.userId.split("/").length - 1]
+              ),
+              status: item.status,
+            }));
 
-        
-        data["hydra:member"].map((item) => {
+            data["hydra:member"].map((item) => {
+              list[item.id] = {
+                id: item.id,
+                roles: item.roles,
+                mail: item.mail,
+                firstname: item.firstname,
+                lastname: item.lastname,
+                created_at: item.created_at,
+                updated_at: item.updated_at,
+                last_activity: item.last_activity,
+                valid: item.valid,
+                ban: item.ban,
+              };
 
-          list[item.id] = {
-            id: item.id,
-            roles: item.roles,
-            mail: item.mail,
-            firstname: item.firstname,
-            lastname: item.lastname,
-            created_at: item.created_at,
-            updated_at: item.updated_at,
-            last_activity: item.last_activity,
-            valid: item.valid,
-            ban: item.ban,
-            
-          };
-
-          resolve(list);
-        });
+              formers.map((former) => {
+                if (former.userId === item.id) {
+                  list[item.id] = {
+                    ...list[item.id],
+                    teacherId: former.id,
+                    isTeacher: true,
+                    teacherStatus: former.status,
+                  };
+                }
+              });
+            });
+            resolve(list);
+          });
       })
       .catch((err) => {
         reject(err);
@@ -93,14 +113,13 @@ const getComments = () => {
         axios
           .get(import.meta.env.VITE_API_URL + "/users")
           .then(({ data: { ["hydra:member"]: usersRaw } }) => {
-
-
             data["hydra:member"].map((item) => {
               let usr;
-              for(let i in Object.values(usersRaw)){
-                let userId = item.user_id.split("/")[item.user_id.split("/").length - 1];
+              for (let i in Object.values(usersRaw)) {
+                let userId =
+                  item.user_id.split("/")[item.user_id.split("/").length - 1];
                 let id = Object.values(usersRaw)[i].id;
-                if(id === parseInt(userId)){
+                if (id === parseInt(userId)) {
                   usr = Object.values(usersRaw)[i];
                   break;
                 }
@@ -108,8 +127,8 @@ const getComments = () => {
 
               list[item.id] = {
                 id: item.id,
-                user_id: item.user_id,
-                course_id: item.course_id,
+                user_id: item.user_id.split("/")[2],
+                course_id: item.course.split("/")[2],
                 content: item.content,
                 star: item.star,
                 created_at: item.created_at,
@@ -121,7 +140,6 @@ const getComments = () => {
             });
 
             resolve(list);
-
           });
       })
       .catch((err) => {
@@ -132,17 +150,16 @@ const getComments = () => {
 
 export const initData = async () => {
   const courses = await getCourses();
-  const users = await getUsers();  
+  const users = await getUsers();
   const comments = await getComments();
   store.setCart();
   listCourses.value = courses;
-  listUsers.value = users;  
+  listUsers.value = users;
   listComments.value = comments;
-  store.setListCoursesInCart()
+  store.setListCoursesInCart();
 
   let arr = [];
   if (localStorage.getItem("CART") === null) {
     localStorage.setItem("CART", JSON.stringify(arr));
   }
-
 };

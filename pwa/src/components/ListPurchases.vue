@@ -6,11 +6,6 @@ import toastr from "toastr";
 
 import ItemCourse from "./Courses/ItemCourse.vue";
 
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-
 const items = ref({});
 const validItems = ref({});
 
@@ -37,6 +32,7 @@ watchEffect(() => {
         <ItemCourse
           :title="item.title"
           :description="item.description"
+          :image="item.image"
           :id="item.id"
         />
       </div>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import router from "./../router";
 import { store } from "../store/store";
+import toastr from "toastr";
 
 export const login = (mail, password) => {
   return new Promise((resolve, reject) => {
@@ -18,6 +19,7 @@ export const login = (mail, password) => {
                 item.userId.split("/")[item.userId.split("/").length - 1]
               ),
               isValid: item.valid,
+              status: item.status
             }));
 
             const { token, ...user } = data;
@@ -29,7 +31,7 @@ export const login = (mail, password) => {
                 (item) => item.userId === parseInt(user.user_id)
               );
 
-              store.setProf(true, former[0].isValid);
+              store.setProf(true, former[0].status);
             }
 
             store.setConnected(true);
@@ -49,6 +51,7 @@ export const login = (mail, password) => {
       .catch((error) => {
         // Gestion des erreurs
         reject(error);
+
       });
   });
 };

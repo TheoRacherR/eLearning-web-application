@@ -5,6 +5,7 @@ import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
 import axios from "axios";
 import { initData } from "../utils/initData";
+import toastr from "toastr";
 
 const { user } = store;
 
@@ -17,12 +18,14 @@ const commenting = ref(false);
 const items = ref({});
 const validComments = ref({});
 
-
 watchEffect(() => {
   items.value = store.comments.list;
 
   for (const item in items.value) {
-    if (items.value[item].valid === 1 && items.value[item].id === parseInt(courseId)) {
+    if (
+      items.value[item].valid === 1 &&
+      parseInt(items.value[item].course_id) === parseInt(courseId)
+    ) {
       validComments.value = {
         ...validComments.value,
         [item]: { ...items.value[item] },
@@ -43,7 +46,6 @@ onMounted(() => {
   checkConnection(false, false, "Detail");
   store.selectCourse(courseId);
 });
-
 
 const handleCart = () => {
   let arr = [];
@@ -73,26 +75,30 @@ const closeCommenting = () => {
 };
 
 const submitComment = () => {
-  const body = {
-    course: "courses/" + courseId,
-    userId: "users/" + user.id,
-    star: Math.round(rating.value),
-    content: comment.value,
-  };
+  if (comment.value.length > 300) {
+    toastr.error("Trop long ", "", { timeOut: 3000 });
+  } else {
+    const body = {
+      course: "courses/" + courseId,
+      userId: "users/" + user.id,
+      star: Math.round(rating.value),
+      content: comment.value,
+    };
 
-  axios
-    .post(import.meta.env.VITE_API_URL + "/comments", body, {
-      headers: {
-        Authorization: `Bearer ${store.user.token}`,
-      },
-    })
-    .then(() => {
-  initData();
-  closeCommenting();
-  })
-  .catch((err) => {
-    console.log("dbeug", err);
-  });
+    axios
+      .post(import.meta.env.VITE_API_URL + "/comments", body, {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      })
+      .then(() => {
+        initData();
+        closeCommenting();
+      })
+      .catch((err) => {
+        console.log("dbeug", err);
+      });
+  }
 };
 
 watch(rating, () => {
@@ -139,15 +145,27 @@ watch(rating, () => {
             </div>
           </div>
 
-          <div class="main-com">{{ com.content.slice(0, 100) }} {{ com.content.length > 103 ? '...' : '' }}</div>
+          <div class="main-com">
+            {{ com.content.slice(0, 100) }}
+            {{ com.content.length > 103 ? "..." : "" }}
+          </div>
         </div>
       </div>
     </div>
     <div v-if="store.user.isConnected && !course?.possessed">
-      <button v-if="!Object.keys(store.cart.list).includes(courseId.toString())" class="bttn bttn-succ" @click="handleCart">
+      <button
+        v-if="!Object.keys(store.cart.list).includes(courseId.toString())"
+        class="bttn bttn-succ"
+        @click="handleCart"
+      >
         <va-icon name="add_shopping_cart" /> Ajouter au panier
       </button>
-      <div class="alreadyInCartDetailP" v-else-if="Object.keys(store.cart.list).includes(courseId.toString())"><p><va-icon name="done" />Ce cours se trouve dans le panier</p></div>
+      <div
+        class="alreadyInCartDetailP"
+        v-else-if="Object.keys(store.cart.list).includes(courseId.toString())"
+      >
+        <p><va-icon name="done" />Ce cours se trouve dans le panier</p>
+      </div>
     </div>
 
     <div class="wrapperComment" v-if="commenting">
@@ -162,7 +180,10 @@ watch(rating, () => {
     </div>
     <button
       class="bttn bttn-prim"
-      v-else-if="course?.possessed && store.user.isConnected"
+      v-else-if="
+        // course?.possessed &&
+        store.user.isConnected
+      "
       @click="handleComment"
     >
       Laisser un commentaire
@@ -183,7 +204,7 @@ watch(rating, () => {
   text-align: center;
 }
 
-div.alreadyInCartDetailP > p{ 
+div.alreadyInCartDetailP > p {
   background-color: rgb(94, 138, 29);
   color: var(--color-text-dark);
   margin: 0 auto;
@@ -214,7 +235,6 @@ div.item-comment {
   padding: 0 0 1.8rem 0;
   border-top: 1px solid grey;
 }
-
 
 div.top-com {
   margin-bottom: 1rem;

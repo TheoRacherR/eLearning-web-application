@@ -5,19 +5,8 @@ import { ref, watchEffect } from "vue";
 
 import { RouterLink } from "vue-router";
 import router from "../../router";
-import { store } from "../../store/store";
+import { store, listUsers } from "../../store/store";
 import toastr from "toastr";
-
-if (!store.user.isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-// else if (!store.user.isAdmin) {
-//   router.push("/");
-//   toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", {
-//     timeOut: 3000,
-// });
-// }
 
 const users = ref({});
 
@@ -31,18 +20,58 @@ const getRole = (roles) => {
   roles.map((item) => {
     switch (item) {
       case "ROLE_USER":
-        role += "Utilisateur ";
+        role += "User";
+        break;
+      case "ROLE_FORMER":
+        role += "Teacher";
         break;
       case "ROLE_ADMIN":
-        role += "Administrateur ";
+        role += "Admin ";
         break;
-
       default:
+        role = "-";
         break;
     }
   });
 
   return role;
+};
+
+const handleBan = (userId) => {
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + "/users/" + userId,
+      { ban: !listUsers.value[userId].ban },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      listUsers.value[userId].ban = !listUsers.value[userId].ban;
+
+      toastr.success("Utilisateur banni", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
+
+const handleDelete = (userId) => {
+  axios
+    .delete(import.meta.env.VITE_API_URL + "/users/" + userId, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+      delete listUsers.value[userId];
+      toastr.success("Utilisateur supprimé", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
 };
 </script>
 
@@ -60,7 +89,8 @@ const getRole = (roles) => {
               <th>Nom</th>
               <th>Mail</th>
               <th>Role</th>
-              <th>Compte Validé ?</th>
+              <th>Compte Validé</th>
+              <th>Banni</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -85,6 +115,9 @@ const getRole = (roles) => {
               </td>
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
+              <td v-if="user.ban === true">Oui</td>
+              <td v-else>Non</td>
+
               <td>
                 <button class="bttn bttn-wng">
                   <RouterLink :to="`/db/user/${user.id}`"
@@ -92,11 +125,19 @@ const getRole = (roles) => {
                   /></RouterLink>
                 </button>
                 <!--Aller sur la page-->
-                <button class="bttn bttn-dng-out">
-                  <va-icon name="block" />
+                <button
+                  class="bttn bttn-succ-out banned"
+                  v-if="user.ban === true"
+                >
+                  <va-icon name="refresh" @click="handleBan(user.id)" />
+                </button>
+                <button class="bttn bttn-dng-out not-banned" v-else>
+                  <va-icon name="block" @click="handleBan(user.id)" />
                 </button>
                 <!--Bannir-->
-                <button class="bttn bttn-dng"><va-icon name="delete" /></button>
+                <button class="bttn bttn-dng">
+                  <va-icon name="delete" @click="handleDelete(user.id)" />
+                </button>
                 <!--Supprimer-->
               </td>
             </tr>
@@ -132,12 +173,20 @@ div.container-dashboard {
         padding: 1rem;
       }
 
+      td button {
+        margin-right: 1rem;
+      }
+
       td.verifed {
         color: #52b425;
       }
 
       td.waiting {
         color: rgb(168, 43, 43);
+      }
+
+      td button.banned {
+        color: #52b425;
       }
 
       td button a {

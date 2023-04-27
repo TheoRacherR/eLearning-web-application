@@ -4,7 +4,7 @@ import { store } from "../store/store";
 import { ref, isReactive, watchEffect } from "vue";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
-import Carrousel from "./Home/Carousel.vue";
+import Swiper from "./Home/Swiper.vue";
 import BoxLeft from "./Home/BoxLeft.vue";
 import BoxRight from "./Home/BoxRight.vue";
 import IconBox from "./Home/IconBox.vue";
@@ -19,7 +19,6 @@ watchEffect(() => {
   let count = 0
 
   for (const item in items.value) {
-    console.log(item);
     if (items.value[item].valid) {
       validItems.value = {
         ...validItems.value,
@@ -56,11 +55,8 @@ let cnt =
   <div class="wrapper">
     <div class="first-home-item">
       <div>
-        <h1>Nos formations</h1>
-        <Carrousel
-          :title="'Les derniers cours ajoutés : '"
-          :validItems="validItems"
-        />
+        <h1 style="text-align: left;">Les dernières formations : </h1>
+        <Swiper :content="validItems"/>
       </div>
     </div>
 
@@ -90,6 +86,10 @@ let cnt =
   text-align: center;
   padding-top: 4rem;
   width: 100%;
+
+  div.first-home-item {
+    margin-bottom: 5rem;
+  }
 
   div.second-home-item {
     background-color: rgb(245, 245, 245);

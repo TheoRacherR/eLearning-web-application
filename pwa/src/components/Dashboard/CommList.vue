@@ -1,200 +1,191 @@
 <script setup>
-
-import LeftDashboard from './LeftDashboard/LeftDashboard.vue';
-import { RouterLink } from 'vue-router';
-import router from '../../router';
-import { store } from "../../store/store";
+import { ref, watchEffect } from "vue";
+import { RouterLink } from "vue-router";
+import router from "../../router";
+import { listComments, store } from "../../store/store";
 import toastr from "toastr";
 
-if(!store.user.isConnected){
-  router.push("/")
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-else if(!store.user.isAdmin){
-  router.push("/")
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
-}
+import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
+import ItemCourse from "../Courses/ItemCourse.vue";
+import axios from "axios";
 
-const content = [
-    {
-        id: 1,
-        user_id: {
-            id: 2,
-            firstname: "Michele",
-            lastname: "Obama",
-        },
-        course: {
-            id: 1,
-            title: "Comment devenir très riche, très rapidement"
-        },
-        content: "Ce cours n'est pas vraiment approprié, je souhaite qu'il soit supprimé de la liste",
-        star: 0.5,
-        valid: false,
-        created_at: "2022-01-25 00:01:00",
-    },
-    {
-        id: 2,
-        user_id: {
-            id: 1,
-            firstname: "Hervé",
-            lastname: "Duval",
-        },
-        course: {
-            id: 2,
-            title: "PHP - Les bases aux pratiques avancées"
-        },
-        content: "Formation complète avec tout le nécessaire pour bien commencer le Trading.. explication simple et facile a comprendre...merci beaucoup",
-        star: 4.5,
-        valid: true,
-        created_at: "2023-03-04 17:09:40",
-    },
-    {
-        id: 3,
-        user_id: {
-            id: 4,
-            firstname: "Philippe",
-            lastname: "Lamber",
-        },
-        course: {
-            id: 5,
-            title: "Cours de JS en pronfondeur"
-        },
-        content: "Peu d'exemple et une qualité de vidéo très basse, je ne recommande pas vraiment ce cours.",
-        star: 1,
-        valid: true,
-        created_at: "2021-05-20 09:10:05",
-    },
-    {
-        id: 4,
-        user_id: {
-            id: 3,
-            firstname: "Marie",
-            lastname: "Curie",
-        },
-        course: {
-            id: 5,
-            title: "Cours de JS en pronfondeur"
-        },
-        content: "Grand pédagogie, simplicité dans les explications, petits tips qui permettent de comprendre tellement en peu de mots. Comme je le dis souvent 'Less is more' , et cette formation est exactement ce que je recherchais. Merci",
-        star: 5,
-        valid: true,
-        created_at: "2021-05-20 09:10:05",
-    },
-    
-]
+const items = ref({});
 
+watchEffect(() => {
+  items.value = store.comments.list;
+});
+
+const handleBan = (commentId) => {
+  const value = listComments.value[commentId].valid === 2 ? 1 : 2;
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + "/comments/" + commentId,
+      { valid: value },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      listComments.value[commentId].valid = value;
+
+      toastr.success("Commentaire banni", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
+
+const handleDelete = (commentId) => {
+  axios
+    .delete(import.meta.env.VITE_API_URL + "/comments/" + commentId, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+      delete listComments.value[commentId];
+      toastr.success("Commentaire supprimé", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+};
 </script>
 
-
-
 <template>
-    <div class="container-dashboard">
+  <div class="container-dashboard">
+    <LeftDashboard />
+    <div class="container-commlist">
+      <h2>Liste des commentaires:</h2>
+      <div class="container-grid">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Commentaire</th>
+              <!-- Titre du cours-->
+              <th>Auteur</th>
+              <!--Prénom + Nom-->
+              <th>Note</th>
+              <!--Note du commentaire: Etoiles visuels si possible sinon Int-->
+              <th>Date</th>
+              <!-- Created at en DD/MM/AAAA-->
+              <th>Validé ?</th>
+              <!-- Commentaire validé ?-->
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="comment in items">
+              <td v-if="comment.id > 0">{{ comment.id }}</td>
+              <td v-else>-</td>
 
-        <LeftDashboard/>
-        <div class="container-commlist">      
+              <td v-if="comment.content.length > 0">
+                {{ comment.content.slice(0, 300) }}
+              </td>
+              <td v-else>-</td>
 
-            <h2>Liste des commentaires: </h2>
-            <div class="container-grid">
+              <td
+                v-if="
+                  comment.firstname.length > 0 || comment.lastname.length > 0
+                "
+              >
+                {{ comment.firstname + " " + comment.lastname }}
+              </td>
+              <td
+                v-else-if="
+                  comment.firstname.length === 0 &&
+                  comment.lastname.length === 0
+                "
+              >
+                -
+              </td>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Cours</th> <!-- Titre du cours-->
-                            <th>Auteur</th> <!--Prénom + Nom-->
-                            <th>Commentaire</th> <!-- Content du commentaire slice à un nombre N-->
-                            <th>Note</th> <!--Note du commentaire: Etoiles visuels si possible sinon Int-->
-                            <th>Date</th> <!-- Created at en DD/MM/AAAA-->
-                            <th>Validé ?</th> <!-- Commentaire validé ?-->
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="c in content">
-                            <td v-if="c.id > 0">{{ c.id }}</td>
-                            <td v-else>-</td>
+              <td v-if="comment.star > 0">{{ comment.star }}/5</td>
+              <td v-else>-</td>
 
-                            <td v-if="c.content.length > 0 ">{{ c.content.slice(0, 75) }}...</td>
-                            <td v-else>-</td>
+              <td>{{ comment.created_at }}</td>
 
-                            <td v-if="c.user_id.firstname.length > 0 || c.user_id.lastname.length > 0">{{ c.user_id.firstname + ' ' + c.user_id.lastname }}</td>
-                            <td v-else-if="c.user_id.firstname.length === 0 && c.user_id.lastname.length === 0">-</td>
+              <td class="verifed" v-if="comment.valid == 1">
+                <va-icon name="verified" />
+              </td>
+              <td class="refused" v-else-if="comment.valid == 2">
+                <va-icon name="cancel" />
+              </td>
+              <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
-                            <RouterLink to="/detail/1">
-                                <td v-if="c.course.title.length > 0 ">{{ c.course.title.slice(0,20) }}...</td>
-                                <td v-else>-</td>
-                            </RouterLink>
-
-                            <td v-if="c.star > 0 ">{{ c.star }}</td>
-                            <td v-else>-</td>
-
-                            <td>{{ c.created_at }}</td>
-
-                            <td class="verifed" v-if="c.valid === true"><va-icon name="verified"/></td>
-                            <td class="waiting" v-else><va-icon name="hourglass_empty"/></td>
-
-                            <td>
-                                <button class="bttn bttn-wng"><va-icon name="last_page"/></button> <!-- Accéder au cours pour voir le commentaire -->
-                                <button class="bttn bttn-dng-out"><va-icon name="block"/></button> <!--Bannir-->
-                                <button class="bttn bttn-dng"><va-icon name="delete"/></button> <!-- Supprimer le commentaire -->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    
+              <td>
+                <!-- <button class="bttn bttn-wng">
+                  <va-icon name="last_page" />
+                </button> -->
+                <!-- Accéder au cours pour voir le commentaire -->
+                <button
+                  class="bttn bttn-dng-out"
+                  @click="handleBan(comment.id)"
+                >
+                  <va-icon name="block" />
+                </button>
+                <!--Bannir-->
+                <button class="bttn bttn-dng" @click="handleDelete(comment.id)">
+                  <va-icon name="delete" />
+                </button>
+                <!-- Supprimer le commentaire -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </template>
 
-
-
 <style lang="scss" scoped>
-
 div.container-dashboard {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    /* background-color: aqua; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  /* background-color: aqua; */
 
-    div.container-commlist {
-        padding: 2rem 5rem;
-        width: 90%;
+  div.container-commlist {
+    padding: 2rem 5rem;
+    width: 90%;
 
-        div.container-grid {
-            display: grid;
-            grid-auto-columns: auto;
-            grid-auto-rows: auto;
+    div.container-grid {
+      display: grid;
+      grid-auto-columns: auto;
+      grid-auto-rows: auto;
 
-            thead {
-                background-color: rgb(63, 133, 118);
-                color: #fff;
-            }
-            th, td {
-                padding: 1rem;
-            }
+      thead {
+        background-color: rgb(63, 133, 118);
+        color: #fff;
+      }
+      th,
+      td {
+        padding: 1rem;
+      }
 
-            td.verifed{
-                color: #52b425;
-            }
+      td button {
+        margin-right: 1rem;
+      }
 
-            td.waiting {
-                color: rgb(168, 43, 43);
-            }
+      td.verifed {
+        color: #52b425;
+      }
 
-            tbody tr:nth-child(even) {
-                background-color: #f5f5f5;
-            }
+      td.refused {
+        color: rgb(168, 43, 43);
+      }
 
+      td.waiting {
+        color: #eb8c1f;
+      }
 
-
-        }
-    
+      tbody tr:nth-child(even) {
+        background-color: #f5f5f5;
+      }
     }
+  }
 }
-
-
-
-
 </style>

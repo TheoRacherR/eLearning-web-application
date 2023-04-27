@@ -30,13 +30,13 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 
 #[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object.user_id === user'
+    // security: 'is_granted("ROLE_ADMIN") or object.user_id === user'
 )]
 
 #[Get]
 
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("ROLE_ADMIN") or object.user_id === user'
 )]
 class Course
 {
@@ -87,6 +87,9 @@ class Course
 
     #[ORM\Column(length: 255)]
     private ?string $stripePriceId = null;
+
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $sequence = null;
 
     public function __construct()
     {
@@ -162,12 +165,12 @@ class Course
         return $this;
     }
 
-    public function isValid(): ?bool
+    public function isValid(): ?int
     {
         return $this->valid;
     }
 
-    public function setValid(bool $valid): self
+    public function setValid(int $valid): self
     {
         $this->valid = $valid;
 
@@ -320,6 +323,18 @@ class Course
     public function setStripePriceId(string $stripePriceId): self
     {
         $this->stripePriceId = $stripePriceId;
+
+        return $this;
+    }
+
+    public function getSequence(): ?string
+    {
+        return $this->sequence;
+    }
+
+    public function setSequence(?string $sequence): self
+    {
+        $this->sequence = $sequence;
 
         return $this;
     }

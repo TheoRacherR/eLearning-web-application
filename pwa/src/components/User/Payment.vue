@@ -1,11 +1,5 @@
 <script setup>
 import RightContainer from "./RightContainer.vue";
-
-if(!store.user.isConnected){
-  router.push("/")
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-
 </script>
 
 <template>
@@ -15,7 +9,7 @@ if(!store.user.isConnected){
       Vous n'avez pas de moyen de paiement d'enregistré
     </div>
 
-    <RightContainer page="mypayment"/>
+    <RightContainer page="mypayment" />
   </div>
 </template>
 

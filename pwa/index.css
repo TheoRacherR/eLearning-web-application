@@ -361,3 +361,7 @@ input.innput {
 .toast-warning {
     background-color: #F89406 !important;
 }
+
+div.ql-container{
+    height: 10rem;
+}

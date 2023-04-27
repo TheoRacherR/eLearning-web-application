@@ -18,31 +18,31 @@ use Gedmo\Timestampable;
 #[ApiResource]
 
 #[GetCollection(
-    // security: ':("ROLE_ADMIN")'
+    // security: 'is_granted("ROLE_ADMIN")'
 )]
 
 #[Get(
-    security: 'object.user_id === user or :("ROLE_ADMIN")'
+    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Post(
-    security: ':("IS_AUTHENTICATED_FULLY") or :("ROLE_ADMIN")'
+    security: 'is_granted("IS_AUTHENTICATED_FULLY") or is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Delete(
-    security: ':("ROLE_ADMIN")'
+    security: 'is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Put(
-    security: 'object.user_id === user or :("ROLE_ADMIN")'
+    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
 )]
 
 
 #[Patch(
-    security: 'object.user_id === user or :("ROLE_ADMIN")'
+    security: 'object.user_id === user or is_granted("ROLE_ADMIN")'
 )]
 
 
@@ -57,9 +57,6 @@ class Former
     #[ORM\ManyToOne(inversedBy: 'former')]
     #[ORM\JoinColumn(nullable: false)]
     public ?User $user_id = null;
-
-    #[ORM\Column()]
-    private ?bool $valid = false;
 
     #[ORM\Column(length: 255)]
     private ?string $accountOwner = null;
@@ -76,8 +73,8 @@ class Former
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private string|null|\DateTimeInterface $updated_at;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $refused = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private ?string $status = null;
 
     public function __construct() {
         $this->createdAt = new \DateTime();
@@ -96,18 +93,6 @@ class Former
     public function setUserId(User $user_id): self
     {
         $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function isValid(): ?bool
-    {
-        return $this->valid;
-    }
-
-    public function setValid(bool $valid): self
-    {
-        $this->valid = $valid;
 
         return $this;
     }
@@ -172,14 +157,14 @@ class Former
         return $this;
     }
 
-    public function isRefused(): ?bool
+    public function getStatus(): ?string
     {
-        return $this->refused;
+        return $this->status;
     }
 
-    public function setRefused(?bool $refused): self
+    public function setStatus(?string $status): self
     {
-        $this->refused = $refused;
+        $this->status = $status;
 
         return $this;
     }

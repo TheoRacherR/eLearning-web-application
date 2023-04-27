@@ -1,9 +1,27 @@
 <script setup>
 import RightContainer from "./RightContainer.vue";
+import toastr from "toastr";
+import { store } from "../../store/store";
+import router from "../../router";
+import { ref, watchEffect } from "vue";
 
-if(!store.user.isConnected){
-  router.push("/")
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
+import ItemCourse from "../Courses/ItemCourse.vue";
+
+const items = ref({});
+const validItems = ref({});
+
+watchEffect(() => {
+  items.value = store.courses.list;
+
+  for (const item in items.value) {
+    if (items.value[item].possessed) {
+      validItems.value = {
+        ...validItems.value,
+        [item]: { ...items.value[item] },
+      };
+    }
+  }
+});
 </script>
 
 <template>
@@ -11,42 +29,31 @@ if(!store.user.isConnected){
     <div class="main-container">
       <h3>Mes derniers achats</h3>
       <div class="container-purchases">
-        <div class="purchase-item">
-          <div class="left">
-            <img src="https://via.placeholder.com/250x250" alt="" />
-            <div class="item">Title</div>
-          </div>
-          <div class="right">
-            <RouterLink to="/detail/271">Détails</RouterLink>
-            <div>15.98€</div>
-          </div>
-        </div>
-
-        <div class="purchase-item">
-          <div class="left">
-            <img src="https://via.placeholder.com/250x250" alt="" />
-            <div class="item">Title</div>
-          </div>
-          <div class="right">
-            <RouterLink to="/detail/271">Détails</RouterLink>
-            <div>15.98€</div>
-          </div>
-        </div>
-
-        <div class="purchase-item">
-          <div class="left">
-            <img src="https://via.placeholder.com/250x250" alt="" />
-            <div class="item">Title</div>
-          </div>
-          <div class="right">
-            <RouterLink to="/detail/271">Détails</RouterLink>
-            <div>15.98€</div>
+        <div v-if="validItems.length > 0">
+          <div class="purchase-item" v-for="item in validItems">
+            <div class="left">
+              <img
+                v-if="item.image !== null"
+                src="../../../public/not-found.png"
+                alt="not found image"
+              />
+              <img v-else :src="item.image" alt="image of the product" />
+              <div class="item">
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.description }}</p>
+              </div>
+            </div>
+            <div class="right">
+              <RouterLink :to="`/detail/${item.id}`">Détails</RouterLink>
+              <div>{{ item.price }}€</div>
+            </div>
           </div>
         </div>
+        <div v-else>Vous n'avez pas de cours acheté</div>
       </div>
     </div>
 
-    <RightContainer page="mypurchases"/>
+    <RightContainer page="mypurchases" />
   </div>
 </template>
 
@@ -83,7 +90,7 @@ div.total-container {
             height: 8rem;
           }
 
-          div.item {
+          .item {
             margin-left: 1rem;
           }
         }

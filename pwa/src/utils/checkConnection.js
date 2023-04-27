@@ -1,10 +1,12 @@
 import axios from "axios";
 import router from "../router";
-import { store } from "../store/store";
+import { store, listUsers } from "../store/store";
+import toastr from "toastr";
 
 export const checkConnection = (
-  withRedirectOnConnect,
-  withRedirectOnCatch,
+  withRedirectOnConnect, //redirigé si connecté et page resgister
+  withRedirectOnCatch, //redirigé si on a un mauvais token
+  redirectIfNotTeacher, //redirigé si pas role prof
   from
 ) => {
   if (!store.user.isConnected) {
@@ -28,6 +30,7 @@ export const checkConnection = (
                   item.userId.split("/")[item.userId.split("/").length - 1]
                 ),
                 isValid: item.valid,
+                status: item.status,
               }));
 
               if (formers.some((item) => item.userId === parseInt(data.id))) {
@@ -35,8 +38,8 @@ export const checkConnection = (
                   (item) => item.userId === parseInt(data.id)
                 );
 
-                store.setProf(true, former[0].isValid);
-              }
+                store.setProf(true, former[0].status);
+              } else if (redirectIfNotTeacher) router.push("/");
             });
 
           store.setToken(token);
@@ -51,7 +54,6 @@ export const checkConnection = (
             user_id: data.id,
             isAdmin: data.roles.includes("ROLE_ADMIN"),
           });
-          // console.log("debug here", data.roles.includes("ROLE_ADMIN"));
 
           if (withRedirectOnConnect) router.push("/");
         })

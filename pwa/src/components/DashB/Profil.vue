@@ -9,7 +9,7 @@ const {
     isAdmin,
     isConnected,
     isTeacher,
-    isTeacherValid,
+    teacherStatus,
     token,
     ...infos
   },
@@ -28,7 +28,13 @@ const isDifferent = computed(() => {
   <div class="wrapperForm">
     <h1>Modifier mon profil</h1>
     <va-form style="width: 300px">
-      <va-input v-for="key in Object.keys(currentUser)" :key="key" class="my-3" :label="key" v-model="currentUser[key]"/>
+      <va-input
+        v-for="key in Object.keys(currentUser)"
+        :key="key"
+        class="my-3"
+        :label="key"
+        v-model="currentUser[key]"
+      />
       <button class="bttn bttn-prim" :disabled="!isDifferent">Valider</button>
     </va-form>
     <button class="bttn bttn-prim-out requestProf" v-if="!isTeacher">

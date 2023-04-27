@@ -8,6 +8,8 @@ import { store } from "../../store/store";
 
 const user = ref({});
 
+const loadingButton = ref(false);
+
 const {
   user: {
     id: userId,
@@ -15,16 +17,11 @@ const {
     isAdmin,
     isConnected,
     isTeacher,
-    isTeacherValid,
+    teacherStatus,
     token,
     ...infos
   },
 } = store;
-
-if (!isConnected) {
-  router.push("/");
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
 
 onMounted(async () => {
   if (token) {
@@ -70,6 +67,7 @@ watch(
 );
 
 const handleSubmit = () => {
+  loadingButton.value = true;
   axios
     .patch(
       import.meta.env.VITE_API_URL + "/users/" + userId,
@@ -82,6 +80,7 @@ const handleSubmit = () => {
     )
     .then(() => {
       toastr.success("Données mises à jour", "", { timeOut: 3000 });
+      loadingButton.value = false;
     })
     .catch((err) => {
       console.log("debug", err);
@@ -111,9 +110,16 @@ const handleSubmit = () => {
         <input class="innput" v-model="user.mail" />
       </div>
 
-      <button class="bttn bttn-prim" @click="handleSubmit">Valider</button>
-
-      <button class="bttn bttn-wng">Demander à passer professeur</button>
+      <button class="bttn bttn-prim" @click="handleSubmit">
+        <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          v-if="loadingButton"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Valider
+      </button>
     </div>
 
     <RightContainer page="personal-data" />
@@ -150,10 +156,6 @@ div.total-container {
     button.bttn-prim {
       margin: 2rem 1rem 0 auto;
       width: 100%;
-    }
-
-    button.bttn-wng {
-      margin: 2rem 1rem 0 auto;
     }
   }
 }

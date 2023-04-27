@@ -17,7 +17,7 @@ const initStore = {
     lastname: "",
     isAdmin: false,
     isTeacher: false,
-    isTeacherValid: bool,
+    teacherStatus: "",
     token: "",
   },
   courses: { list: {}, selected: null },
@@ -57,10 +57,23 @@ export const store = reactive({
   setToken(token) {
     this.user.token = token;
   },
-  setProf(isTeacher, isValid) {
+  setProf(isTeacher,status) {
     this.user.isTeacher = isTeacher;
-    this.user.isTeacherValid = isValid;
+    this.user.teacherStatus = status;
   },
+  setCart() {
+    this.cart.list = {};
+    JSON.parse(localStorage.getItem("CART"))?.map((id) => {
+      this.cart.list[id] = "key";
+    });
+    this.setListCoursesInCart();
+  },
+
+  setAddCart(courseId) {
+    this.cart.list = { ...this.cart.list, [courseId]: "1" };
+    this.setListCoursesInCart();
+  },
+
   selectCourse(id) {
     this.courses.selected = id;
   },
@@ -87,19 +100,6 @@ export const store = reactive({
     );
   },
 
-  setCart() {
-    this.cart.list = {}
-    JSON.parse(localStorage.getItem('CART'))?.map(id => {
-      this.cart.list[id] =  "key"
-    })
-    this.setListCoursesInCart()
-  },
-
-  setAddCart(courseId) {
-    this.cart.list = { ...this.cart.list, [courseId]: "1" };
-    this.setListCoursesInCart();
-  },
-
   deleteCart() {
     this.cart.list = {};
     this.setListCoursesInCart();
@@ -114,7 +114,7 @@ export const store = reactive({
     this.user.lastname = initStore.lastname;
     this.user.isAdmin = initStore.user.isAdmin;
     this.user.isTeacher = initStore.user.isTeacher;
-    this.user.isTeacherValid = initStore.user.isTeacherValid;
+    this.user.teacherStatus = initStore.user.teacherStatus;
     this.user.token = initStore.user.token;
   },
 });
@@ -130,5 +130,4 @@ export const setBuyCourse = (id) => {
   });
 
   store.courses.list[arrayFiltered[0][0]].possessed = true;
-
 };

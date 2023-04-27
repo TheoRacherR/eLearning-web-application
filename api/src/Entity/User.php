@@ -126,17 +126,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $userCourses;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Comment::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'user_id' ,targetEntity: Course::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Course::class, orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $courses;
 
     #[Groups(['read'])]
     #[ORM\Column]
     private ?bool $ban = false;
+
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Answer::class)]
+    private Collection $answers;
 
     public function __construct()
     {
@@ -146,6 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->lastActivity = new \DateTime();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,7 +174,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if ($roles === []) {
+            $roles[] = 'ROLE_USER';
+        }
 
         return array_unique($roles);
     }
@@ -340,6 +346,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBan(bool $ban): self
     {
         $this->ban = $ban;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): self
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers->add($answer);
+            $answer->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): self
+    {
+        if ($this->answers->removeElement($answer)) {
+            // set the owning side to null (unless already changed)
+            if ($answer->getAccount() === $this) {
+                $answer->setAccount(null);
+            }
+        }
 
         return $this;
     }

@@ -3,27 +3,22 @@ import LeftDashboard from "./LeftDashboard/LeftDashboard.vue";
 import axios from "axios";
 import { ref, watchEffect } from "vue";
 
-import router from '../../router';
-import { store } from "../../store/store";
+import router from "../../router";
+import { store, listUsers } from "../../store/store";
 import toastr from "toastr";
-
-if(!store.user.isConnected){
-  router.push("/")
-  toastr.error("Vous n'êtes pas connecté ", "", { timeOut: 3000 });
-}
-else if(!store.user.isAdmin){
-  router.push("/")
-  toastr.error("Vous n'êtes pas autorisé à accéder au backoffice ", "", { timeOut: 3000 });
-}
-
 
 const users = ref({});
 
 watchEffect(() => {
-  users.value = store.users.list;
+  const values = Object.values(store.users.list);
+  const concerned = values.filter(
+    (item) => item.isTeacher && item.teacherStatus === "WAITING"
+  );
+  const object = {};
+  concerned.map((item) => (object[item.id] = item));
 
+  users.value = object;
 });
-
 
 const getRole = (roles) => {
   let role = "";
@@ -43,6 +38,27 @@ const getRole = (roles) => {
   });
 
   return role;
+};
+
+const updateStatus = (formerId, status, userId) => {
+  axios
+    .patch(
+      import.meta.env.VITE_API_URL + "/formers/" + formerId,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      }
+    )
+    .then(() => {
+      console.log("debug", userId);
+      listUsers.value[userId].teacherStatus = status;
+      toastr.success("Demande validée", "", { timeOut: 3000 });
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
 };
 </script>
 
@@ -92,18 +108,22 @@ const getRole = (roles) => {
                     ><va-icon name="last_page"
                   /></RouterLink>
                 </button>
-                
+
                 <!--Refuser la demande-->
-                <button class="bttn bttn-succ">
+                <button
+                  class="bttn bttn-succ"
+                  @click="updateStatus(user.teacherId, 'VALIDATED', user.id)"
+                >
                   <va-icon name="done" />
                 </button>
 
                 <!--Accepter la demande-->
-                <button class="bttn bttn-dng">
+                <button
+                  class="bttn bttn-dng"
+                  @click="updateStatus(user.teacherId, 'REFUSED', user.id)"
+                >
                   <va-icon name="close" />
                 </button>
-
-                
               </td>
             </tr>
           </tbody>
@@ -136,6 +156,10 @@ div.container-dashboard {
       th,
       td {
         padding: 1rem;
+      }
+
+      td button {
+        margin-right: 1rem;
       }
 
       td.verifed {
