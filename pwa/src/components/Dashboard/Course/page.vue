@@ -7,9 +7,9 @@ import toastr from "toastr";
 import { listCourses, store } from "../../../store/store";
 import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
-import { RouterLink } from "vue-router"
+import { RouterLink } from "vue-router";
 
-const courseId = ref()
+const courseId = ref();
 
 const items = ref({});
 const validItems = ref({});
@@ -18,7 +18,6 @@ const chapterTitle = ref("");
 const chapter = ref("");
 const chapters = ref({});
 const nbChapter = ref(0);
-
 
 const number = ref("0123456789");
 
@@ -34,13 +33,12 @@ const course = ref({
   price: "",
 });
 
-const questions = ref({})
-const questionsGenerated = ref(false)
+const questions = ref({});
+const questionsGenerated = ref(false);
 
 const formerId = ref();
 
 watchEffect(() => {
-
   items.value = store.courses.list;
   for (const item in items.value) {
     if (items.value[item].id === parseInt(courseId.value)) {
@@ -55,19 +53,18 @@ watchEffect(() => {
     }
   }
   if (Object.values(validItems.value).length > 0) {
-    chapters.value = JSON.parse(validItems.value[courseId.value].sequence)['chapters']
-    // questions.value = JSON.parse(validItems.value[courseId.value].sequence)['questions']
+    chapters.value = JSON.parse(
+      validItems.value[courseId.value].sequence
+    ).chapters;
+    questions.value = JSON.parse(
+      validItems.value[courseId.value].sequence
+    )?.questions;
 
-    // console.log(questions.value)
-    nbChapter.value = Object.values(JSON.parse(validItems.value[courseId.value].sequence)['chapters']).length
-
-    console.log(Object.values(JSON.parse(validItems.value[courseId.value].sequence)['questions']))
-    console.log("init chapters")
-
+    nbChapter.value = Object.values(
+      JSON.parse(validItems.value[courseId.value].sequence).chapters
+    ).length;
   }
-
-})
-
+});
 
 onMounted(() => {
   courseId.value = router.currentRoute.value.params.id;
@@ -88,54 +85,62 @@ onMounted(() => {
             formerId.value = userIID;
           }
         });
-      });    
+      });
   }
-  
-
 });
 
 const generateQuestions = async () => {
-  const obj = JSON.parse(validItems.value[courseId.value].sequence)["questions"];
+  const obj = JSON.parse(validItems.value[courseId.value].sequence)[
+    "questions"
+  ];
   for (const quest in obj) {
-    console.log(quest)
-      axios
+    console.log(quest);
+    axios
       .get(import.meta.env.VITE_API_URL + "/questions/" + quest, {
         headers: {
           Authorization: `Bearer ${store.user.token}`,
         },
       })
-        .then((data) => {
-          console.log(JSON.parse(data.data.settings).content)
-          questions.value[data.data.id] = {
-            question: JSON.parse(data.data.settings).content
-          }
-          console.log(questions.value)
+      .then((data) => {
+        console.log(JSON.parse(data.data.settings).content);
+        questions.value[data.data.id] = {
+          question: JSON.parse(data.data.settings).content,
+        };
+        console.log(questions.value);
       });
   }
   questionsGenerated.value = true;
-}
-
+};
 
 const handleSubmitCourse = async () => {
-  if (formerId && course.value.title.length > 0 && course.value.description.length > 0 && course.value.price.length > 0 && Object.values(chapters.value).length > 0) {
+  if (
+    formerId &&
+    course.value.title.length > 0 &&
+    course.value.description.length > 0 &&
+    course.value.price.length > 0 &&
+    Object.values(chapters.value).length > 0
+  ) {
     submitting.value = true;
     axios
-    .patch(
-      import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+      .patch(
+        import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
           title: course.value.title,
           description: course.value.description,
           price: parseInt(course.value.price),
           valid: 0,
           updatedAt: "NOW",
-          sequence: JSON.stringify({ ['chapters']: chapters.value, ['questions']: questions.value }),
+          sequence: JSON.stringify({
+            ["chapters"]: chapters.value,
+            ["questions"]: questions.value,
+          }),
         },
         {
           headers: {
-            Authorization  : `Bearer ${store.user.token}`,
+            Authorization: `Bearer ${store.user.token}`,
           },
         }
-    )
+      )
       .then(() => {
         toastr.success("Cours modifié", "", { timeOut: 3000 });
         submitting.value = false;
@@ -149,51 +154,50 @@ const handleSubmitCourse = async () => {
   }
 };
 
-const deleteAQuestion = async (id) => {
-  delete questions.value[id];
-  // console.log(questions.value[id])
+const deleteAQuestion = async (index, questionId) => {
   axios
-    .delete(
-      import.meta.env.VITE_API_URL + "/questions/" + id,
-        {
-          headers: {
-            Authorization  : `Bearer ${store.user.token}`,
-          },
-        }
-  ).then(() => {
-    axios
-    .patch(
-      import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
-        {
-          valid: 0,
-          updatedAt: "NOW",
-          sequence: JSON.stringify({ ['chapters']: chapters.value, ['questions']: questions.value }),
-        },
-        {
-          headers: {
-            Authorization  : `Bearer ${store.user.token}`,
-          },
-        }
-    )
-      .then(() => {
-        toastr.success("Question supprimé", "", { timeOut: 3000 });
-        submitting.value = false;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .delete(import.meta.env.VITE_API_URL + "/questions/" + questionId, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
     })
-  console.log("deleted")
-}
+    .then(() => {
+      questions.value.splice(index, 1);
+
+      axios
+        .patch(
+          import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+          {
+            valid: 0,
+            updatedAt: "NOW",
+            sequence: JSON.stringify({
+              chapters: chapters.value,
+              questions: questions.value,
+            }),
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${store.user.token}`,
+            },
+          }
+        )
+        .then(() => {
+          toastr.success("Question supprimé", "", { timeOut: 3000 });
+          submitting.value = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+};
 
 const editOrAdd = async () => {
   if (editChapter.value) {
     // editAChapter();
-  }
-  else {
+  } else {
     addNewChapter();
   }
-}
+};
 
 // const clickToEdit = async (id) => {
 //   idToEdit.value = id;
@@ -205,19 +209,20 @@ const editOrAdd = async () => {
 // }
 
 const addNewChapter = async () => {
-  if (chapterTitle.value.length > 0 && chapter.value.getHTML() != "<p><br></p>") {
-
+  if (
+    chapterTitle.value.length > 0 &&
+    chapter.value.getHTML() != "<p><br></p>"
+  ) {
     chapters.value[nbChapter.value] = {
-        title: chapterTitle.value,
-        content: chapter.value.getHTML()
+      title: chapterTitle.value,
+      content: chapter.value.getHTML(),
     };
-    console.log(chapters.value)
+    console.log(chapters.value);
     chapterTitle.value = "";
     document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
     chapter.value = "";
     nbChapter.value = nbChapter.value + 1;
     chapterEditorOn.value = false;
-
   }
 };
 
@@ -234,21 +239,32 @@ const addNewChapter = async () => {
 
 const deleteAChapter = async (id) => {
   delete chapters.value[id];
-  console.log(chapters.value)
-  console.log("deleted")
-}
+  console.log(chapters.value);
+  console.log("deleted");
+};
 
 const cancelEditor = async () => {
   chapterTitle.value = "";
   document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
   chapter.value = "";
   chapterEditorOn.value = false;
-}
+};
 
 const checkNumber = () => {
-  if (!number.value.includes(course.value.price.substring(course.value.price.length - 1, course.value.price.length)))
-  { course.value.price = course.value.price.substring(course.value.price.length - 1, 0) }
-}
+  if (
+    !number.value.includes(
+      course.value.price.substring(
+        course.value.price.length - 1,
+        course.value.price.length
+      )
+    )
+  ) {
+    course.value.price = course.value.price.substring(
+      course.value.price.length - 1,
+      0
+    );
+  }
+};
 </script>
 
 <template>
@@ -272,7 +288,7 @@ const checkNumber = () => {
                 aria-label="Amount (to the nearest dollar)"
                 v-model="course.price"
                 placeholder="Prix"
-                @input='checkNumber'
+                @input="checkNumber"
               />
               <span class="input-group-text">€</span>
             </div>
@@ -345,41 +361,51 @@ const checkNumber = () => {
             <button class="bttn bttn-wng" @click="editOrAdd">Valider</button>
             <button class="bttn bttn-dng" @click="cancelEditor">Annuler</button>
           </div>
-
         </div>
         <div class="list-course">
           <div v-for:="(item, index) in chapters" class="itemss">
             <div>Chapitre {{ index }} "{{ item.title }}"</div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
-              <button class="bttn bttn-dng" @click="deleteAChapter(index)"><va-icon name="delete"/></button>
+              <button class="bttn bttn-dng" @click="deleteAChapter(index)">
+                <va-icon name="delete" />
+              </button>
             </div>
           </div>
         </div>
 
         <!-- Ajouter une question -->
-        <button class="bttn bttn-wng quiz-btn">
+        <button class="bttn bttn-wng quiz-btn" v-if="questions.length === 0">
           <RouterLink :to="`/db/quiz/create/${courseId}`">
-            <va-icon name="add"/>
+            <va-icon name="add" />
             Créer un Quiz
           </RouterLink>
         </button>
+        <button class="bttn bttn-wng quiz-btn" v-else="questions.length === 0">
+          <RouterLink :to="`/db/quiz/create/${courseId}`">
+            <va-icon name="add" />
+            Ajouter des questions
+          </RouterLink>
+        </button>
 
-        
         <div class="list-course">
           <button class="bttn bttn-drk quiz-btn" @click="generateQuestions">
-            <va-icon name="refresh"/>
+            <va-icon name="refresh" />
             Rafraichir les questions
           </button>
           <div v-for:="(item, index) in questions" class="itemss">
             <div>Question {{ index }} "{{ item.question }}"</div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
-              <button class="bttn bttn-dng" @click="deleteAQuestion(index)"><va-icon name="delete"/></button>
+              <button
+                class="bttn bttn-dng"
+                @click="deleteAQuestion(index, item.questionId)"
+              >
+                <va-icon name="delete" />
+              </button>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -426,10 +452,9 @@ div.container-dashboard {
       width: 20%;
       margin-left: 80%;
       justify-content: space-around;
-      
     }
-    
-    div.group-buttons{
+
+    div.group-buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 2rem;
@@ -452,11 +477,11 @@ div.container-dashboard {
         }
       }
 
-      div.itemss:nth-child(2n-1){
+      div.itemss:nth-child(2n-1) {
         background-color: rgb(245, 245, 245);
       }
     }
-    button.quiz-btn a{
+    button.quiz-btn a {
       text-decoration: none;
       color: white;
     }
