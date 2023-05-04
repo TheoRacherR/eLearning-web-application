@@ -92,6 +92,7 @@ const submitComment = () => {
         },
       })
       .then(() => {
+        toastr.info("Votre commentaire est en cours de validation", "", { timeout: 3000 });
         initData();
         closeCommenting();
       })
