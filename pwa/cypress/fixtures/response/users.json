@@ -1,0 +1,178 @@
+{
+  "@context": "/contexts/User",
+  "@id": "/users",
+  "@type": "hydra:Collection",
+  "hydra:member": [
+    {
+      "@id": "/users/1",
+      "@type": "User",
+      "id": 1,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "emmanuelle.boucher@morel.org",
+      "firstname": "Benoît",
+      "lastname": "Lelievre",
+      "createdAt": "2023-05-05T12:25:22+00:00",
+      "updatedAt": "2023-05-05T12:25:22+00:00",
+      "lastActivity": "2023-05-05T12:25:22+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/2",
+      "@type": "User",
+      "id": 2,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "dlaunay@morel.com",
+      "firstname": "Martin",
+      "lastname": "Perrier",
+      "createdAt": "2023-05-05T12:25:23+00:00",
+      "updatedAt": "2023-05-05T12:25:23+00:00",
+      "lastActivity": "2023-05-05T12:25:23+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/3",
+      "@type": "User",
+      "id": 3,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "delannoy.audrey@bouygtel.fr",
+      "firstname": "Sébastien",
+      "lastname": "Tessier",
+      "createdAt": "2023-05-05T12:25:23+00:00",
+      "updatedAt": "2023-05-05T12:25:23+00:00",
+      "lastActivity": "2023-05-05T12:25:23+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/4",
+      "@type": "User",
+      "id": 4,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "alex.pages@rodriguez.com",
+      "firstname": "Marthe",
+      "lastname": "Bailly",
+      "createdAt": "2023-05-05T12:25:23+00:00",
+      "updatedAt": "2023-05-05T12:25:23+00:00",
+      "lastActivity": "2023-05-05T12:25:23+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/5",
+      "@type": "User",
+      "id": 5,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "celine.gomes@gmail.com",
+      "firstname": "Thierry",
+      "lastname": "Maurice",
+      "createdAt": "2023-05-05T12:25:24+00:00",
+      "updatedAt": "2023-05-05T12:25:24+00:00",
+      "lastActivity": "2023-05-05T12:25:24+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/6",
+      "@type": "User",
+      "id": 6,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "augustin04@delahaye.com",
+      "firstname": "Paul",
+      "lastname": "Allard",
+      "createdAt": "2023-05-05T12:25:24+00:00",
+      "updatedAt": "2023-05-05T12:25:24+00:00",
+      "lastActivity": "2023-05-05T12:25:24+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/7",
+      "@type": "User",
+      "id": 7,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "nguyen.eric@legall.fr",
+      "firstname": "Maurice",
+      "lastname": "Pineau",
+      "createdAt": "2023-05-05T12:25:24+00:00",
+      "updatedAt": "2023-05-05T12:25:24+00:00",
+      "lastActivity": "2023-05-05T12:25:24+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/8",
+      "@type": "User",
+      "id": 8,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "sabine.bourdon@dupuy.com",
+      "firstname": "Jeanne",
+      "lastname": "Berger",
+      "createdAt": "2023-05-05T12:25:25+00:00",
+      "updatedAt": "2023-05-05T12:25:25+00:00",
+      "lastActivity": "2023-05-05T12:25:25+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/9",
+      "@type": "User",
+      "id": 9,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "dijoux.alex@raymond.com",
+      "firstname": "Marc",
+      "lastname": "Barthelemy",
+      "createdAt": "2023-05-05T12:25:25+00:00",
+      "updatedAt": "2023-05-05T12:25:25+00:00",
+      "lastActivity": "2023-05-05T12:25:25+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    },
+    {
+      "@id": "/users/10",
+      "@type": "User",
+      "id": 10,
+      "roles": [
+        "ROLE_USER"
+      ],
+      "mail": "guillou.patrick@legrand.org",
+      "firstname": "Capucine",
+      "lastname": "Jacquet",
+      "createdAt": "2023-05-05T12:25:25+00:00",
+      "updatedAt": "2023-05-05T12:25:25+00:00",
+      "lastActivity": "2023-05-05T12:25:25+00:00",
+      "valid": true,
+      "userCourses": [],
+      "ban": false
+    }
+  ],
+  "hydra:totalItems": 10
+}

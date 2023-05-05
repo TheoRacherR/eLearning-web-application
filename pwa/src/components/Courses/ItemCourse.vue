@@ -70,7 +70,7 @@ const handleCart = () => {
                         Déjà dans le panier
                     </div>
                     <div v-else class="addToCart">
-                        <button class="bttn bttn-succ" @click="handleCart">
+                        <button class="bttn bttn-succ" data-test="addToCartButton" @click="handleCart">
                             <va-icon name="add_shopping_cart" />
                         </button>
                     </div>

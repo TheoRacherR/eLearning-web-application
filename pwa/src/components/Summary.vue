@@ -22,7 +22,6 @@ onMounted(() => {
       })
       .then((res) => {
         if (res.data.status === "complete") {
-          console.log("coucou");
           const cart = Object.values(store.listCoursesInCart.list);
           for (let i = 0; i < cart.length; i++) {
             axios
@@ -157,7 +156,7 @@ const onSubmitCart = () => {
           </div>
         </div>
 
-        <button class="bttn bttn-succ" @click="onSubmitCart">
+        <button class="bttn bttn-succ" @click="onSubmitCart" data-test="submitCartButton">
           <div
             class="spinner-border spinner-border-sm"
             role="status"
