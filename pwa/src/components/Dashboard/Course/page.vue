@@ -126,7 +126,6 @@ const handleSubmitCourse = async () => {
           title: course.value.title,
           description: course.value.description,
           price: parseInt(course.value.price),
-          valid: 0,
           updatedAt: "NOW",
           sequence: JSON.stringify({ ['chapters']: chapters.value, ['questions']: questions.value }),
         },
