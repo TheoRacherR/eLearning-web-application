@@ -60,14 +60,9 @@ const handleCart = () => {
                 <div class="description-item">{{ description }}</div>
             </RouterLink>
             <div v-if="props.addToCart === true">
-                <div v-if="course?.possessed && store.user.isConnected" class="check">
-                    <div class="possessed">
-                        Vous possédez ce cours
-                    </div>
-                </div>
-                <div v-else-if="!course?.possessed && store.user.isConnected" class="check">
+                <div v-if="!course?.possessed && store.user.isConnected" class="check">
                     <div v-if="Object.keys(store.cart.list).includes(props.id.toString())" class="alreadyInCart">
-                        Déjà dans le panier
+                        Ce cours est dans le panier
                     </div>
                     <div v-else class="addToCart">
                         <button class="bttn bttn-succ" @click="handleCart">
@@ -126,13 +121,11 @@ div.container-item{
             color: #fff;
             
             > div.possessed {
-                padding: .2rem 1rem;
-                background-color: #47ad0b;
+                color: #47ad0b;
 
             }
             > div.alreadyInCart {
-                padding: .2rem 1rem;
-                background-color: #ca3611;
+                color: #ca3611;
             }
         }
     }

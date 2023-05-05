@@ -8,8 +8,6 @@ const props = defineProps({
   },
 });
 
-console.log(store.user);
-
 let links = [
   {
     name: "Mes achats",
