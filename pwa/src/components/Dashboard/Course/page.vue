@@ -56,14 +56,7 @@ watchEffect(() => {
   }
   if (Object.values(validItems.value).length > 0) {
     chapters.value = JSON.parse(validItems.value[courseId.value].sequence)['chapters']
-    // questions.value = JSON.parse(validItems.value[courseId.value].sequence)['questions']
-
-    // console.log(questions.value)
     nbChapter.value = Object.values(JSON.parse(validItems.value[courseId.value].sequence)['chapters']).length
-
-    console.log(Object.values(JSON.parse(validItems.value[courseId.value].sequence)['questions']))
-    console.log("init chapters")
-
   }
 
 })
@@ -71,7 +64,6 @@ watchEffect(() => {
 
 onMounted(() => {
   courseId.value = router.currentRoute.value.params.id;
-  // generateQuestions();
   if (store.user.isConnected) {
     axios
       .get(import.meta.env.VITE_API_URL + "/formers", {
@@ -97,7 +89,6 @@ onMounted(() => {
 const generateQuestions = async () => {
   const obj = JSON.parse(validItems.value[courseId.value].sequence)["questions"];
   for (const quest in obj) {
-    console.log(quest)
       axios
       .get(import.meta.env.VITE_API_URL + "/questions/" + quest, {
         headers: {
@@ -105,9 +96,13 @@ const generateQuestions = async () => {
         },
       })
         .then((data) => {
-          console.log(JSON.parse(data.data.settings).content)
+          console.log(JSON.parse(data.data.settings).answers[0])
           questions.value[data.data.id] = {
-            question: JSON.parse(data.data.settings).content
+            question: JSON.parse(data.data.settings).content,
+            answer1: JSON.parse(data.data.settings).answers[0],
+            answer2: JSON.parse(data.data.settings).answers[1],
+            answer3: JSON.parse(data.data.settings).answers[2],
+            answer4: JSON.parse(data.data.settings).answers[3],
           }
           console.log(questions.value)
       });
@@ -150,7 +145,6 @@ const handleSubmitCourse = async () => {
 
 const deleteAQuestion = async (id) => {
   delete questions.value[id];
-  // console.log(questions.value[id])
   axios
     .delete(
       import.meta.env.VITE_API_URL + "/questions/" + id,
@@ -185,24 +179,6 @@ const deleteAQuestion = async (id) => {
   console.log("deleted")
 }
 
-const editOrAdd = async () => {
-  if (editChapter.value) {
-    // editAChapter();
-  }
-  else {
-    addNewChapter();
-  }
-}
-
-// const clickToEdit = async (id) => {
-//   idToEdit.value = id;
-//   editChapter.value = true;
-//   chapterEditorOn.value = true;
-//   chapterTitle.value = Object.values(chapters.value)[id].title;
-//   chapter.value = Object.values(chapters.value)[id].content;
-//   document.getElementsByClassName("ql-editor").innerHTML = "<div>" + Object.values(chapters.value)[id].content + "</div>";
-// }
-
 const addNewChapter = async () => {
   if (chapterTitle.value.length > 0 && chapter.value.getHTML() != "<p><br></p>") {
 
@@ -219,17 +195,6 @@ const addNewChapter = async () => {
 
   }
 };
-
-// const editAChapter = async () => {
-//   chapters.value[idToEdit.value] = {
-//     title: chapterTitle.value,
-//     content: chapter.value.getHTML(),
-//   };
-//   chapterTitle.value = "";
-//   document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
-//   chapter.value = "";
-//   chapterEditorOn.value = false;
-// }
 
 const deleteAChapter = async (id) => {
   delete chapters.value[id];
@@ -341,7 +306,7 @@ const checkNumber = () => {
             placeholder="Rédigez votre cours ici..."
           />
           <div class="group-buttons">
-            <button class="bttn bttn-wng" @click="editOrAdd">Valider</button>
+            <button class="bttn bttn-wng" @click="addNewChapter">Valider</button>
             <button class="bttn bttn-dng" @click="cancelEditor">Annuler</button>
           </div>
 
@@ -371,7 +336,20 @@ const checkNumber = () => {
             Rafraichir les questions
           </button>
           <div v-for:="(item, index) in questions" class="itemss">
-            <div>Question {{ index }} "{{ item.question }}"</div>
+            <div>
+              <div>Question : "{{ item.question }}"</div>
+              <div v-if="item.answer1.isGoodAnswer" style="color: green;">Réponse 1 : {{ item.answer1.label }} <va-icon name="check"></va-icon></div>
+              <div v-else style="color: red;">Réponse 1 : {{ item.answer1.label }} <va-icon name="close"></va-icon></div>
+
+              <div v-if="item.answer2.isGoodAnswer" style="color: green;">Réponse 2 : {{ item.answer2.label }} <va-icon name="check"></va-icon></div>
+              <div v-else style="color: red;">Réponse 2 : {{ item.answer2.label }} <va-icon name="close"></va-icon></div>
+
+              <div v-if="item.answer3.isGoodAnswer" style="color: green;">Réponse 3 : {{ item.answer3.label }} <va-icon name="check"></va-icon></div>
+              <div v-else style="color: red;">Réponse 3 : {{ item.answer3.label }} <va-icon name="close"></va-icon></div>
+
+              <div v-if="item.answer4.isGoodAnswer" style="color: green;">Réponse 4 : {{ item.answer4.label }} <va-icon name="check"></va-icon></div>
+              <div v-else style="color: red;">Réponse 4 : {{ item.answer4.label }} <va-icon name="close"></va-icon></div>
+            </div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
               <button class="bttn bttn-dng" @click="deleteAQuestion(index)"><va-icon name="delete"/></button>
