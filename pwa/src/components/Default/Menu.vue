@@ -37,7 +37,7 @@ watchEffect(() => {
         </div>
         <div class="fill" v-if="store.user.isConnected"></div>
         <div>
-          <RouterLink v-if="store.user.isConnected" to="/list-mypurchases"
+          <RouterLink v-if="store.user.isConnected" data-test="myPurchases" to="/list-mypurchases"
             >Mes achats</RouterLink
           >
         </div>

@@ -49,16 +49,13 @@ const handleCart = () => {
 </script>
 
 <template>
+    <RouterLink :to="`/detail/${props.id}`">
     <div class="container-item">
-        <RouterLink :to="`/detail/${props.id}`">
-            <img v-if="props.image !== null" src="../../../public/not-found.png" alt="not found image">
-            <img v-else :src="props.image" alt="image of the product" />
-        </RouterLink>
+        <img v-if="props.image !== null" src="../../../public/not-found.png" alt="not found image">
+        <img v-else :src="props.image" alt="image of the product" />
         <div class="right-box">
-            <RouterLink :to="`/detail/${props.id}`">
                 <div class="title-item">{{ title }}</div>
                 <div class="description-item">{{ description }}</div>
-            </RouterLink>
             <div v-if="props.addToCart === true">
                 <div v-if="course?.possessed && store.user.isConnected" class="check">
                     <div class="possessed">
@@ -78,6 +75,7 @@ const handleCart = () => {
             </div>
         </div>
     </div>
+    </RouterLink>
 </template>
 
 <style lang="scss" scoped>
@@ -124,7 +122,7 @@ div.container-item{
             display: flex;
             justify-content: end;
             color: #fff;
-            
+
             > div.possessed {
                 padding: .2rem 1rem;
                 background-color: #47ad0b;
