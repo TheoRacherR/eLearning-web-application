@@ -1,0 +1,7 @@
+{
+  "@context": "/contexts/Former",
+  "@id": "/formers",
+  "@type": "hydra:Collection",
+  "hydra:member": [],
+  "hydra:totalItems": 0
+}

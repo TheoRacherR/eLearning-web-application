@@ -149,6 +149,7 @@ watch(rating, () => {
       v-if="course?.possessed && store.user.isConnected"
       :to="`/course/${courseId}`"
       class="bttn bttn-prim-out"
+      data-test="continueCourse"
       >Reprendre ce cours</router-link
     >
     <div class="wrapperCommentsList">
