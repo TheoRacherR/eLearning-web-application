@@ -18,10 +18,6 @@ initData();
 
 const links1 = [
   {
-    title: "Google",
-    link: "https://www.google.com",
-  },
-  {
     title: "Twitter",
     link: "https://www.twitter.com",
   },
@@ -30,38 +26,23 @@ const links1 = [
     link: "https://www.facebook.com",
   },
   {
-    title: "Twitch",
-    link: "https://www.twitch.tv",
+    title: "Instagram",
+    link: "https://www.instagram.com",
   },
 ];
 
 const links2 = [
   {
-    title: "Yahoo",
-    link: "https://www.yahoo.com",
+    title: "Changer mes informations",
+    link: "/user/personal-data",
   },
   {
-    title: "Instagram",
-    link: "https://www.instagram.com",
+    title: "Mes achats",
+    link: "/user/mypurchases",
   },
   {
-    title: "Spotify",
-    link: "https://www.spotify.com",
-  },
-];
-
-const links3 = [
-  {
-    title: "Amazon",
-    link: "https://www.amazon.com",
-  },
-  {
-    title: "Microsoft",
-    link: "https://www.microsoft.com",
-  },
-  {
-    title: "Apple",
-    link: "https://www.apple.com",
+    title: "Notre politique de confidentialité",
+    link: "/user/confidentiality",
   },
 ];
 </script>
@@ -99,7 +80,7 @@ const links3 = [
     <Suspense> <RouterView /></Suspense>
   </main>
 
-  <Footer :links1="links1" :links2="links2" :links3="links3"/>
+  <Footer :links1="links1" :links2="links2" />
 </template>
 
 <style scoped>
