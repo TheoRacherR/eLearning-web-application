@@ -39,6 +39,8 @@ const getCourses = () => {
                 stripeProductId: item.stripeProductId,
                 stripePriceId: item.stripePriceId,
                 sequence: item.sequence,
+                created_at: item.createdAt,
+                updated_at: item.updated_at,
               };
             });
 

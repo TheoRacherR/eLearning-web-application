@@ -26,7 +26,7 @@ const pg = (props.number / props.total) * 100;
         <h4>{{ title }}</h4>
         <div class="box">
             <div class="number">{{ number }}</div>
-            <div class="text"> Soit {{ pg }}% du nombre total</div>
+            <div class="text"> Soit {{ Number((pg).toFixed(2)) }}% du nombre total</div>
         </div>
     </div>
 </template>
