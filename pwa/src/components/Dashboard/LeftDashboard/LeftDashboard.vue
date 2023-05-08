@@ -8,6 +8,9 @@ import router from "../../../router";
 const itemsCourse = ref({});
 let countInvalidItemCourse = ref(0);
 
+const itemsReport = ref({});
+let countInvalidItemReport = ref(0);
+
 const itemsComment = ref({});
 let countInvalidItemComment = ref(0);
 
@@ -20,6 +23,14 @@ watchEffect(() => {
     }
   }
 
+  itemsReport.value = store.reports.list;
+
+  for (const item in itemsReport.value) {
+    if (itemsReport.value[item]) {
+      countInvalidItemReport.value += 1;
+    }
+  }
+
   itemsComment.value = store.comments.list;
 
   for (const item in itemsComment.value) {
@@ -29,10 +40,6 @@ watchEffect(() => {
   }
 });
 
-const navigateListQuiz = () => {
-  const courseId = 62; // Prcq il existe
-  router.push(`/db/quiz/list/${courseId}`);
-};
 </script>
 
 <template>
@@ -61,17 +68,6 @@ const navigateListQuiz = () => {
         <va-icon name="chevron_right" />
       </RouterLink>
     </div>
-
-
-    <!--
-    <button
-      v-if="store.user.isTeacher"
-      class="bttn bttn-succ quiz"
-      @click="navigateListQuiz"
-    >
-      Liste quiz
-    </button>
-    -->
 
 
     <!-- Liste pour les admins -->
@@ -103,13 +99,17 @@ const navigateListQuiz = () => {
         <va-icon name="chevron_right" />
       </RouterLink>
       <RouterLink to="/db/to-valid-course">
-        <div v-if="countInvalidItemCourse > 0" class="container-tab">
-          <va-icon name="menu_book" size="small" />À valider ({{
+        <div class="container-tab">
+          <va-icon name="hourglass_empty" size="small" />À valider ({{
             countInvalidItemCourse
           }})
         </div>
-        <div v-else class="container-tab">
-          <va-icon name="menu_book" size="small" />À valider
+        <va-icon name="chevron_right" />
+      </RouterLink>
+
+      <RouterLink to="/db/reports-list">
+        <div class="container-tab">
+          <va-icon name="warning" size="small" />Signalements ({{ countInvalidItemReport }})
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>
@@ -125,13 +125,10 @@ const navigateListQuiz = () => {
         <va-icon name="chevron_right" />
       </RouterLink>
       <RouterLink to="/db/to-valid-comm">
-        <div v-if="countInvalidItemComment > 0" class="container-tab">
+        <div class="container-tab">
           <va-icon name="chat" size="small" />À valider ({{
             countInvalidItemComment
           }})
-        </div>
-        <div v-else class="container-tab">
-          <va-icon name="chat" size="small" />À valider
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>
@@ -143,7 +140,7 @@ const navigateListQuiz = () => {
 div.left-board {
   width: 20vw;
   min-height: 100vh;
-  padding-top: 1rem;
+  padding: 1rem;
   background-color: #262c31;
   color: var(--color-text-dark);
   text-align: center;

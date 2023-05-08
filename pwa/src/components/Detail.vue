@@ -216,6 +216,13 @@ watch(rating, () => {
       </button>
     </div>
 
+    <div class="report-container" v-if="store.user.isConnected && course?.possessed">
+      <button class="bttn bttn-dng">
+        <va-icon name="warning"></va-icon>
+        Signaler ce cours
+      </button>
+    </div>
+
 
   </div>
 </template>
@@ -237,8 +244,14 @@ div.wrapper {
     max-width: 20rem;
   }
 
+  div.report-container {
+    margin: 5vh auto;
+    text-align: right;
+    width: 50%;
+  }
+
   div.wrapperCommentsList {
-    margin: 15vh auto 3vh auto;
+    margin: 10vh auto 3vh auto;
     width: 50%;
     text-align: left;
 

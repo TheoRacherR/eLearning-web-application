@@ -39,6 +39,7 @@ class CourseReportRepository extends ServiceEntityRepository
         }
     }
 
+
 //    /**
 //     * @return CourseReport[] Returns an array of CourseReport objects
 //     */
