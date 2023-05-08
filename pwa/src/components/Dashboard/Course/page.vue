@@ -21,6 +21,9 @@ const nbChapter = ref(0);
 
 
 const number = ref("0123456789");
+const numberV = ref("0123456789,");
+
+const floated = ref(false);
 
 const editChapter = ref(false);
 const chapterEditorOn = ref(false);
@@ -210,8 +213,34 @@ const cancelEditor = async () => {
 }
 
 const checkNumber = () => {
-  if (!number.value.includes(course.value.price.substring(course.value.price.length - 1, course.value.price.length)))
-  { course.value.price = course.value.price.substring(course.value.price.length - 1, 0) }
+  if (!course.value.price.includes(',')) {
+    floated.value = false;
+  }
+  if (floated.value === false) {
+    if (!numberV.value.includes(course.value.price.substring(course.value.price.length - 1, course.value.price.length))) {
+      course.value.price = course.value.price.substring(course.value.price.length - 1, 0)
+    }
+    if (course.value.price.includes(",")) {
+      console.log("first")
+      if (course.value.price.length > 0) {
+        console.log('1');
+        floated.value = true;
+      }
+      else {
+        console.log('2');
+        course.value.price = '';
+      }
+    }
+
+  }
+  else {
+    if (!number.value.includes(course.value.price.substring(course.value.price.length - 1, course.value.price.length)))
+    {
+      course.value.price = course.value.price.substring(course.value.price.length - 1, 0)
+    }
+  }
+
+
 }
 </script>
 
