@@ -29,10 +29,6 @@ watchEffect(() => {
   }
 });
 
-const navigateListQuiz = () => {
-  const courseId = 62; // Prcq il existe
-  router.push(`/db/quiz/list/${courseId}`);
-};
 </script>
 
 <template>
@@ -104,12 +100,18 @@ const navigateListQuiz = () => {
       </RouterLink>
       <RouterLink to="/db/to-valid-course">
         <div v-if="countInvalidItemCourse > 0" class="container-tab">
-          <va-icon name="menu_book" size="small" />À valider ({{
+          <va-icon name="hourglass_empty" size="small" />À valider ({{
             countInvalidItemCourse
           }})
         </div>
         <div v-else class="container-tab">
           <va-icon name="menu_book" size="small" />À valider
+        </div>
+        <va-icon name="chevron_right" />
+      </RouterLink>
+      <RouterLink to="/db/reports-list">
+        <div class="container-tab">
+          <va-icon name="warning" size="small" />Signalements
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>
@@ -131,7 +133,7 @@ const navigateListQuiz = () => {
           }})
         </div>
         <div v-else class="container-tab">
-          <va-icon name="chat" size="small" />À valider
+          <va-icon name="hourglass_empty" size="small" />À valider
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>
@@ -143,7 +145,7 @@ const navigateListQuiz = () => {
 div.left-board {
   width: 20vw;
   min-height: 100vh;
-  padding-top: 1rem;
+  padding: 1rem;
   background-color: #262c31;
   color: var(--color-text-dark);
   text-align: center;

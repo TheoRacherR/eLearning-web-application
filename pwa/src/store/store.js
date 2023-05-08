@@ -2,8 +2,9 @@ import { reactive, ref, toRaw } from "vue";
 import { initData } from "../utils/initData";
 
 export const listCourses = ref({});
-export const listComments = ref({});
 export const listUsers = ref({});
+export const listComments = ref({});
+export const listReports = ref({});
 
 const bool = false;
 
@@ -25,6 +26,7 @@ const initStore = {
   listCoursesInCart: { list: {} },
   users: { list: {} },
   comments: { list: {} },
+  reports: { list: {} },
 };
 
 export const store = reactive({
@@ -40,6 +42,10 @@ export const store = reactive({
   comments: {
     ...initStore.comments,
     list: listComments,
+  },
+  reports: {
+    ...initStore.reports,
+    list: listReports,
   },
   setConnected(isConnected) {
     this.user.isConnected = isConnected;
@@ -83,11 +89,15 @@ export const store = reactive({
   },
 
   getUsers() {
-    return Object.values(this.comments.list);
+    return Object.values(this.users.list);
   },
 
   getComments() {
     return Object.values(this.comments.list);
+  },
+
+  getReports() {
+    return Object.values(this.reports.list);
   },
 
   setListCoursesInCart() {

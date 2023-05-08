@@ -46,6 +46,20 @@ const router = createRouter({
       component: () => import("../components/Dashboard/CoursesToValidate.vue"),
     },
 
+    //Liste des signalements
+    {
+      path: "/db/reports-list",
+      name: "db-reports-list",
+      component: () => import("../components/Dashboard/ReportsList.vue"),
+    },
+
+    //Liste des signalements
+    {
+      path: "/db/course-reports/:id",
+      name: "db-course-reports",
+      component: () => import("../components/Dashboard/CourseReports.vue"),
+    },
+
     //Liste des commentaires
     {
       path: "/db/comm-list",
@@ -128,6 +142,13 @@ const router = createRouter({
       path: "/detail/:id",
       name: "detail",
       component: () => import("../components/Detail.vue"),
+    },
+
+    //Page de report du cours
+    {
+      path: "/report/:id",
+      name: "report-course",
+      component: () => import("../components/Courses/ReportCourse.vue"),
     },
 
     //Dans le cours
