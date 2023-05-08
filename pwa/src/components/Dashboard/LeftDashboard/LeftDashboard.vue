@@ -8,6 +8,9 @@ import router from "../../../router";
 const itemsCourse = ref({});
 let countInvalidItemCourse = ref(0);
 
+const itemsReport = ref({});
+let countInvalidItemReport = ref(0);
+
 const itemsComment = ref({});
 let countInvalidItemComment = ref(0);
 
@@ -17,6 +20,14 @@ watchEffect(() => {
   for (const item in itemsCourse.value) {
     if (itemsCourse.value[item].valid == 0) {
       countInvalidItemCourse.value += 1;
+    }
+  }
+
+  itemsReport.value = store.reports.list;
+
+  for (const item in itemsReport.value) {
+    if (itemsReport.value[item]) {
+      countInvalidItemReport.value += 1;
     }
   }
 
@@ -59,17 +70,6 @@ watchEffect(() => {
     </div>
 
 
-    <!--
-    <button
-      v-if="store.user.isTeacher"
-      class="bttn bttn-succ quiz"
-      @click="navigateListQuiz"
-    >
-      Liste quiz
-    </button>
-    -->
-
-
     <!-- Liste pour les admins -->
 
     <div class="box" v-if="store.user.isAdmin">
@@ -99,19 +99,17 @@ watchEffect(() => {
         <va-icon name="chevron_right" />
       </RouterLink>
       <RouterLink to="/db/to-valid-course">
-        <div v-if="countInvalidItemCourse > 0" class="container-tab">
+        <div class="container-tab">
           <va-icon name="hourglass_empty" size="small" />À valider ({{
             countInvalidItemCourse
           }})
         </div>
-        <div v-else class="container-tab">
-          <va-icon name="menu_book" size="small" />À valider
-        </div>
         <va-icon name="chevron_right" />
       </RouterLink>
+
       <RouterLink to="/db/reports-list">
         <div class="container-tab">
-          <va-icon name="warning" size="small" />Signalements
+          <va-icon name="warning" size="small" />Signalements ({{ countInvalidItemReport }})
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>
@@ -127,13 +125,10 @@ watchEffect(() => {
         <va-icon name="chevron_right" />
       </RouterLink>
       <RouterLink to="/db/to-valid-comm">
-        <div v-if="countInvalidItemComment > 0" class="container-tab">
+        <div class="container-tab">
           <va-icon name="chat" size="small" />À valider ({{
             countInvalidItemComment
           }})
-        </div>
-        <div v-else class="container-tab">
-          <va-icon name="hourglass_empty" size="small" />À valider
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>

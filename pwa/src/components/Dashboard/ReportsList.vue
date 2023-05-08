@@ -8,16 +8,31 @@ import axios from "axios";
 
 const items = ref({});
 const validItems = ref({});
+const course = ref({})
+const coursesList = ref({})
 
 
 watchEffect(() => {
   items.value = store.reports.list;
   for (const item in items.value) {
+
+    coursesList.value = store.courses.list;
+    for (const i in coursesList.value) {
+      // console.log(coursesList.value[i].id)
+      if (coursesList.value[i].id == parseInt(items.value[item].course_id)) {
+        console.log("first")
+        course.value = coursesList.value[i];
+      }
+    }
+    
     validItems.value = {
       ...validItems.value,
-      [Object.values(items.value).length - item]: { ...items.value[item] },
+      [Object.values(items.value).length - item]: { ...items.value[item], title: course.value.title },
     };
   }
+
+  console.log(validItems)
+
 });
 
 
@@ -68,6 +83,7 @@ const handleDelete = (courseId) => {
             <tr>
               <th>ID</th>
               <th>Utilisateur</th>
+              <th>Cours</th>
               <th>Raison</th>
               <th>Page du cours</th>
               <!--<th>Signalement classé ?</th>-->
@@ -82,6 +98,8 @@ const handleDelete = (courseId) => {
                             <td v-else-if="course.user_id.firstname.length === 0 && course.user_id.lastname.length === 0">-</td>-->
 
               <td><RouterLink :to="`/db/user/${report.user_id}`">{{ report.firstname }} {{ report.lastname }}</RouterLink></td>
+
+              <td>{{ report.title }}</td>
 
               <td v-if="report.reason.length > 0">
                 {{ report.reason.slice(0, 100) }}

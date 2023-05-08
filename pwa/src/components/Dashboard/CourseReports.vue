@@ -10,8 +10,11 @@ import axios from "axios";
 const courseId = router.currentRoute.value.params.id;
 const items = ref({});
 const validItems = ref({});
+const course = ref({})
+const coursesList = ref({})
 
-const onLoading = ref(false);
+const onLoadingBan = ref(false);
+const onLoadingRep = ref(false);
 
 
 watchEffect(() => {
@@ -24,12 +27,35 @@ watchEffect(() => {
       };
     }
   }
+  coursesList.value = store.courses.list;
+  for (const item in coursesList.value) {
+    if (coursesList.value[item].id == courseId) {
+      course.value = coursesList.value[item];
+    }
+  }
 });
 
 
 const handleBanCourse = () => {
 
-  onLoading.value = true
+  onLoadingBan.value = true
+  for (const item in validItems.value) {
+
+    axios
+      .delete(import.meta.env.VITE_API_URL + "/course_reports/" + validItems.value[item].id, {
+        headers: {
+          Authorization: `Bearer ${store.user.token}`,
+        },
+      })
+      .then(() => {
+        delete listReports.value[validItems.value[item].id];
+        toastr.success("Les signalements ont été supprimés", "", { timeOut: 3000 });
+      })
+      .catch((err) => {
+        console.log("debug", err);
+      });
+    
+  }
   axios
     .delete(import.meta.env.VITE_API_URL + "/courses/" + courseId,
       {
@@ -40,33 +66,14 @@ const handleBanCourse = () => {
       .then(() => {
         delete listCourses.value[courseId];
         toastr.success("Le cours est supprimé", "", { timeOut: 3000 });
+        onLoadingBan.value = false
+        router.push("/db/reports-list");
       })
-      .then(() => {
-        for (const item in validItems.value) {
 
-          axios
-            .delete(import.meta.env.VITE_API_URL + "/course_reports/" + validItems.value[item].id, {
-              headers: {
-                Authorization: `Bearer ${store.user.token}`,
-              },
-            })
-            .then(() => {
-              delete listReports.value[validItems.value[item].id];
-              toastr.success("Les signalements ont été supprimés", "", { timeOut: 3000 });
-            })
-            .catch((err) => {
-              console.log("debug", err);
-            });
-          
-        }
-        onLoading.value = false
-
-        
-      })
 };
 
 const handleCloseReport = () => {
-  onLoading.value = true
+  onLoadingRep.value = true
   for (const item in validItems.value) {
           
     axios
@@ -85,7 +92,7 @@ const handleCloseReport = () => {
       });
       
   }
-  onLoading.value = false
+  onLoadingRep.value = false
 
 };
 </script>
@@ -97,17 +104,17 @@ const handleCloseReport = () => {
 
       
     <div class="container-commlist">
-      <h2>Liste des signalements pour le cours n°{{ courseId }}:</h2>
+      <h2>Liste des signalements pour le cours n°{{ courseId }}: {{ course.title }}</h2>
       
       <div class="container-buttons">
         <button class="bttn bttn-dng" @click="handleBanCourse">
-          <div class="spinner-border spinner-border-sm" role="status" v-if="onLoading">
+          <div class="spinner-border spinner-border-sm" role="status" v-if="onLoadingBan">
             <span class="visually-hidden">Loading...</span>
           </div>
           Bannir le cours
         </button>
         <button class="bttn bttn-wng" @click="handleCloseReport">
-          <div class="spinner-border spinner-border-sm" role="status" v-if="onLoading">
+          <div class="spinner-border spinner-border-sm" role="status" v-if="onLoadingRep">
             <span class="visually-hidden">Loading...</span>
           </div>
           Fermer les signalements
@@ -118,7 +125,7 @@ const handleCloseReport = () => {
       <div class="container-reports">
 
         <div v-for="(item, index) in validItems">
-          N°{{ parseInt(index)+1 }} {{ item.reason }}
+          {{ parseInt(index)+1 }}: "{{ item.reason }}"
         </div>
       </div>
 
