@@ -243,13 +243,19 @@ const checkNumber = () => {
           </div>
         </div>
 
-        <div class="input-item">
-          <label :for="course.description">Description du cours</label>
-          <input
-            class="innput"
-            placeholder="Ecrire ici la description du cours..."
-            v-model="course.description"
-          />
+                <div class="secondline">
+          <div class="input-item">
+            <label for="formFile">Image du cours à renseigner</label>
+            <input class="form-control innput" type="file" id="formFile">
+          </div>
+          <div class="input-item">
+            <label :for="course.description">Description du cours</label>
+            <input
+              class="innput"
+              placeholder="Ecrire ici la description du cours..."
+              v-model="course.description"
+            />
+          </div>
         </div>
 
         <div v-if="!chapterEditorOn" class="buttons">
@@ -383,6 +389,18 @@ div.container-dashboard {
       }
       div:nth-child(2) {
         flex: 1;
+      }
+    }
+
+    div.secondline {
+      display: flex;
+      justify-content: center;
+
+      div:nth-child(1) {
+        flex: 1;
+      }
+      div:nth-child(2) {
+        flex: 3;
       }
     }
 
