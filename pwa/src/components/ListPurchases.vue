@@ -27,7 +27,7 @@ watchEffect(() => {
   <div class="wrapper">
     <h1>Liste des cours :</h1>
     <div class="categories"></div>
-    <div v-if="validItems">
+    <div v-if="Object.values(validItems).length > 0">
       <div class="wrapper-item" v-for="item in validItems">
         <ItemCourse
           :title="item.title"
@@ -37,7 +37,7 @@ watchEffect(() => {
         />
       </div>
     </div>
-    <div v-else>no item</div>
+    <div v-else>Vous n'avez pas acheté de cours</div>
   </div>
 </template>
 

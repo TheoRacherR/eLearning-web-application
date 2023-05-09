@@ -21,6 +21,7 @@ watchEffect(() => {
       };
     }
   }
+  console.log(validItems)
 });
 </script>
 
@@ -29,7 +30,7 @@ watchEffect(() => {
     <div class="main-container">
       <h3>Mes derniers achats</h3>
       <div class="container-purchases">
-        <div v-if="validItems.length > 0">
+        <div v-if="Object.values(validItems).length > 0">
           <div class="purchase-item" v-for="item in validItems">
             <div class="left">
               <img
@@ -49,7 +50,7 @@ watchEffect(() => {
             </div>
           </div>
         </div>
-        <div v-else>Vous n'avez pas de cours acheté</div>
+        <div v-else>Vous n'avez pas acheté de cours</div>
       </div>
     </div>
 

@@ -7,6 +7,7 @@ import { RouterView } from "vue-router";
 import Footer from "./components/Default/Footer.vue";
 import Menu from "./components/Default/Menu.vue";
 import LoginView from "./views/LoginView.vue";
+import Cookie from "./components/Home/Cookie.vue";
 
 import { initData } from "./utils/initData";
 
@@ -79,6 +80,9 @@ const links2 = [
   <main>
     <Suspense> <RouterView /></Suspense>
   </main>
+
+
+  <Cookie />
 
   <Footer :links1="links1" :links2="links2" />
 </template>
