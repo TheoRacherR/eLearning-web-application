@@ -152,49 +152,53 @@ const getComments = () => {
 
 const getReports = () => {
   return new Promise((resolve, reject) => {
-    const list = {};
 
-    axios
-      .get(import.meta.env.VITE_API_URL + "/course_reports",
-        {
-          headers: {
-            Authorization  : `Bearer ${store.user.token}`,
-          },
-        })
-      .then(({ data }) => {
-        axios
-          .get(import.meta.env.VITE_API_URL + "/users")
-          .then(({ data: { ["hydra:member"]: usersRaw } }) => {
-            data["hydra:member"].map((item) => {
-              let usr;
-              for (let i in Object.values(usersRaw)) {
-                let userId =
-                  item.user_id.split("/")[item.user_id.split("/").length - 1];
-                let id = Object.values(usersRaw)[i].id;
-                if (id === parseInt(userId)) {
-                  usr = Object.values(usersRaw)[i];
-                  break;
+    if (store.user.isConnected && store.user.isAdmin) {
+      const list = {};
+  
+      axios
+        .get(import.meta.env.VITE_API_URL + "/course_reports",
+          {
+            headers: {
+              Authorization  : `Bearer ${store.user.token}`,
+            },
+          })
+        .then(({ data }) => {
+          axios
+            .get(import.meta.env.VITE_API_URL + "/users")
+            .then(({ data: { ["hydra:member"]: usersRaw } }) => {
+              data["hydra:member"].map((item) => {
+                let usr;
+                for (let i in Object.values(usersRaw)) {
+                  let userId =
+                    item.user_id.split("/")[item.user_id.split("/").length - 1];
+                  let id = Object.values(usersRaw)[i].id;
+                  if (id === parseInt(userId)) {
+                    usr = Object.values(usersRaw)[i];
+                    break;
+                  }
                 }
-              }
-
-              list[item.id] = {
-                id: item.id,
-                user_id: item.user_id.split("/")[2],
-                firstname: usr.firstname,
-                lastname: usr.lastname,
-                course_id: item.course.split("/")[2],
-                reason: item.reason,
-                done: item.done,
-
-              };
+  
+                list[item.id] = {
+                  id: item.id,
+                  user_id: item.user_id.split("/")[2],
+                  firstname: usr.firstname,
+                  lastname: usr.lastname,
+                  course_id: item.course.split("/")[2],
+                  reason: item.reason,
+                  done: item.done,
+  
+                };
+              });
+  
+              resolve(list);
             });
-
-            resolve(list);
-          });
-      })
-      .catch((err) => {
-        reject(err);
-      });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+      
+    }
   });
 };
 
