@@ -15,13 +15,17 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+  display: {
+    type: Boolean,
+      required: true,
+    }
 
 });
 
 </script>
 
 <template>
-    <footer class="footer footer-dark">
+    <footer v-if="display" class="footer footer-dark">
     <div class="f-top-container">
 
       <div class="c-left">

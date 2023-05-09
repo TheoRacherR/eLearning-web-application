@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Modal } from "bootstrap";
 import { RouterView } from "vue-router";
+import router from "./router";
 
 
 import Footer from "./components/Default/Footer.vue";
@@ -11,6 +12,7 @@ import Cookie from "./components/Home/Cookie.vue";
 
 import { initData } from "./utils/initData";
 
+const displayFooter = ref(true);
 
 const modalRef = ref(null);
 const closeModal = () => Modal.getInstance(modalRef.value)?.hide();
@@ -46,6 +48,14 @@ const links2 = [
     link: "/user/confidentiality",
   },
 ];
+watch(() => {
+  if (router.currentRoute.value.path.length === 1 || router.currentRoute.value.path.substring(0, 3) !== "/db") {
+    displayFooter.value = true;
+  }
+  else {
+    displayFooter.value = false;
+  }
+})
 </script>
 
 <template>
@@ -84,7 +94,7 @@ const links2 = [
 
   <Cookie />
 
-  <Footer :links1="links1" :links2="links2" />
+  <Footer :display="displayFooter" :links1="links1" :links2="links2" />
 </template>
 
 <style scoped>
