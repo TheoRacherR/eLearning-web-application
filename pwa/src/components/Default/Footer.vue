@@ -21,25 +21,25 @@ const props = defineProps({
 </script>
 
 <template>
-    <footer class="footer footer-light">
+    <footer class="footer footer-dark">
     <div class="f-top-container">
 
       <div class="c-left">
         <div class="item-footer footer-left">
           <ul v-for="item in links1" class="fl-ul">
-            <li><RouterLink :to="item.link" class="f-light">{{ item.title }}</RouterLink></li>
+            <li><RouterLink :to="item.link" class="f-dark">{{ item.title }}</RouterLink></li>
           </ul>
         </div>
 
         <div class="item-footer footer-middle">
           <ul v-for="item in links2" class="fl-ul">
-            <li><RouterLink :to="item.link" class="f-light">{{ item.title }}</RouterLink></li>
+            <li><RouterLink :to="item.link" class="f-dark">{{ item.title }}</RouterLink></li>
           </ul>
         </div>
 
         <div class="item-footer footer-right">
           <ul v-for="item in links3" class="fl-ul">
-            <li><RouterLink :to="item.link" class="f-light">{{ item.title }}</RouterLink></li>
+            <li><RouterLink :to="item.link" class="f-dark">{{ item.title }}</RouterLink></li>
           </ul>
         </div>
       </div>

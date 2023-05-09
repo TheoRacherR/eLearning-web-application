@@ -120,14 +120,6 @@ watchEffect(() => {
         >
           Déconnexion
         </button>
-        <button class="bttn bttn-drk-out bttn-theme left-item" type="button">
-          <va-icon name="light_mode" />
-        </button>
-
-        <!--<button class="bttn bttn-drk bttn-theme left-item" type="button">
-            <va-icon name="dark_mode"/>
-            <va-icon name="light_mode"/>
-          </button>-->
       </div>
     </div>
   </nav>
