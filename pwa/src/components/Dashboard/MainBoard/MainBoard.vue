@@ -56,26 +56,18 @@ watchEffect(() => {
         }
     }
 
-    console.log(monthCourses.value)
     let count = 1;
     let arrayMonth = [];
     for (const i in monthCourses.value) {
-        console.log("i: ",i)
-        console.log("count: ",count)
         if (i != count) {
             let diff = parseInt(i) - parseInt(count);
-            console.log(diff)
             for (let j=0; j < parseInt(diff); j++) {
-                console.log("second")
                 arrayMonth.push(0);
             }
             count = parseInt(i);
         }
-        console.log('first')
         arrayMonth.push(monthCourses.value[i]);
         count++;
-        // console.log(Object.keys(monthCourses.value)[i])
-        console.log(arrayMonth)
     }
 
 

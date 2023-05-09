@@ -447,9 +447,9 @@ div.container-dashboard {
     div.buttons {
       display: flex;
       margin-top: 2rem;
-      width: 20%;
-      margin-left: 80%;
-      justify-content: space-around;
+      width: 35%;
+      margin-left: 65%;
+      justify-content: space-between;
       
     }
     
