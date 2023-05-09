@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios";
 import { login } from "../utils/login";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect, watch } from "vue";
 import { store } from "./../store/store";
 import router from "../router";
 import { checkConnection } from "../utils/checkConnection";
@@ -12,32 +12,46 @@ onMounted(() => {
 });
 
 const loadingButton = ref(false);
+const errorPassword = ref(false);
 
 const initialValue = {
   password: "",
+  confirmPassword: "",
   mail: "",
   firstname: "",
   lastname: "",
 };
 
+const confirmPasswords = () => {
+  if (initialValue.password === initialValue.confirmPassword) { 
+    errorPassword.value = false;
+  }
+}
+
 const handleSubmit = () => {
-  loadingButton.value = true;
-  axios
-    .post(import.meta.env.VITE_API_URL + "/users", {
-      password: initialValue.password,
-      mail: initialValue.mail,
-      firstname: initialValue.firstname,
-      lastname: initialValue.lastname,
-    })
-    .then(() => {
-      loadingButton.value = false;
-      router.push("/");
-      toastr.warning("Veuillez vérifier votre compte", "", { timeOut: 3000 });
-      toastr.success("Compte créé", "", { timeOut: 3000 });
-    })
-    .catch((error) => {
-      // Gestion des erreurs
-    });
+  if (initialValue.firstname.length > 0 && initialValue.lastname.length > 0 && initialValue.mail.length > 0 && initialValue.password.length > 0 && initialValue.confirmPassword.length > 0 && initialValue.mail.length > 0 && initialValue.password === initialValue.confirmPassword) {
+    loadingButton.value = true;
+    axios
+      .post(import.meta.env.VITE_API_URL + "/users", {
+        password: initialValue.password,
+        mail: initialValue.mail,
+        firstname: initialValue.firstname,
+        lastname: initialValue.lastname,
+      })
+      .then(() => {
+        loadingButton.value = false;
+        router.push("/");
+        toastr.warning("Veuillez vérifier votre compte", "", { timeOut: 3000 });
+        toastr.success("Compte créé", "", { timeOut: 3000 });
+      })
+      .catch((error) => {
+        // Gestion des erreurs
+      });
+  }
+  else {
+    errorPassword.value = true
+  }
+
 };
 </script>
 
@@ -81,8 +95,23 @@ const handleSubmit = () => {
           class="form-control"
           id="password"
           v-model="initialValue.password"
+          @change="confirmPasswords"
           required
         />
+      </div>
+      <div class="form-group mb-3">
+        <label for="password">Confirmer votre mot de passe</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          v-model="initialValue.confirmPassword"
+          @change="confirmPasswords"
+          required
+        />
+        <div v-if="errorPassword" class="form-group mb-3 erroPwd">
+          Confirmer avec le même mot de passe !
+        </div>
       </div>
       <button type="submit" class="bttn bttn-prim bttn-submit">
         <div
@@ -98,4 +127,8 @@ const handleSubmit = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style lang='scss' scoped>
+  div.erroPwd{
+    color: red;
+  }
+</style>
