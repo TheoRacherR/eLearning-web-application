@@ -86,6 +86,12 @@ const router = createRouter({
       name: "quiz_list",
       component: () => import("../components/Dashboard/Quiz/list.vue"),
     },
+    //Page des questions d'un cours
+    {
+      path: "/db/quiz/list/:courseId/:questionId",
+      name: "quiz_detail",
+      component: () => import("../components/Dashboard/Quiz/detail.vue"),
+    },
 
     //Page de backoffice à supprimer
     {
