@@ -58,15 +58,28 @@ const toggleMenu = () => {
 };
 
 onMounted(() => {
-  checkConnection(false, true, "dashboard");
+  checkConnection(false, true, false, "dashboard");
 });
 </script>
 
 <template>
   <div style="height: 90vh" class="wrapper">
     <va-sidebar :minimized="minimized" minimizedWidth="64px">
-      <va-icon class="m-3" name="arrow_forward" @click="toggleMenu" :rotation="!minimized ? 180 : 0"/>
-      <va-sidebar-item v-for="tab in config.tabs" :active="tab.name === config.selected" @click="() => {config.setSelected(tab.name);}">
+      <va-icon
+        class="m-3"
+        name="arrow_forward"
+        @click="toggleMenu"
+        :rotation="!minimized ? 180 : 0"
+      />
+      <va-sidebar-item
+        v-for="tab in config.tabs"
+        :active="tab.name === config.selected"
+        @click="
+          () => {
+            config.setSelected(tab.name);
+          }
+        "
+      >
         <va-sidebar-item-content>
           <va-icon :name="tab.icon" />
           <va-sidebar-item-title>{{ tab.name }}</va-sidebar-item-title>
