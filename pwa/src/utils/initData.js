@@ -5,7 +5,7 @@ import toastr from "toastr";
 const getCourses = () => {
   return new Promise((resolve, reject) => {
     const list = {};
-
+    
     axios
       .get(import.meta.env.VITE_API_URL + "/courses")
       .then(({ data }) => {
@@ -153,8 +153,8 @@ const getComments = () => {
 const getReports = () => {
   return new Promise((resolve, reject) => {
 
+    const list = {};
     if (store.user.isConnected && store.user.isAdmin) {
-      const list = {};
   
       axios
         .get(import.meta.env.VITE_API_URL + "/course_reports",
@@ -199,6 +199,10 @@ const getReports = () => {
         });
       
     }
+    else {
+      resolve(list);
+    }
+
   });
 };
 
