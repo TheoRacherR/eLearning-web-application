@@ -163,6 +163,16 @@ const router = createRouter({
       name: "course",
       component: () => import("../components/Course.vue"),
     },
+    {
+      path: "/course/:id/:chapIndex",
+      name: "course_chap",
+      component: () => import("../components/Course.vue"),
+    },
+    {
+      path: "/course/:id/quiz/:questionIndex",
+      name: "course_quiz",
+      component: () => import("../components/Quiz.vue"),
+    },
 
     //Liste de tous les courses
     {

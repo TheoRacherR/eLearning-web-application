@@ -8,7 +8,7 @@ import { checkConnection } from "../utils/checkConnection";
 import toastr from "toastr";
 
 onMounted(() => {
-  checkConnection(true, false, "register");
+  checkConnection(true, false, false, "register");
 });
 
 const loadingButton = ref(false);

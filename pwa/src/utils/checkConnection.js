@@ -9,6 +9,7 @@ export const checkConnection = (
   redirectIfNotTeacher, //redirigé si pas role prof
   from
 ) => {
+  console.log("debug", from);
   if (!store.user.isConnected) {
     const tokenRaw = localStorage.getItem("TOKEN");
 
