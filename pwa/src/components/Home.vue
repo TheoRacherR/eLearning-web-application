@@ -78,7 +78,6 @@ let cnt =
     </div>
   </div>
 
-  <Cookie />
 </template>
 
 <style lang="scss" scoped>
@@ -89,6 +88,8 @@ let cnt =
 
   div.first-home-item {
     margin-bottom: 5rem;
+    position: sticky;
+    z-index: auto;
   }
 
   div.second-home-item {

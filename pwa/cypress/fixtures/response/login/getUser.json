@@ -1,0 +1,20 @@
+{
+  "@context": "/contexts/User",
+  "@id": "/users/11",
+  "@type": "User",
+  "id": 11,
+  "roles": [
+    "ROLE_USER"
+  ],
+  "mail": "test@challenge.fr",
+  "firstname": "E2E",
+  "lastname": "Test",
+  "createdAt": "2023-04-10T13:31:14+00:00",
+  "updatedAt": "2023-04-10T13:31:14+00:00",
+  "lastActivity": "2023-04-10T13:31:14+00:00",
+  "valid": true,
+  "userCourses": [
+    "/user_courses/1"
+  ],
+  "ban": false
+}

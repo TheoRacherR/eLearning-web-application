@@ -22,7 +22,6 @@ onMounted(() => {
       })
       .then((res) => {
         if (res.data.status === "complete") {
-          console.log("coucou");
           const cart = Object.values(store.listCoursesInCart.list);
           for (let i = 0; i < cart.length; i++) {
             axios
@@ -117,8 +116,8 @@ const onSubmitCart = () => {
               <div class="right-box">
                 <div class="text-rb">
                   <RouterLink :to="'/detail/' + c.id">
-                    <div class="title-item">{{ c.id }} {{ c.title }}</div>
-                    <div class="description-item">{{ c.description }}</div>
+                    <div class="title-item">{{ c.title }}</div>
+                    <div class="description-item">{{ c.description.slice(0, 100) }}{{ c.description.length > 103 ? "..." : "" }}</div>
                   </RouterLink>
                 </div>
                 <button
@@ -157,7 +156,7 @@ const onSubmitCart = () => {
           </div>
         </div>
 
-        <button class="bttn bttn-succ" @click="onSubmitCart">
+        <button class="bttn bttn-succ" @click="onSubmitCart" data-test="submitCartButton">
           <div
             class="spinner-border spinner-border-sm"
             role="status"

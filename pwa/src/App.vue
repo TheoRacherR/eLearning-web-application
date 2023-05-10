@@ -1,15 +1,18 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Modal } from "bootstrap";
 import { RouterView } from "vue-router";
+import router from "./router";
 
 
 import Footer from "./components/Default/Footer.vue";
 import Menu from "./components/Default/Menu.vue";
 import LoginView from "./views/LoginView.vue";
+import Cookie from "./components/Home/Cookie.vue";
 
 import { initData } from "./utils/initData";
 
+const displayFooter = ref(true);
 
 const modalRef = ref(null);
 const closeModal = () => Modal.getInstance(modalRef.value)?.hide();
@@ -17,10 +20,6 @@ const closeModal = () => Modal.getInstance(modalRef.value)?.hide();
 initData();
 
 const links1 = [
-  {
-    title: "Google",
-    link: "https://www.google.com",
-  },
   {
     title: "Twitter",
     link: "https://www.twitter.com",
@@ -30,40 +29,33 @@ const links1 = [
     link: "https://www.facebook.com",
   },
   {
-    title: "Twitch",
-    link: "https://www.twitch.tv",
+    title: "Instagram",
+    link: "https://www.instagram.com",
   },
 ];
 
 const links2 = [
   {
-    title: "Yahoo",
-    link: "https://www.yahoo.com",
+    title: "Changer mes informations",
+    link: "/user/personal-data",
   },
   {
-    title: "Instagram",
-    link: "https://www.instagram.com",
+    title: "Mes achats",
+    link: "/user/mypurchases",
   },
   {
-    title: "Spotify",
-    link: "https://www.spotify.com",
+    title: "Notre politique de confidentialité",
+    link: "/user/confidentiality",
   },
 ];
-
-const links3 = [
-  {
-    title: "Amazon",
-    link: "https://www.amazon.com",
-  },
-  {
-    title: "Microsoft",
-    link: "https://www.microsoft.com",
-  },
-  {
-    title: "Apple",
-    link: "https://www.apple.com",
-  },
-];
+watch(() => {
+  if (router.currentRoute.value.path.length === 1 || router.currentRoute.value.path.substring(0, 3) !== "/db") {
+    displayFooter.value = true;
+  }
+  else {
+    displayFooter.value = false;
+  }
+})
 </script>
 
 <template>
@@ -99,7 +91,10 @@ const links3 = [
     <Suspense> <RouterView /></Suspense>
   </main>
 
-  <Footer :links1="links1" :links2="links2" :links3="links3"/>
+
+  <Cookie />
+
+  <Footer :display="displayFooter" :links1="links1" :links2="links2" />
 </template>
 
 <style scoped>

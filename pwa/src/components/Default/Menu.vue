@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink } from "vue-router";
+import router from "../../router"
 import { ref, watchEffect } from "vue";
 
 import { store } from "../../store/store";
@@ -34,11 +35,11 @@ watchEffect(() => {
         </div>
         <div class="fill"></div>
         <div>
-          <RouterLink to="/list-courses">Tous les cours</RouterLink>
+          <RouterLink to="/list-courses" data-test="allCoursesMenu">Tous les cours</RouterLink>
         </div>
         <div class="fill" v-if="store.user.isConnected"></div>
         <div>
-          <RouterLink v-if="store.user.isConnected" to="/list-mypurchases"
+          <RouterLink v-if="store.user.isConnected" data-test="myPurchases" to="/list-mypurchases"
             >Mes achats</RouterLink
           >
         </div>
@@ -72,7 +73,7 @@ watchEffect(() => {
           to="/summary"
           style="color: black"
         >
-          <button class="bttn bttn-cart">
+          <button class="bttn bttn-cart" data-test="cartButton">
             <va-icon name="shopping_cart" style="position: absolute" />
             <div class="sc-count">{{ cartLen }}</div>
           </button>
@@ -120,14 +121,6 @@ watchEffect(() => {
         >
           Déconnexion
         </button>
-        <button class="bttn bttn-drk-out bttn-theme left-item" type="button">
-          <va-icon name="light_mode" />
-        </button>
-
-        <!--<button class="bttn bttn-drk bttn-theme left-item" type="button">
-            <va-icon name="dark_mode"/>
-            <va-icon name="light_mode"/>
-          </button>-->
       </div>
     </div>
   </nav>

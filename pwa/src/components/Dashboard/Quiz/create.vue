@@ -70,6 +70,8 @@ watch(
 const handleSubmit = async () => {
   const { content, ...answers } = question.value;
 
+  console.log("debug", answers);
+
   const settings = JSON.stringify({ content, answers: Object.values(answers) });
   const goodAnswer = JSON.stringify(
     Object.values(answers).findIndex((item) => item.isGoodAnswer)

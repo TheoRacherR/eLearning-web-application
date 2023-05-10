@@ -273,16 +273,14 @@ const checkSize = (e) => {
         <input
           v-if="ownerValid !== 'false'"
           class="innput valid"
-          @change="checkSize('name')"
-          @input="focusOnNext('name')"
+          @input="focusOnNext('name'); checkSize('name')"
           v-model="former.accountOwner"
           placeholder="Exemple: M.DUPOND Jean"
         />
         <input
           v-else
           class="innput invalid"
-          @change="checkSize('name')"
-          @input="focusOnNext('name')"
+          @input="focusOnNext('name'); checkSize('name')"
           v-model="former.accountOwner"
           placeholder="Exemple: M.DUPOND Jean"
         />

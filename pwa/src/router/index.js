@@ -46,6 +46,20 @@ const router = createRouter({
       component: () => import("../components/Dashboard/CoursesToValidate.vue"),
     },
 
+    //Liste des signalements
+    {
+      path: "/db/reports-list",
+      name: "db-reports-list",
+      component: () => import("../components/Dashboard/ReportsList.vue"),
+    },
+
+    //Liste des signalements
+    {
+      path: "/db/course-reports/:id",
+      name: "db-course-reports",
+      component: () => import("../components/Dashboard/CourseReports.vue"),
+    },
+
     //Liste des commentaires
     {
       path: "/db/comm-list",
@@ -108,6 +122,12 @@ const router = createRouter({
       name: "quiz_list",
       component: () => import("../components/Dashboard/Quiz/list.vue"),
     },
+    //Page des questions d'un cours
+    {
+      path: "/db/quiz/list/:courseId/:questionId",
+      name: "quiz_detail",
+      component: () => import("../components/Dashboard/Quiz/detail.vue"),
+    },
 
     //Page de backoffice à supprimer
     {
@@ -130,11 +150,28 @@ const router = createRouter({
       component: () => import("../components/Detail.vue"),
     },
 
+    //Page de report du cours
+    {
+      path: "/report/:id",
+      name: "report-course",
+      component: () => import("../components/Courses/ReportCourse.vue"),
+    },
+
     //Dans le cours
     {
       path: "/course/:id",
       name: "course",
       component: () => import("../components/Course.vue"),
+    },
+    {
+      path: "/course/:id/:chapIndex",
+      name: "course_chap",
+      component: () => import("../components/Course.vue"),
+    },
+    {
+      path: "/course/:id/quiz/:questionIndex",
+      name: "course_quiz",
+      component: () => import("../components/Quiz.vue"),
     },
 
     //Liste de tous les courses

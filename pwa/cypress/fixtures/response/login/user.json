@@ -1,0 +1,13 @@
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2ODMyOTI3ODUsImV4cCI6MTY4MzI5NjM4NSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoidGVzdEBjaGFsbGVuZ2UuZnIifQ.xVe195l3ybQGjRJSDaqaawyHCKv0Se7X8nj29ugbjAoDi-QB9dwJzEztBXeo3Bpcb555myxOC1yFEKiYi47PgvP1QvPOlmBaooceAxQaXWbcL_4VjDZKYc8btFsVR7_618H1WTdtDA9-Ov3z7A6rQDf_yFYlKLbeITgV_U8Jpm3Wazk7wyLu-98uaq8ftJZHeFlhpEk-pNb5ICFyWVEltljxuFmsqjr8WKrQ_aXbxW0j-WJ1nGicuq9xsUq8dcE-JhB0A49e-iBhd2o5QCZUttQ9-DAwfZKurUvgt-wmPTPqJR26MsqUqv1Pb4ixTeTbC_lFTJbYhDBf2aD7W5GySg",
+  "user_id": 11,
+  "mail": "test@challenge.fr",
+  "firstname": "E2E",
+  "lastname": "Test",
+  "valid": true,
+  "ban": false,
+  "roles": [
+    "ROLE_USER",
+    "ROLE_ADMIN"
+  ]
+}

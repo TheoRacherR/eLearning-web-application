@@ -1,0 +1,15 @@
+{
+  "@context": "/contexts/UserCourse",
+  "@id": "/user_courses",
+  "@type": "hydra:Collection",
+  "hydra:member": [
+    {
+      "@id": "/user_courses/1",
+      "@type": "UserCourse",
+      "id": 1,
+      "account": "/users/11",
+      "course": "/courses/1"
+    }
+  ],
+  "hydra:totalItems": 1
+}

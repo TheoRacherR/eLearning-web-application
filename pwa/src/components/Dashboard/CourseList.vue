@@ -76,7 +76,7 @@ const handleDelete = (courseId) => {
               <td class="refused" v-else><va-icon name="close" /></td>
               <td>
                 <button class="bttn bttn-wng">
-                  <RouterLink :to="`/db/course/${course.id}`"
+                  <RouterLink :to="`/db/course/page/${course.id}`"
                     ><va-icon name="last_page"
                   /></RouterLink>
                 </button>
