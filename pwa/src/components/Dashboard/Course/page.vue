@@ -56,11 +56,15 @@ watchEffect(() => {
     }
   }
   if (Object.values(validItems.value).length > 0) {
-    chapters.value = JSON.parse(validItems.value[courseId.value].sequence)[
-      "chapters"
-    ];
+    chapters.value = JSON.parse(
+      validItems.value[courseId.value].sequence
+    ).chapters;
+    questions.value = JSON.parse(
+      validItems.value[courseId.value].sequence
+    )?.questions;
+
     nbChapter.value = Object.values(
-      JSON.parse(validItems.value[courseId.value].sequence)["chapters"]
+      JSON.parse(validItems.value[courseId.value].sequence).chapters
     ).length;
   }
 });
@@ -154,15 +158,16 @@ const handleSubmitCourse = async () => {
   }
 };
 
-const deleteAQuestion = async (id) => {
-  delete questions.value[id];
+const deleteAQuestion = async (index, questionId) => {
   axios
-    .delete(import.meta.env.VITE_API_URL + "/questions/" + id, {
+    .delete(import.meta.env.VITE_API_URL + "/questions/" + questionId, {
       headers: {
         Authorization: `Bearer ${store.user.token}`,
       },
     })
     .then(() => {
+      questions.value.splice(index, 1);
+
       axios
         .patch(
           import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
@@ -170,8 +175,8 @@ const deleteAQuestion = async (id) => {
             valid: 0,
             updatedAt: "NOW",
             sequence: JSON.stringify({
-              ["chapters"]: chapters.value,
-              ["questions"]: questions.value,
+              chapters: chapters.value,
+              questions: questions.value,
             }),
           },
           {
@@ -188,7 +193,6 @@ const deleteAQuestion = async (id) => {
           console.log(err);
         });
     });
-  console.log("deleted");
 };
 
 const addNewChapter = async () => {
@@ -247,47 +251,18 @@ const cancelEditor = async () => {
 };
 
 const checkNumber = () => {
-  if (!course.value.price.includes(",")) {
-    floated.value = false;
-  }
-  if (floated.value === false) {
-    if (
-      !numberV.value.includes(
-        course.value.price.substring(
-          course.value.price.length - 1,
-          course.value.price.length
-        )
-      )
-    ) {
-      course.value.price = course.value.price.substring(
+  if (
+    !number.value.includes(
+      course.value.price.substring(
         course.value.price.length - 1,
-        0
-      );
-    }
-    if (course.value.price.includes(",")) {
-      console.log("first");
-      if (course.value.price.length > 0) {
-        console.log("1");
-        floated.value = true;
-      } else {
-        console.log("2");
-        course.value.price = "";
-      }
-    }
-  } else {
-    if (
-      !number.value.includes(
-        course.value.price.substring(
-          course.value.price.length - 1,
-          course.value.price.length
-        )
+        course.value.price.length
       )
-    ) {
-      course.value.price = course.value.price.substring(
-        course.value.price.length - 1,
-        0
-      );
-    }
+    )
+  ) {
+    course.value.price = course.value.price.substring(
+      course.value.price.length - 1,
+      0
+    );
   }
 };
 </script>
@@ -467,7 +442,10 @@ const checkNumber = () => {
             </div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
-              <button class="bttn bttn-dng" @click="deleteAQuestion(index)">
+              <button
+                class="bttn bttn-dng"
+                @click="deleteAQuestion(index, item.questionId)"
+              >
                 <va-icon name="delete" />
               </button>
             </div>
