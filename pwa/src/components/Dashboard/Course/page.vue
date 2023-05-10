@@ -20,7 +20,7 @@ const chapters = ref({});
 const nbChapter = ref(0);
 
 const number = ref("0123456789");
-const numberV = ref("0123456789,");
+const numberV = ref("0123456789.");
 
 const floated = ref(false);
 
@@ -29,11 +29,13 @@ const chapterEditorOn = ref(false);
 const idToEdit = ref();
 
 const submitting = ref(false);
+let image;
 
 const course = ref({
   title: "",
   description: "",
   price: "",
+  image: "",
 });
 
 const questions = ref({});
@@ -118,6 +120,18 @@ onMounted(() => {
   }
 });
 
+const handleChangeImage = (event) => {
+  const selectedfile = event.target.files;
+  if (selectedfile.length > 0) {
+    const [imageFile] = selectedfile;
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      image = fileReader.result;
+    };
+    fileReader.readAsDataURL(imageFile);
+  }
+};
+
 const handleSubmitCourse = async () => {
   if (
     formerId &&
@@ -127,18 +141,22 @@ const handleSubmitCourse = async () => {
     Object.values(chapters.value).length > 0
   ) {
     submitting.value = true;
+    const data = {
+      title: course.value.title,
+      description: course.value.description,
+      price: Number(course.value.price),
+      image: image,
+      updatedAt: "NOW",
+      sequence: JSON.stringify({
+        ["chapters"]: chapters.value,
+        ["questions"]: questions.value,
+      }),
+    };
     axios
       .patch(
         import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          title: course.value.title,
-          description: course.value.description,
-          price: parseInt(course.value.price),
-          updatedAt: "NOW",
-          sequence: JSON.stringify({
-            ["chapters"]: chapters.value,
-            ["questions"]: questions.value,
-          }),
+          ...data,
         },
         {
           headers: {
@@ -146,7 +164,8 @@ const handleSubmitCourse = async () => {
           },
         }
       )
-      .then(() => {
+      .then((res) => {
+        console.log(res);
         toastr.success("Cours modifié", "", { timeOut: 3000 });
         submitting.value = false;
       })
@@ -300,7 +319,12 @@ const checkNumber = () => {
         <div class="secondline">
           <div class="input-item">
             <label for="formFile">Image du cours à renseigner</label>
-            <input class="form-control innput" type="file" id="formFile" />
+            <input
+              class="form-control innput"
+              type="file"
+              id="formFile"
+              v-on:change="handleChangeImage"
+            />
           </div>
           <div class="input-item">
             <label :for="course.description">Description du cours</label>

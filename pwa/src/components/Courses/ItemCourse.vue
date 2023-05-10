@@ -51,8 +51,8 @@ const handleCart = () => {
 <template>
     <RouterLink :to="`/detail/${props.id}`">
     <div class="container-item">
-        <img v-if="props.image !== null" src="../../../public/not-found.png" alt="not found image">
-        <img v-else :src="props.image" alt="image of the product" />
+        <img v-if="props.image" :src="props.image" alt="image of the product">
+        <img v-else src="../../../public/not-found.png" alt="not found image" />
         <div class="right-box">
                 <div class="title-item">{{ title }}</div>
                 <div class="description-item">{{ description }}</div>
