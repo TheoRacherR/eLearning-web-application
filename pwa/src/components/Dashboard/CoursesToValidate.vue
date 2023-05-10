@@ -35,6 +35,7 @@ const handleSubmit = (courseId, value) => {
       }
     )
     .then(() => {
+      store.courses.list[courseId].valid = value;
       if (value == 1) {
         toastr.success("Cours accepté", "", { timeOut: 3000 });
       } else if (value == 2) {

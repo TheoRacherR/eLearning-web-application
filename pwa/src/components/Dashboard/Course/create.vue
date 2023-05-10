@@ -118,7 +118,23 @@ const handleSubmitCourse = async () => {
           },
         }
       )
-      .then(() => {
+      .then(({ data }) => {
+        console.log("debug", data);
+        store.courses.list[data.course] = {
+          id: data.course,
+          userId: "/users/" + store.user.id,
+          user_id: "/users/" + store.user.id,
+          content: "",
+          stripeProductId: "string",
+          stripePriceId: "string",
+          title: course.value.title,
+          description: course.value.description,
+          price: parseInt(course.value.price),
+          valid: 0,
+          createdAt: "NOW",
+          updatedAt: "NOW",
+          sequence: JSON.stringify(chapters.value),
+        };
         toastr.success("Cours ajouté", "", { timeOut: 3000 });
         submitting.value = false;
         resetData();
