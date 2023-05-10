@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import router from "../../router"
 import { ref, watchEffect } from "vue";
 
 import { store } from "../../store/store";
