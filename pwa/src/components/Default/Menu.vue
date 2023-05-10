@@ -4,14 +4,15 @@ import router from "../../router"
 import { ref, watchEffect } from "vue";
 
 import { store } from "../../store/store";
+import router from "../../router";
 
 const cartLen = ref(0);
 
 const handleLogout = () => {
+  router.push("/");
   localStorage.removeItem("TOKEN");
 
   store.reset();
-  router.push("/");
 };
 
 watchEffect(() => {
