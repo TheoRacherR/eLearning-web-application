@@ -65,7 +65,7 @@ watchEffect(() => {
       validItems.value[courseId.value].sequence
     )?.questions;
 
-    const promises = questionsData.map((item) =>
+    const promises =questionsData && questionsData.map((item) =>
       axios.get(
         import.meta.env.VITE_API_URL + "/questions/" + item.questionId,
         {
@@ -76,7 +76,7 @@ watchEffect(() => {
       )
     );
 
-    Promise.all(promises).then((responses) => {
+      promises && Promise.all(promises).then((responses) => {
       const questionsRes = responses.map((response) => response.data);
 
       questionsRes.map((item) => {
