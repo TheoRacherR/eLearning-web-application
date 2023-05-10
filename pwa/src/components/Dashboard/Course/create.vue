@@ -23,11 +23,13 @@ const chapterEditorOn = ref(false);
 const idToEdit = ref();
 
 const submitting = ref(false);
+let image;
 
 const course = ref({
   title: "",
   description: "",
   price: "",
+  image: "",
 });
 
 const formerId = ref();
@@ -71,6 +73,18 @@ const resetData = async () => {
   chapterEditorOn.value = false;
 };
 
+const handleChangeImage = (event) => {
+    const selectedfile = event.target.files;
+    if (selectedfile.length > 0) {
+        const [imageFile] = selectedfile;
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            image = fileReader.result;
+        };
+        fileReader.readAsDataURL(imageFile);
+    }
+}
+
 const handleSubmitCourse = async () => {
   if (
     formerId &&
@@ -93,6 +107,7 @@ const handleSubmitCourse = async () => {
           description: course.value.description,
           price: parseFloat(course.value.price),
           valid: 0,
+          image: image,
           createdAt: "NOW",
           updatedAt: "NOW",
           sequence: JSON.stringify(chapters.value),
@@ -225,10 +240,10 @@ const checkNumber = () => {
         </div>
 
         <div class="secondline">
-          <div class="input-item">
-            <label for="formFile">Image du cours à renseigner</label>
-            <input class="form-control innput" type="file" id="formFile" />
-          </div>
+            <div class="input-item">
+                <label for="formFile">Image du cours à renseigner</label>
+                <input class="form-control innput" type="file" id="formFile" v-on:change="handleChangeImage" />
+            </div>
           <div class="input-item">
             <label :for="course.description">Description du cours</label>
             <input

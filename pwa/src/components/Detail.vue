@@ -115,7 +115,9 @@ watch(rating, () => {
   <div class="wrapper">
     <h1>{{ course?.title }}</h1>
 
-    <div class="description">{{ course?.description }}</div>
+    <img class="img-fluid" :src="course?.image" alt="Image du cours" style="width: 70%">
+
+    <div class="description m-2">{{ course?.description }}</div>
 
     <!-- Ajouter au panier -->
     <div v-if="store.user.isConnected && !course?.possessed">
@@ -186,7 +188,7 @@ watch(rating, () => {
     ">
       <vue3-star-ratings v-model="rating" />
       <textarea rows="5" v-model="comment" placeholder="Rentrez votre commentaire ici"></textarea>
-      
+
       <div class="cont-form-comment">
         <button v-if="comment.length > 0" class="bttn bttn-prim" @click="submitComment">
           <div
@@ -260,13 +262,13 @@ div.wrapper {
       flex-wrap: wrap;
       /* text-align: left; */
       margin-top: 3rem;
-  
+
       div.item-comment {
         margin: 0 1.6rem 1.6rem 0;
         width: calc(50% - 1.6rem);
         padding: 0 0 1.8rem 0;
         border-top: 1px solid grey;
-  
+
         div.top-com {
           margin-bottom: 1rem;
           font-weight: bold;
@@ -311,7 +313,7 @@ div.wrapper {
       }
     }
 
-  
+
   }
 
   div.leave-comment{

@@ -5,7 +5,7 @@ import toastr from "toastr";
 const getCourses = () => {
   return new Promise((resolve, reject) => {
     const list = {};
-    
+
     axios
       .get(import.meta.env.VITE_API_URL + "/courses")
       .then(({ data }) => {
@@ -34,6 +34,7 @@ const getCourses = () => {
                 description: item.description,
                 content: item.content,
                 price: item.price,
+                image: item.image,
                 possessed: possessed,
                 valid: item.valid,
                 stripeProductId: item.stripeProductId,
@@ -155,7 +156,7 @@ const getReports = () => {
 
     const list = {};
     if (store.user.isConnected && store.user.isAdmin) {
-  
+
       axios
         .get(import.meta.env.VITE_API_URL + "/course_reports",
           {
@@ -178,7 +179,7 @@ const getReports = () => {
                     break;
                   }
                 }
-  
+
                 list[item.id] = {
                   id: item.id,
                   user_id: item.user_id.split("/")[2],
@@ -187,17 +188,17 @@ const getReports = () => {
                   course_id: item.course.split("/")[2],
                   reason: item.reason,
                   done: item.done,
-  
+
                 };
               });
-  
+
               resolve(list);
             });
         })
         .catch((err) => {
           reject(err);
         });
-      
+
     }
     else {
       resolve(list);

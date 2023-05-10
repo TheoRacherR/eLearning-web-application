@@ -110,7 +110,7 @@ const onSubmitCart = () => {
           <div v-for="c in listCoursesInCart" class="item-sum">
             <div class="container-item">
               <img
-                src="https://via.placeholder.com/250x250"
+                :src="c.image"
                 alt="image of the course"
               />
               <div class="right-box">
