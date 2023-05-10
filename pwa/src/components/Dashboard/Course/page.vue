@@ -59,9 +59,36 @@ watchEffect(() => {
     chapters.value = JSON.parse(
       validItems.value[courseId.value].sequence
     ).chapters;
-    questions.value = JSON.parse(
+    const questionsData = JSON.parse(
       validItems.value[courseId.value].sequence
     )?.questions;
+
+    const promises = questionsData.map((item) =>
+      axios.get(
+        import.meta.env.VITE_API_URL + "/questions/" + item.questionId,
+        {
+          headers: {
+            Authorization: `Bearer ${store.user.token}`,
+          },
+        }
+      )
+    );
+
+    Promise.all(promises).then((responses) => {
+      const questionsRes = responses.map((response) => response.data);
+
+      questionsRes.map((item) => {
+        console.log("debug", item);
+
+        questions.value[item.id] = {
+          question: JSON.parse(item.settings).content,
+          answer1: JSON.parse(item.settings).answers[0],
+          answer2: JSON.parse(item.settings).answers[1],
+          answer3: JSON.parse(item.settings).answers[2],
+          answer4: JSON.parse(item.settings).answers[3],
+        };
+      });
+    });
 
     nbChapter.value = Object.values(
       JSON.parse(validItems.value[courseId.value].sequence).chapters
@@ -90,32 +117,6 @@ onMounted(() => {
       });
   }
 });
-
-const generateQuestions = async () => {
-  const obj = JSON.parse(validItems.value[courseId.value].sequence)[
-    "questions"
-  ];
-  for (const quest in obj) {
-    axios
-      .get(import.meta.env.VITE_API_URL + "/questions/" + quest, {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
-      })
-      .then((data) => {
-        console.log(JSON.parse(data.data.settings).answers[0]);
-        questions.value[data.data.id] = {
-          question: JSON.parse(data.data.settings).content,
-          answer1: JSON.parse(data.data.settings).answers[0],
-          answer2: JSON.parse(data.data.settings).answers[1],
-          answer3: JSON.parse(data.data.settings).answers[2],
-          answer4: JSON.parse(data.data.settings).answers[3],
-        };
-        console.log(questions.value);
-      });
-  }
-  questionsGenerated.value = true;
-};
 
 const handleSubmitCourse = async () => {
   if (
@@ -213,7 +214,8 @@ const addNewChapter = async () => {
           updatedAt: "NOW",
           sequence: JSON.stringify({
             chapters: chapters.value,
-            questions: questions.value,
+            questions: JSON.parse(validItems.value[courseId.value].sequence)
+              ?.questions,
           }),
         },
         {
@@ -397,10 +399,6 @@ const checkNumber = () => {
         </button>
 
         <div class="list-course">
-          <button class="bttn bttn-drk quiz-btn" @click="generateQuestions">
-            <va-icon name="refresh" />
-            Rafraichir les questions
-          </button>
           <div v-for:="(item, index) in questions" class="itemss">
             <div>
               <div>Question : "{{ item.question }}"</div>

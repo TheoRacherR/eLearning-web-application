@@ -72,7 +72,7 @@ onMounted(() => {
     class="bttn bttn-wng quiz-btn"
     v-if="chapters.length === parseInt(chapIndex) + 1"
   >
-    <RouterLink :to="`/course/${courseId}/quiz/0`">
+    <RouterLink :to="`/course/${courseId}/quiz`">
       <va-icon name="last_page" />
       Faire le Quiz
     </RouterLink>

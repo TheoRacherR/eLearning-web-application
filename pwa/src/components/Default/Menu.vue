@@ -1,10 +1,9 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import router from "../../router"
+import router from "../../router";
 import { ref, watchEffect } from "vue";
 
 import { store } from "../../store/store";
-import router from "../../router";
 
 const cartLen = ref(0);
 
@@ -35,11 +34,16 @@ watchEffect(() => {
         </div>
         <div class="fill"></div>
         <div>
-          <RouterLink to="/list-courses" data-test="allCoursesMenu">Tous les cours</RouterLink>
+          <RouterLink to="/list-courses" data-test="allCoursesMenu"
+            >Tous les cours</RouterLink
+          >
         </div>
         <div class="fill" v-if="store.user.isConnected"></div>
         <div>
-          <RouterLink v-if="store.user.isConnected" data-test="myPurchases" to="/list-mypurchases"
+          <RouterLink
+            v-if="store.user.isConnected"
+            data-test="myPurchases"
+            to="/list-mypurchases"
             >Mes achats</RouterLink
           >
         </div>
@@ -138,6 +142,7 @@ nav.navbar-nav {
     padding: 0;
 
     div.item-nav {
+      align-items: center;
       flex: 1;
     }
     //875px

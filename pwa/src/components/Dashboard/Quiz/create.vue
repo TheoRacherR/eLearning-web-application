@@ -41,7 +41,6 @@ onMounted(async () => {
     course.value = {
       sequence: JSON.parse(courseRaw.sequence),
     };
-    console.log(typeof course.value.sequence["questions"]);
   }
 });
 
@@ -62,7 +61,6 @@ watch(
       course.value = {
         sequence: courseRaw.sequence ? JSON.parse(courseRaw.sequence) : [],
       };
-      console.log(course.value);
     }
   }
 );
@@ -70,54 +68,68 @@ watch(
 const handleSubmit = async () => {
   const { content, ...answers } = question.value;
 
-  console.log("debug", answers);
-
-  const settings = JSON.stringify({ content, answers: Object.values(answers) });
-  const goodAnswer = JSON.stringify(
-    Object.values(answers).findIndex((item) => item.isGoodAnswer)
+  const answersValid = Object.values(answers).some(
+    (item) => item.label.length > 0
   );
-  console.log("debug", { course: "courses/" + courseId, settings, goodAnswer });
+  const hasGoodAnswer = Object.values(answers).some(
+    (item) => item.isGoodAnswer
+  );
 
-  axios
-    .post(
-      import.meta.env.VITE_API_URL + "/questions",
-      { course: "courses/" + courseId, settings, goodAnswer },
-      {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
-      }
-    )
-    .then(({ data: { id: questionId } }) => {
-      const oldQuestions = course.value.sequence.questions || [];
-
-      course.value.sequence.questions = [
-        ...oldQuestions,
-        { questionId, question: content },
-      ];
-
-      console.log("debug", course.value.sequence);
-
-      axios
-        .patch(
-          import.meta.env.VITE_API_URL + "/courses/" + courseId,
-          {
-            sequence: JSON.stringify(course.value.sequence),
-            updatedAt: "NOW",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${store.user.token}`,
-            },
-          }
-        )
-        .then(() => {
-          resetQuestion();
-        });
-    })
-    .catch((err) => {
-      console.log("debug", err);
+  if (answersValid && hasGoodAnswer && content.length > 0) {
+    const settings = JSON.stringify({
+      content,
+      answers: Object.values(answers),
     });
+    const goodAnswer = JSON.stringify(
+      Object.values(answers).findIndex((item) => item.isGoodAnswer)
+    );
+
+    axios
+      .post(
+        import.meta.env.VITE_API_URL + "/questions",
+        { course: "courses/" + courseId, settings, goodAnswer },
+        {
+          headers: {
+            Authorization: `Bearer ${store.user.token}`,
+          },
+        }
+      )
+      .then(({ data: { id: questionId } }) => {
+        const oldQuestions = course.value.sequence.questions || [];
+
+        course.value.sequence.questions = [
+          ...oldQuestions,
+          { questionId, question: content },
+        ];
+
+        console.log("debug", course.value.sequence);
+
+        axios
+          .patch(
+            import.meta.env.VITE_API_URL + "/courses/" + courseId,
+            {
+              sequence: JSON.stringify(course.value.sequence),
+              updatedAt: "NOW",
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${store.user.token}`,
+              },
+            }
+          )
+          .then(() => {
+            store.courses.list[courseId].sequence = JSON.stringify(
+              course.value.sequence
+            );
+            resetQuestion();
+          });
+      })
+      .catch((err) => {
+        console.log("debug", err);
+      });
+  } else {
+    toastr.error("Réponses incomplètes", "", { timeOut: 3000 });
+  }
 };
 
 const isDisabled = (answerId) => {
@@ -163,7 +175,7 @@ const isDisabled = (answerId) => {
     <div class="main-page">
       <h2>
         Création du Quiz : question n°{{
-          course?.sequence?.questions.length + 1 || 1
+          course?.sequence?.questions?.length + 1 || 1
         }}
       </h2>
       <div class="container-input">

@@ -169,9 +169,14 @@ const router = createRouter({
       component: () => import("../components/Course.vue"),
     },
     {
-      path: "/course/:id/quiz/:questionIndex",
+      path: "/course/:id/quiz",
       name: "course_quiz",
       component: () => import("../components/Quiz.vue"),
+    },
+    {
+      path: "/course/:id/quiz/finals",
+      name: "result_quiz",
+      component: () => import("../components/ResultsQuiz.vue"),
     },
 
     //Liste de tous les courses

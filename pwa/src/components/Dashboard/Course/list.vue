@@ -6,13 +6,12 @@ import router from "./../../../router";
 import toastr from "toastr";
 import { listCourses, store } from "../../../store/store";
 
-
 const items = ref({});
 const validItems = ref({});
 
 watchEffect(() => {
   items.value = store.courses.list;
-
+  console.log("debug", items.value);
 
   for (const item in items.value) {
     if (items.value[item].userId === "/users/" + store.user.id) {
@@ -35,17 +34,16 @@ const deleteCourse = (courseId) => {
       toastr.success("Cours supprimé", "", { timeout: 3000 });
     })
     .catch((err) => {
-       console.log("debug", err);
-     });
-}
-
+      console.log("debug", err);
+    });
+};
 </script>
 
 <template>
   <div class="container-dashboard">
     <LeftDashboard />
     <div class="main-page">
-      <h2>Liste de vos cours </h2>
+      <h2>Liste de vos cours</h2>
       <div class="container-grid">
         <table>
           <thead>
@@ -63,7 +61,10 @@ const deleteCourse = (courseId) => {
             <tr v-for="course in validItems">
               <td>{{ course.id }}</td>
               <td>{{ course.title }}</td>
-              <td>{{ course.description.slice(0, 100) }} <span v-if="course.description.length >= 97">...</span></td>
+              <td>
+                {{ course.description.slice(0, 100) }}
+                <span v-if="course.description.length >= 97">...</span>
+              </td>
               <td class="verifed" v-if="course.valid == 1">
                 <va-icon name="verified" />
               </td>
@@ -77,11 +78,11 @@ const deleteCourse = (courseId) => {
               <td>
                 <button class="bttn bttn-wng">
                   <RouterLink :to="`/db/course/page/${course.id}`">
-                    <va-icon name="last_page"/>
+                    <va-icon name="last_page" />
                   </RouterLink>
                 </button>
                 <button class="bttn bttn-dng" @click="deleteCourse(course.id)">
-                    <va-icon name="delete"/>
+                  <va-icon name="delete" />
                 </button>
               </td>
             </tr>
