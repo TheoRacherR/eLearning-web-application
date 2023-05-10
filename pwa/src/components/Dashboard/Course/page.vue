@@ -20,7 +20,7 @@ const chapters = ref({});
 const nbChapter = ref(0);
 
 const number = ref("0123456789");
-const numberV = ref("0123456789,");
+const numberV = ref("0123456789.");
 
 const floated = ref(false);
 
@@ -122,18 +122,22 @@ const handleSubmitCourse = async () => {
     Object.values(chapters.value).length > 0
   ) {
     submitting.value = true;
+    const data = {
+        title: course.value.title,
+        description: course.value.description,
+        price: Number(course.value.price),
+        updatedAt: "NOW",
+        sequence: JSON.stringify({
+            ["chapters"]: chapters.value,
+            ["questions"]: questions.value,
+        })
+    }
+      console.log(data)
     axios
       .patch(
         import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          title: course.value.title,
-          description: course.value.description,
-          price: parseInt(course.value.price),
-          updatedAt: "NOW",
-          sequence: JSON.stringify({
-            ["chapters"]: chapters.value,
-            ["questions"]: questions.value,
-          }),
+          ...data
         },
         {
           headers: {
@@ -141,7 +145,8 @@ const handleSubmitCourse = async () => {
           },
         }
       )
-      .then(() => {
+      .then((res) => {
+          console.log(res)
         toastr.success("Cours modifié", "", { timeOut: 3000 });
         submitting.value = false;
       })

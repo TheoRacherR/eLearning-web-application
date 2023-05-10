@@ -13,8 +13,8 @@ const chapter = ref("");
 const chapters = ref({});
 const nbChapter = ref(0);
 
-const number = ref("0123456789");
-const numberV = ref("0123456789,");
+const number = ref("0123456789.");
+const numberV = ref("0123456789");
 
 const floated = ref(false);
 
@@ -91,7 +91,7 @@ const handleSubmitCourse = async () => {
           stripePriceId: "string",
           title: course.value.title,
           description: course.value.description,
-          price: parseInt(course.value.price),
+          price: parseFloat(course.value.price),
           valid: 0,
           createdAt: "NOW",
           updatedAt: "NOW",
