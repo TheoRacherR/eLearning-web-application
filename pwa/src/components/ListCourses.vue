@@ -10,16 +10,18 @@ const validItems = ref({});
 
 watchEffect(() => {
   items.value = store.courses.list;
+    console.log(items.value)
 
   for (const item in items.value) {
     if (items.value[item].valid && !items.value[item].possessed ) {
       validItems.value = {
         ...validItems.value,
-        [item]: { ...items.value[item] },
+        [Object.values(items.value).length - item]: { ...items.value[item] },
       };
     }
   }
 });
+
 
 
 </script>
@@ -34,34 +36,34 @@ watchEffect(() => {
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
-    div.wrapper {
-        padding: 2rem 0;
-    }
+  div.wrapper {
+      padding: 2rem 0;
+  }
 
-@media (min-width: 768px){
+  @media (min-width: 768px){
     div.wrapper {
-        margin: auto;
-        max-width: 768px;
-        width: 100%;
+      margin: auto;
+      max-width: 768px;
+      width: 100%;
     }
-}
+  }
 
-@media (min-width: 992px){
+  @media (min-width: 992px){
     div.wrapper {
-        margin: auto;
-        max-width: 992px;
-        width: 100%;
+      margin: auto;
+      max-width: 992px;
+      width: 100%;
     }
-}
+  }
 
-@media (min-width: 1280px) {
+  @media (min-width: 1280px) {
     div.wrapper {
-        margin: auto;
-        max-width: 1280px;
-        width: 100%;
+      margin: auto;
+      max-width: 1280px;
+      width: 100%;
     }
-}
+  }
 
 </style>

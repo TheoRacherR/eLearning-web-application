@@ -4,6 +4,7 @@ import { Autoplay, Pagination } from "swiper";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { ref } from 'vue';
+import { RouterLink } from "vue-router"
 
 const props = defineProps({
   content: {
@@ -12,24 +13,6 @@ const props = defineProps({
   },
 });
 
-const swiperTextBase = ref([
-    {
-        author: "Test",
-        description: "Ceci est une description pour test 1",
-        img: "https://via.placeholder.com/40x40",
-    },
-    {
-        author: "Test2",
-        description: "Ceci est une description pour test 2",
-        img: "https://via.placeholder.com/40x40",
-    },
-    {
-        author: "Test3",
-        description: "Ceci est une description pour test 3",
-        img: "https://via.placeholder.com/40x40",
-    },
-    
-])
 const modules = [Autoplay, Pagination]
 </script>
 
@@ -46,14 +29,16 @@ const modules = [Autoplay, Pagination]
                 pauseOnMouseEnter: true,
             }"
         >
-            <swiper-slide v-for="cont in content" :key="cont.description">
-                <div>
+        <swiper-slide v-for="cont in content" :key="cont.description">
+            <RouterLink :to="`/detail/${cont.id}`">
+                <div class="cont">
                     <h4>{{ cont.title }}</h4>
                     <p>{{ cont.description.slice(0, 100) }}{{ cont.description.length > 103 ? "..." : "" }}</p>
                     
                 </div>
                 <img v-if="cont.image !== null" src="../../../public/not-found.png" alt="not found image">
                 <img v-else :src="cont.image" alt="image">
+            </RouterLink>
 
                 
             </swiper-slide>
@@ -68,11 +53,24 @@ div.container {
     padding: 2rem;
     // background-color: rgb(165, 165, 165);
 
-    img {
-        width: 400px;
-        height: 400px;
-        object-fit: cover;
+    a {
+        text-decoration: none;
+        
+        div.cont {
+    
+            color: black;
+            h4, p{
+                letter-spacing: 1px;
+            }
+        }
+    
+        img {
+            width: 400px;
+            height: 400px;
+            object-fit: cover;
+        }
     }
+
 }
 
 </style>

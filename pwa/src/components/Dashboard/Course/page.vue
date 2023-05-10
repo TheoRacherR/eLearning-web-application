@@ -7,9 +7,9 @@ import toastr from "toastr";
 import { listCourses, store } from "../../../store/store";
 import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
-import { RouterLink } from "vue-router"
+import { RouterLink } from "vue-router";
 
-const courseId = ref()
+const courseId = ref();
 
 const items = ref({});
 const validItems = ref({});
@@ -19,28 +19,31 @@ const chapter = ref("");
 const chapters = ref({});
 const nbChapter = ref(0);
 
-
 const number = ref("0123456789");
+const numberV = ref("0123456789.");
+
+const floated = ref(false);
 
 const editChapter = ref(false);
 const chapterEditorOn = ref(false);
 const idToEdit = ref();
 
 const submitting = ref(false);
+let image;
 
 const course = ref({
   title: "",
   description: "",
   price: "",
+  image: "",
 });
 
-const questions = ref({})
-const questionsGenerated = ref(false)
+const questions = ref({});
+const questionsGenerated = ref(false);
 
 const formerId = ref();
 
 watchEffect(() => {
-
   items.value = store.courses.list;
   for (const item in items.value) {
     if (items.value[item].id === parseInt(courseId.value)) {
@@ -55,23 +58,21 @@ watchEffect(() => {
     }
   }
   if (Object.values(validItems.value).length > 0) {
-    chapters.value = JSON.parse(validItems.value[courseId.value].sequence)['chapters']
-    // questions.value = JSON.parse(validItems.value[courseId.value].sequence)['questions']
+    chapters.value = JSON.parse(
+      validItems.value[courseId.value].sequence
+    ).chapters;
+    questions.value = JSON.parse(
+      validItems.value[courseId.value].sequence
+    )?.questions;
 
-    // console.log(questions.value)
-    nbChapter.value = Object.values(JSON.parse(validItems.value[courseId.value].sequence)['chapters']).length
-
-    console.log(Object.values(JSON.parse(validItems.value[courseId.value].sequence)['questions']))
-    console.log("init chapters")
-
+    nbChapter.value = Object.values(
+      JSON.parse(validItems.value[courseId.value].sequence).chapters
+    ).length;
   }
-
-})
-
+});
 
 onMounted(() => {
   courseId.value = router.currentRoute.value.params.id;
-  // generateQuestions();
   if (store.user.isConnected) {
     axios
       .get(import.meta.env.VITE_API_URL + "/formers", {
@@ -88,55 +89,82 @@ onMounted(() => {
             formerId.value = userIID;
           }
         });
-      });    
+      });
   }
-  
-
 });
 
 const generateQuestions = async () => {
-  const obj = JSON.parse(validItems.value[courseId.value].sequence)["questions"];
+  const obj = JSON.parse(validItems.value[courseId.value].sequence)[
+    "questions"
+  ];
   for (const quest in obj) {
-    console.log(quest)
-      axios
+    axios
       .get(import.meta.env.VITE_API_URL + "/questions/" + quest, {
         headers: {
           Authorization: `Bearer ${store.user.token}`,
         },
       })
-        .then((data) => {
-          console.log(JSON.parse(data.data.settings).content)
-          questions.value[data.data.id] = {
-            question: JSON.parse(data.data.settings).content
-          }
-          console.log(questions.value)
+      .then((data) => {
+        console.log(JSON.parse(data.data.settings).answers[0]);
+        questions.value[data.data.id] = {
+          question: JSON.parse(data.data.settings).content,
+          answer1: JSON.parse(data.data.settings).answers[0],
+          answer2: JSON.parse(data.data.settings).answers[1],
+          answer3: JSON.parse(data.data.settings).answers[2],
+          answer4: JSON.parse(data.data.settings).answers[3],
+        };
+        console.log(questions.value);
       });
   }
   questionsGenerated.value = true;
+};
+
+const handleChangeImage = (event) => {
+    const selectedfile = event.target.files;
+    if (selectedfile.length > 0) {
+        const [imageFile] = selectedfile;
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            image = fileReader.result;
+        };
+        fileReader.readAsDataURL(imageFile);
+    }
 }
 
-
 const handleSubmitCourse = async () => {
-  if (formerId && course.value.title.length > 0 && course.value.description.length > 0 && course.value.price.length > 0 && Object.values(chapters.value).length > 0) {
+  if (
+    formerId &&
+    course.value.title.length > 0 &&
+    course.value.description.length > 0 &&
+    course.value.price.length > 0 &&
+    Object.values(chapters.value).length > 0
+  ) {
     submitting.value = true;
+    const data = {
+        title: course.value.title,
+        description: course.value.description,
+        price: Number(course.value.price),
+        image: image,
+        updatedAt: "NOW",
+        sequence: JSON.stringify({
+            ["chapters"]: chapters.value,
+            ["questions"]: questions.value,
+        })
+    }
     axios
-    .patch(
-      import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+      .patch(
+        import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          title: course.value.title,
-          description: course.value.description,
-          price: parseInt(course.value.price),
-          valid: 0,
-          updatedAt: "NOW",
-          sequence: JSON.stringify({ ['chapters']: chapters.value, ['questions']: questions.value }),
+          ...data
         },
         {
           headers: {
-            Authorization  : `Bearer ${store.user.token}`,
+            Authorization: `Bearer ${store.user.token}`,
           },
         }
-    )
-      .then(() => {
+      )
+      .then((res) => {
+          console.log(res)
         toastr.success("Cours modifié", "", { timeOut: 3000 });
         submitting.value = false;
       })
@@ -149,106 +177,113 @@ const handleSubmitCourse = async () => {
   }
 };
 
-const deleteAQuestion = async (id) => {
-  delete questions.value[id];
-  // console.log(questions.value[id])
+const deleteAQuestion = async (index, questionId) => {
   axios
-    .delete(
-      import.meta.env.VITE_API_URL + "/questions/" + id,
-        {
-          headers: {
-            Authorization  : `Bearer ${store.user.token}`,
+    .delete(import.meta.env.VITE_API_URL + "/questions/" + questionId, {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .then(() => {
+      questions.value.splice(index, 1);
+
+      axios
+        .patch(
+          import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+          {
+            valid: 0,
+            updatedAt: "NOW",
+            sequence: JSON.stringify({
+              chapters: chapters.value,
+              questions: questions.value,
+            }),
           },
-        }
-  ).then(() => {
+          {
+            headers: {
+              Authorization: `Bearer ${store.user.token}`,
+            },
+          }
+        )
+        .then(() => {
+          toastr.success("Question supprimé", "", { timeOut: 3000 });
+          submitting.value = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+};
+
+const addNewChapter = async () => {
+  if (
+    chapterTitle.value.length > 0 &&
+    chapter.value.getHTML() != "<p><br></p>"
+  ) {
+    chapters.value[nbChapter.value] = {
+      title: chapterTitle.value,
+      content: chapter.value.getHTML(),
+    };
+
     axios
-    .patch(
-      import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+      .patch(
+        import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
           valid: 0,
           updatedAt: "NOW",
-          sequence: JSON.stringify({ ['chapters']: chapters.value, ['questions']: questions.value }),
+          sequence: JSON.stringify({
+            chapters: chapters.value,
+            questions: questions.value,
+          }),
         },
         {
           headers: {
-            Authorization  : `Bearer ${store.user.token}`,
+            Authorization: `Bearer ${store.user.token}`,
           },
         }
-    )
+      )
       .then(() => {
-        toastr.success("Question supprimé", "", { timeOut: 3000 });
-        submitting.value = false;
+        toastr.success("Chapitre ajouté", "", { timeOut: 3000 });
+
+        chapterTitle.value = "";
+        document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
+        chapter.value = "";
+        nbChapter.value = nbChapter.value + 1;
+        chapterEditorOn.value = false;
       })
       .catch((err) => {
         console.log(err);
       });
-    })
-  console.log("deleted")
-}
-
-const editOrAdd = async () => {
-  if (editChapter.value) {
-    // editAChapter();
-  }
-  else {
-    addNewChapter();
-  }
-}
-
-// const clickToEdit = async (id) => {
-//   idToEdit.value = id;
-//   editChapter.value = true;
-//   chapterEditorOn.value = true;
-//   chapterTitle.value = Object.values(chapters.value)[id].title;
-//   chapter.value = Object.values(chapters.value)[id].content;
-//   document.getElementsByClassName("ql-editor").innerHTML = "<div>" + Object.values(chapters.value)[id].content + "</div>";
-// }
-
-const addNewChapter = async () => {
-  if (chapterTitle.value.length > 0 && chapter.value.getHTML() != "<p><br></p>") {
-
-    chapters.value[nbChapter.value] = {
-        title: chapterTitle.value,
-        content: chapter.value.getHTML()
-    };
-    console.log(chapters.value)
-    chapterTitle.value = "";
-    document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
-    chapter.value = "";
-    nbChapter.value = nbChapter.value + 1;
-    chapterEditorOn.value = false;
-
   }
 };
 
-// const editAChapter = async () => {
-//   chapters.value[idToEdit.value] = {
-//     title: chapterTitle.value,
-//     content: chapter.value.getHTML(),
-//   };
-//   chapterTitle.value = "";
-//   document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
-//   chapter.value = "";
-//   chapterEditorOn.value = false;
-// }
-
 const deleteAChapter = async (id) => {
   delete chapters.value[id];
-  console.log(chapters.value)
-  console.log("deleted")
-}
+  console.log(chapters.value);
+  console.log("deleted");
+};
 
 const cancelEditor = async () => {
   chapterTitle.value = "";
   document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
   chapter.value = "";
   chapterEditorOn.value = false;
-}
+};
 
 const checkNumber = () => {
-  if (!number.value.includes(course.value.price.substring(course.value.price.length - 1, course.value.price.length)))
-  { course.value.price = course.value.price.substring(course.value.price.length - 1, 0) }
-}
+  if (
+    !number.value.includes(
+      course.value.price.substring(
+        course.value.price.length - 1,
+        course.value.price.length
+      )
+    )
+  ) {
+    course.value.price = course.value.price.substring(
+      course.value.price.length - 1,
+      0
+    );
+  }
+};
 </script>
 
 <template>
@@ -272,20 +307,26 @@ const checkNumber = () => {
                 aria-label="Amount (to the nearest dollar)"
                 v-model="course.price"
                 placeholder="Prix"
-                @input='checkNumber'
+                @input="checkNumber"
               />
               <span class="input-group-text">€</span>
             </div>
           </div>
         </div>
 
-        <div class="input-item">
-          <label :for="course.description">Description du cours</label>
-          <input
-            class="innput"
-            placeholder="Ecrire ici la description du cours..."
-            v-model="course.description"
-          />
+        <div class="secondline">
+          <div class="input-item">
+            <label for="formFile">Image du cours à renseigner</label>
+            <input class="form-control innput" type="file" id="formFile" v-on:change="handleChangeImage" />
+          </div>
+          <div class="input-item">
+            <label :for="course.description">Description du cours</label>
+            <input
+              class="innput"
+              placeholder="Ecrire ici la description du cours..."
+              v-model="course.description"
+            />
+          </div>
         </div>
 
         <div v-if="!chapterEditorOn" class="buttons">
@@ -342,44 +383,93 @@ const checkNumber = () => {
             placeholder="Rédigez votre cours ici..."
           />
           <div class="group-buttons">
-            <button class="bttn bttn-wng" @click="editOrAdd">Valider</button>
+            <button class="bttn bttn-wng" @click="addNewChapter">
+              Valider
+            </button>
             <button class="bttn bttn-dng" @click="cancelEditor">Annuler</button>
           </div>
-
         </div>
         <div class="list-course">
           <div v-for:="(item, index) in chapters" class="itemss">
-            <div>Chapitre {{ index }} "{{ item.title }}"</div>
+            <div>Chapitre {{ parseInt(index) + 1 }} "{{ item.title }}"</div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
-              <button class="bttn bttn-dng" @click="deleteAChapter(index)"><va-icon name="delete"/></button>
+              <button class="bttn bttn-dng" @click="deleteAChapter(index)">
+                <va-icon name="delete" />
+              </button>
             </div>
           </div>
         </div>
 
         <!-- Ajouter une question -->
-        <button class="bttn bttn-wng quiz-btn">
+        <button class="bttn bttn-wng quiz-btn" v-if="questions?.length === 0">
           <RouterLink :to="`/db/quiz/create/${courseId}`">
-            <va-icon name="add"/>
+            <va-icon name="add" />
             Créer un Quiz
           </RouterLink>
         </button>
+        <button class="bttn bttn-wng quiz-btn" v-else>
+          <RouterLink :to="`/db/quiz/create/${courseId}`">
+            <va-icon name="add" />
+            Ajouter des questions
+          </RouterLink>
+        </button>
 
-        
         <div class="list-course">
           <button class="bttn bttn-drk quiz-btn" @click="generateQuestions">
-            <va-icon name="refresh"/>
+            <va-icon name="refresh" />
             Rafraichir les questions
           </button>
           <div v-for:="(item, index) in questions" class="itemss">
-            <div>Question {{ index }} "{{ item.question }}"</div>
+            <div>
+              <div>Question : "{{ item.question }}"</div>
+              <div v-if="item.answer1.isGoodAnswer" style="color: green">
+                Réponse 1 : {{ item.answer1.label }}
+                <va-icon name="check"></va-icon>
+              </div>
+              <div v-else style="color: red">
+                Réponse 1 : {{ item.answer1.label }}
+                <va-icon name="close"></va-icon>
+              </div>
+
+              <div v-if="item.answer2.isGoodAnswer" style="color: green">
+                Réponse 2 : {{ item.answer2.label }}
+                <va-icon name="check"></va-icon>
+              </div>
+              <div v-else style="color: red">
+                Réponse 2 : {{ item.answer2.label }}
+                <va-icon name="close"></va-icon>
+              </div>
+
+              <div v-if="item.answer3.isGoodAnswer" style="color: green">
+                Réponse 3 : {{ item.answer3.label }}
+                <va-icon name="check"></va-icon>
+              </div>
+              <div v-else style="color: red">
+                Réponse 3 : {{ item.answer3.label }}
+                <va-icon name="close"></va-icon>
+              </div>
+
+              <div v-if="item.answer4.isGoodAnswer" style="color: green">
+                Réponse 4 : {{ item.answer4.label }}
+                <va-icon name="check"></va-icon>
+              </div>
+              <div v-else style="color: red">
+                Réponse 4 : {{ item.answer4.label }}
+                <va-icon name="close"></va-icon>
+              </div>
+            </div>
             <div>
               <!--<button class="bttn bttn-wng" @click="clickToEdit(index)"><va-icon name="edit"/></button>-->
-              <button class="bttn bttn-dng" @click="deleteAQuestion(index)"><va-icon name="delete"/></button>
+              <button
+                class="bttn bttn-dng"
+                @click="deleteAQuestion(index, item.questionId)"
+              >
+                <va-icon name="delete" />
+              </button>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -409,6 +499,18 @@ div.container-dashboard {
       }
     }
 
+    div.secondline {
+      display: flex;
+      justify-content: center;
+
+      div:nth-child(1) {
+        flex: 1;
+      }
+      div:nth-child(2) {
+        flex: 3;
+      }
+    }
+
     div.input-item {
       margin-bottom: 2rem;
 
@@ -423,13 +525,12 @@ div.container-dashboard {
     div.buttons {
       display: flex;
       margin-top: 2rem;
-      width: 20%;
-      margin-left: 80%;
-      justify-content: space-around;
-      
+      width: 35%;
+      margin-left: 65%;
+      justify-content: space-between;
     }
-    
-    div.group-buttons{
+
+    div.group-buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 2rem;
@@ -452,11 +553,11 @@ div.container-dashboard {
         }
       }
 
-      div.itemss:nth-child(2n-1){
+      div.itemss:nth-child(2n-1) {
         background-color: rgb(245, 245, 245);
       }
     }
-    button.quiz-btn a{
+    button.quiz-btn a {
       text-decoration: none;
       color: white;
     }

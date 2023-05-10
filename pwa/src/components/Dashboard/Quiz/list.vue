@@ -23,14 +23,12 @@ const init = async () => {
     });
 
   const sequence = JSON.parse(courseRaw.sequence);
-  console.log("debug", sequence);
 
   course.value = {
     sequence,
   };
 
   const promises = sequence.map((id) => {
-    console.log("debug", id);
     return axios.get(import.meta.env.VITE_API_URL + "/questions/" + id, {
       headers: {
         Authorization: `Bearer ${store.user.token}`,
@@ -41,7 +39,6 @@ const init = async () => {
   Promise.all(promises)
     .then((responses) => {
       responses.forEach(({ data }) => {
-        console.log("debug", JSON.parse(data.settings));
         questions.value.push({
           id: data.id,
           settings: JSON.parse(data.settings),

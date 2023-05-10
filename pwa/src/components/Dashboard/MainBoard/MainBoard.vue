@@ -1,75 +1,132 @@
-<script>
+<script setup>
 
 import Number from './Number.vue';
 import Graph from './Graph.vue';
 import LineChart from './LineChart.vue';
 import PieChart from './PieChart.vue';
 import PolarAreaChart from './PolarAreaChart.vue'
+import { ref, watchEffect } from "vue"
+import { store } from "../../../store/store"
 
-export default {
-  components: {
-    LineChart,
-    PieChart,
-    PolarAreaChart,
-    Number
-  },
-  data() {
-    return {
-        chartDataLine: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [
+const chartDataLine = ref({})
+const chartDataPie = ref({})
+const chartDataPolar = ref({})
+const content = ref([])
+const totalCountUser = ref(0)
+
+const userAdmin = ref({})
+const userTeacher = ref({})
+const userUser = ref({})
+
+const monthCourses = ref({})
+
+watchEffect(() => {
+
+    for (const item in store.users.list) {
+        if (store.users.list[item].roles[0] === 'ROLE_ADMIN') {
+            userAdmin.value = {
+                ...userAdmin.value,
+                [item]: { ...store.users.list[item] },
+            }
+        }
+        else if (store.users.list[item].roles[0] === 'ROLE_FORMER') {
+            userTeacher.value = {
+                ...userTeacher.value,
+                [item]: { ...store.users.list[item] },
+            }
+        }
+        else {
+            userUser.value = {
+                ...userUser.value,
+                [item]: { ...store.users.list[item] },  
+            }
+        }
+    }
+
+    for (const item in store.courses.list) {
+        let month = store.courses.list[item].created_at.substring(5,7);
+
+        month = parseInt(month);
+
+        if (monthCourses.value[month] === undefined) {
+            monthCourses.value[month] = 1;
+        }
+        else {
+            monthCourses.value[month] += 1;
+        }
+    }
+
+    let count = 1;
+    let arrayMonth = [];
+    for (const i in monthCourses.value) {
+        if (i != count) {
+            let diff = parseInt(i) - parseInt(count);
+            for (let j=0; j < parseInt(diff); j++) {
+                arrayMonth.push(0);
+            }
+            count = parseInt(i);
+        }
+        arrayMonth.push(monthCourses.value[i]);
+        count++;
+    }
+
+
+    content.value = [
+        {
+            title: "Nombre d'élèves :",
+            number: Object.values(userUser.value).length
+        },
+        {
+            title: "Nombre de prof :",
+            number: Object.values(userTeacher.value).length
+        },
+        {
+            title: "Nombre d'administrateurs :",
+            number: Object.values(userAdmin.value).length
+        },
+    ]
+    chartDataLine.value = {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aou', 'Sept', 'Oct', 'Nov', 'Déc'],
+        datasets: [
             {
-                label: 'Sales',
+                label: 'Cours',
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1,
-                data: [65, 59, 80, 81, 56, 55],
-            }
-            ]
-        },
-        chartDataPie: {
-            labels: ['Red', 'Blue', 'Yellow'],
-            datasets: [
+                data: arrayMonth,
+            },
+        ]
+    };
+    
+    chartDataPie.value = {
+        labels: ['Élèves', 'Professeurs', 'Administrateurs'],
+        datasets: [
             {
                 label: 'My First Dataset',
-                data: [300, 50, 100],
+                data: [Object.values(userUser.value).length, Object.values(userTeacher.value).length, Object.values(userAdmin.value).length],
                 backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
+                    'rgb(255, 205, 86)',
+                    'rgb(92, 209, 24)',
+                    'rgb(54, 162, 235)',
                 ]
             }
-            ]
-        },
-        chartDataPolar: {
-            datasets: [{
-                data: [10, 20, 30]
-            }],
+        ]
+    };
+    
+    chartDataPolar.value = {
+        datasets: [{
+            data: [Object.values(store.comments.list).length, Object.values(store.users.list).length, Object.values(store.reports.list).length]
+        }],
+    
+        labels: [
+            'Commentaires',
+            'Utilisateurs',
+            'Signalements'
+        ]
+    };
 
-            labels: [
-                'Red',
-                'Yellow',
-                'Blue'
-            ]
-        },
-        content: [
-            {
-                title: "Nombre d'élèves :",
-                number: 50
-            },
-            {
-                title: "Nombre de prof :",
-                number: 195
-            },
-            {
-                title: "Nombre total :",
-                number: 250
-            },
-        ],
-        total: 250,
-    }
-  }
-};
+    totalCountUser.value = Object.values(store.users.list).length;
+})
 </script>
 
 
@@ -80,7 +137,7 @@ export default {
 
         <div class="firstline">
             <div v-for="c in content">
-                <Number :title="c.title" :number="c.number" :total="total"/>
+                <Number :title="c.title" :number="c.number" :total="totalCountUser"/>
             </div>
         </div>
         <div class="secondline">
