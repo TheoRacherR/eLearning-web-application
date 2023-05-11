@@ -2,7 +2,6 @@
 import axios from "axios";
 import { ref, watch, onMounted, watchEffect } from "vue";
 import LeftDashboard from "./../LeftDashboard/LeftDashboard.vue";
-import router from "./../../../router";
 import toastr from "toastr";
 import { listCourses, store } from "../../../store/store";
 
@@ -11,7 +10,6 @@ const validItems = ref({});
 
 watchEffect(() => {
   items.value = store.courses.list;
-  console.log("debug", items.value);
 
   for (const item in items.value) {
     if (items.value[item].userId === "/users/" + store.user.id) {
@@ -31,6 +29,8 @@ const deleteCourse = (courseId) => {
       },
     })
     .then(() => {
+      delete store.courses.list[courseId];
+      delete validItems.value[courseId];
       toastr.success("Cours supprimé", "", { timeout: 3000 });
     })
     .catch((err) => {
