@@ -24,10 +24,10 @@ watchEffect(() => {
   }
 });
 
-const handleSubmit = async (courseId, value) => {
+const handleSubmit = async (commentId, value) => {
   axios
     .patch(
-      import.meta.env.VITE_API_URL + `/comments/${courseId}`,
+      import.meta.env.VITE_API_URL + `/comments/${commentId}`,
       {
         valid: value,
       },
@@ -38,12 +38,13 @@ const handleSubmit = async (courseId, value) => {
       }
     )
     .then(() => {
+      store.comments.list[commentId].valid = value;
       if (value == 1) {
         toastr.success("Commentaire accepté", "", { timeOut: 3000 });
       } else if (value == 2) {
         toastr.warning("Commentaire refusé", "", { timeOut: 3000 });
       }
-      delete invalidItems.value[courseId];
+      delete invalidItems.value[commentId];
     });
 };
 </script>

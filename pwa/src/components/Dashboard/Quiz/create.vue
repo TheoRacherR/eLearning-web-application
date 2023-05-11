@@ -121,6 +121,7 @@ const handleSubmit = async () => {
             store.courses.list[courseId].sequence = JSON.stringify(
               course.value.sequence
             );
+              toastr.success("Question ajouté au cours", "", { timeOut: 3000 });
             resetQuestion();
           });
       })
@@ -245,7 +246,7 @@ const isDisabled = (answerId) => {
       </div>
 
       <button class="bttn bttn-drk back-btn">
-        <RouterLink :to="`/db/course/page/${courseId}`"> Précédent </RouterLink>
+        <RouterLink :to="`/db/course/page/${courseId}`"> <va-icon name="chevron_left"/>Revenir au cours </RouterLink>
       </button>
     </div>
   </div>

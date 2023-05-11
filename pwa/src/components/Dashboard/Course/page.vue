@@ -65,32 +65,35 @@ watchEffect(() => {
       validItems.value[courseId.value].sequence
     )?.questions;
 
-    const promises =questionsData && questionsData.map((item) =>
-      axios.get(
-        import.meta.env.VITE_API_URL + "/questions/" + item.questionId,
-        {
-          headers: {
-            Authorization: `Bearer ${store.user.token}`,
-          },
-        }
-      )
-    );
+    const promises =
+      questionsData &&
+      questionsData.map((item) =>
+        axios.get(
+          import.meta.env.VITE_API_URL + "/questions/" + item.questionId,
+          {
+            headers: {
+              Authorization: `Bearer ${store.user.token}`,
+            },
+          }
+        )
+      );
 
-      promises && Promise.all(promises).then((responses) => {
-      const questionsRes = responses.map((response) => response.data);
+    promises &&
+      Promise.all(promises).then((responses) => {
+        const questionsRes = responses.map((response) => response.data);
 
-      questionsRes.map((item) => {
-        console.log("debug", item);
+        questionsRes.map((item) => {
+          console.log("debug", item);
 
-        questions.value[item.id] = {
-          question: JSON.parse(item.settings).content,
-          answer1: JSON.parse(item.settings).answers[0],
-          answer2: JSON.parse(item.settings).answers[1],
-          answer3: JSON.parse(item.settings).answers[2],
-          answer4: JSON.parse(item.settings).answers[3],
-        };
+          questions.value[item.id] = {
+            question: JSON.parse(item.settings).content,
+            answer1: JSON.parse(item.settings).answers[0],
+            answer2: JSON.parse(item.settings).answers[1],
+            answer3: JSON.parse(item.settings).answers[2],
+            answer4: JSON.parse(item.settings).answers[3],
+          };
+        });
       });
-    });
 
     nbChapter.value = Object.values(
       JSON.parse(validItems.value[courseId.value].sequence).chapters
@@ -149,7 +152,8 @@ const handleSubmitCourse = async () => {
       updatedAt: "NOW",
       sequence: JSON.stringify({
         ["chapters"]: chapters.value,
-        ["questions"]: questions.value,
+        ["questions"]: JSON.parse(validItems.value[courseId.value].sequence)
+          ?.questions,
       }),
     };
     axios
@@ -196,7 +200,8 @@ const deleteAQuestion = async (index, questionId) => {
             updatedAt: "NOW",
             sequence: JSON.stringify({
               chapters: chapters.value,
-              questions: questions.value,
+              questions: JSON.parse(validItems.value[courseId.value].sequence)
+                ?.questions,
             }),
           },
           {
@@ -229,7 +234,6 @@ const addNewChapter = async () => {
       .patch(
         import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          valid: 0,
           updatedAt: "NOW",
           sequence: JSON.stringify({
             chapters: chapters.value,
@@ -259,9 +263,43 @@ const addNewChapter = async () => {
 };
 
 const deleteAChapter = async (id) => {
-  delete chapters.value[id];
-  console.log(chapters.value);
-  console.log("deleted");
+  if (Object.values(chapters.value).length - 1 > 0) {
+    delete chapters.value[id];
+    axios
+      .patch(
+        import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+        {
+          valid: 0,
+          updatedAt: "NOW",
+          sequence: JSON.stringify({
+            chapters: chapters.value,
+            questions: JSON.parse(validItems.value[courseId.value].sequence)
+              ?.questions,
+          }),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${store.user.token}`,
+          },
+        }
+      )
+      .then(() => {
+        toastr.success("Chapitre supprimé", "", { timeOut: 3000 });
+
+        chapterTitle.value = "";
+        document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
+        chapter.value = "";
+        nbChapter.value = nbChapter.value + 1;
+        chapterEditorOn.value = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    toastr.warning("Vous devez avoir au minimum 1 chapitre", "", {
+      timeOut: 3000,
+    });
+  }
 };
 
 const cancelEditor = async () => {

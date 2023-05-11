@@ -197,45 +197,51 @@ const handleSubmit = () => {
 
 <template>
   <div class="wrapper">
-    <h1>{{ course?.title }}</h1>
-    <h2>{{ chapter?.title }}</h2>
-    <h2>
-      Question n°{{ parseInt(questionIndexValue) + 1 }}/{{ questions?.length }}:
-      {{ question.question }}
-    </h2>
+    <div class="header">
+
+      <h1>{{ course?.title }}</h1>
+      <h2>{{ chapter?.title }}</h2>
+      <h2>
+        Question {{ parseInt(questionIndexValue) + 1 }}
+        {{ question.question }}
+      </h2>
+    </div>
 
     <div class="wrapperAnswers">
-      <div class="input-item">
-        <label>Question 1 : {{ answersLabel[0] }}</label>
-        <input
-          type="checkbox"
-          v-model="answersUser.answer_1"
-          :disabled="isDisabled(1)"
-        />
-      </div>
-      <div class="input-item">
-        <label>Question 2 : {{ answersLabel[1] }}</label>
-        <input
-          type="checkbox"
-          v-model="answersUser.answer_2"
-          :disabled="isDisabled(2)"
-        />
-      </div>
-      <div class="input-item">
-        <label>Question 3 : {{ answersLabel[2] }}</label>
-        <input
-          type="checkbox"
-          v-model="answersUser.answer_3"
-          :disabled="isDisabled(3)"
-        />
-      </div>
-      <div class="input-item">
-        <label>Question 4 : {{ answersLabel[3] }}</label>
-        <input
-          type="checkbox"
-          v-model="answersUser.answer_4"
-          :disabled="isDisabled(4)"
-        />
+      <div class="wrapperQuestions">
+
+        <div class="input-item">
+          <label>A : {{ answersLabel[0] }}</label>
+          <input
+            type="checkbox"
+            v-model="answersUser.answer_1"
+            :disabled="isDisabled(1)"
+          />
+        </div>
+        <div class="input-item">
+          <label>B : {{ answersLabel[1] }}</label>
+          <input
+            type="checkbox"
+            v-model="answersUser.answer_2"
+            :disabled="isDisabled(2)"
+          />
+        </div>
+        <div class="input-item">
+          <label>C : {{ answersLabel[2] }}</label>
+          <input
+            type="checkbox"
+            v-model="answersUser.answer_3"
+            :disabled="isDisabled(3)"
+          />
+        </div>
+        <div class="input-item">
+          <label>D : {{ answersLabel[3] }}</label>
+          <input
+            type="checkbox"
+            v-model="answersUser.answer_4"
+            :disabled="isDisabled(4)"
+          />
+        </div>
       </div>
       <button
         class="bttn bttn-prim"
@@ -251,9 +257,41 @@ const handleSubmit = () => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+
 .wrapper {
-  padding: 3vh 3vw;
+  // padding: 6vh 0;
   text-align: center;
+  // width:50%;
+  margin: 0 auto;
+
+  div.header{
+    padding: 3vh 30vw 3vh 30vw;
+    background-color: rgb(142, 139, 168);
+    text-align: left;
+
+  }
+
+  div.wrapperAnswers{
+
+    div.wrapperQuestions{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: 5rem auto;
+      width: 60vw;
+
+      div.input-item {
+        width: 48%;
+        padding: 3rem 0;
+        background-color: rgb(231, 231, 231);
+
+        input {
+          margin-left: 2rem;
+        }
+      }
+
+    }
+  }
 }
 </style>
