@@ -8,6 +8,8 @@ export const listReports = ref({});
 
 const bool = false;
 
+const status = "";
+
 const initStore = {
   user: {
     isValid: false,
@@ -63,7 +65,7 @@ export const store = reactive({
   setToken(token) {
     this.user.token = token;
   },
-  setProf(isTeacher,status) {
+  setProf(isTeacher, status) {
     this.user.isTeacher = isTeacher;
     this.user.teacherStatus = status;
   },
@@ -124,7 +126,7 @@ export const store = reactive({
     this.user.lastname = initStore.lastname;
     this.user.isAdmin = initStore.user.isAdmin;
     this.user.isTeacher = initStore.user.isTeacher;
-    this.user.teacherStatus = initStore.user.teacherStatus;
+    this.user.teacherStatus = status;
     this.user.token = initStore.user.token;
   },
 });
