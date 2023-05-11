@@ -6,6 +6,7 @@ import { ref, watchEffect } from "vue";
 import { store } from "../../store/store";
 
 const cartLen = ref(0);
+const teacherStatus = ref("");
 
 const handleLogout = () => {
   router.push("/");
@@ -16,6 +17,9 @@ const handleLogout = () => {
 
 watchEffect(() => {
   cartLen.value = Object.keys(store.cart.list).length;
+});
+watchEffect(() => {
+  teacherStatus.value = store.user.teacherStatus;
 });
 </script>
 
@@ -50,15 +54,9 @@ watchEffect(() => {
 
         <div
           class="fill"
-          v-if="
-            store.user.isConnected && store.user.teacherStatus === 'VALIDATED'
-          "
+          v-if="store.user.isConnected && teacherStatus === 'VALIDATED'"
         ></div>
-        <div
-          v-if="
-            store.user.isConnected && store.user.teacherStatus === 'VALIDATED'
-          "
-        >
+        <div v-if="store.user.isConnected && teacherStatus === 'VALIDATED'">
           <RouterLink to="/db">Mes cours</RouterLink>
         </div>
 

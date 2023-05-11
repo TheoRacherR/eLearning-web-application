@@ -1,4 +1,10 @@
-import { listCourses, listUsers, listComments, store, listReports } from "../store/store";
+import {
+  listCourses,
+  listUsers,
+  listComments,
+  store,
+  listReports,
+} from "../store/store";
 import axios from "axios";
 import toastr from "toastr";
 
@@ -20,10 +26,10 @@ const getCourses = () => {
             }));
 
             data["hydra:member"].map((item) => {
-              const possessed = userCourses.some((uc) => {
+              const possessed = userCourses.some((courseUser) => {
                 return (
-                  parseInt(uc.courseId) === parseInt(item.id) &&
-                  parseInt(uc.userId) === parseInt(store.user.id)
+                  parseInt(courseUser.courseId) === parseInt(item.id) &&
+                  parseInt(courseUser.userId) === parseInt(store.user.id)
                 );
               });
 
@@ -153,17 +159,14 @@ const getComments = () => {
 
 const getReports = () => {
   return new Promise((resolve, reject) => {
-
     const list = {};
     if (store.user.isConnected && store.user.isAdmin) {
-
       axios
-        .get(import.meta.env.VITE_API_URL + "/course_reports",
-          {
-            headers: {
-              Authorization  : `Bearer ${store.user.token}`,
-            },
-          })
+        .get(import.meta.env.VITE_API_URL + "/course_reports", {
+          headers: {
+            Authorization: `Bearer ${store.user.token}`,
+          },
+        })
         .then(({ data }) => {
           axios
             .get(import.meta.env.VITE_API_URL + "/users")
@@ -188,7 +191,6 @@ const getReports = () => {
                   course_id: item.course.split("/")[2],
                   reason: item.reason,
                   done: item.done,
-
                 };
               });
 
@@ -198,12 +200,9 @@ const getReports = () => {
         .catch((err) => {
           reject(err);
         });
-
-    }
-    else {
+    } else {
       resolve(list);
     }
-
   });
 };
 

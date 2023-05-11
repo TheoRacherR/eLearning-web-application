@@ -129,7 +129,7 @@ watch(rating, () => {
     <!-- Ajouter au panier -->
     <div v-if="store.user.isConnected && !course?.possessed">
       <button
-        v-if="!Object.keys(store.cart.list).includes(courseId.toString())"
+        v-if="!Object.keys(store.cart.list).includes(JSON.stringify(courseId))"
         class="bttn bttn-succ"
         @click="handleCart"
       >
@@ -137,7 +137,9 @@ watch(rating, () => {
       </button>
       <div
         class="alreadyInCartDetailP"
-        v-else-if="Object.keys(store.cart.list).includes(courseId.toString())"
+        v-else-if="
+          Object.keys(store.cart.list).includes(JSON.stringify(courseId))
+        "
       >
         <p><va-icon name="done" />Ce cours se trouve dans le panier</p>
       </div>

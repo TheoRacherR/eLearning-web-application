@@ -10,7 +10,7 @@ export const checkConnection = (
   redirectIfNotAdmin, //redirigé si pas role Admin
   from
 ) => {
-  console.log("debug", from);
+  // console.log("debug", from);
   const tokenRaw = localStorage.getItem("TOKEN");
 
   if (tokenRaw) {

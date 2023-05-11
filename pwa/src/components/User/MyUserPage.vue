@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, watchEffect } from "vue";
 import RightContainer from "./RightContainer.vue";
 import toastr from "toastr";
 import router from "../../router";
@@ -24,12 +24,13 @@ const {
   },
 } = store;
 
-onMounted(async () => {
-  if (token) {
+watchEffect(async () => {
+  const tokenn = store.user.token;
+  if (tokenn) {
     const { data: userRaw } = await axios
-      .get(import.meta.env.VITE_API_URL + "/users/" + userId, {
+      .get(import.meta.env.VITE_API_URL + "/users/" + store.user.id, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${tokenn}`,
         },
       })
       .catch((err) => {
