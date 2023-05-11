@@ -12,7 +12,7 @@ const handleSubmitButton = () => {
 
 <template>
     <div class="container">
-        <h1 class="mt-3">Mot de passe oublié ?</h1>
+        <h1 class="mt-5">Mot de passe oublié ?</h1>
         <div class="form-group mb-3">
             <label for="email">Votre adresse mail</label>
             <input type="text" class="form-control" id="email">
