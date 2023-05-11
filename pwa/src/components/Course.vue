@@ -44,7 +44,7 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  checkConnection(false, true, false, "Course page");
+  checkConnection(false, true, false, false, "Course page");
   store.selectCourse(courseId);
 
   if (

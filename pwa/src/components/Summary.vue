@@ -96,6 +96,10 @@ const onSubmitCart = () => {
       loadingButton.value = false;
     });
 };
+
+onMounted(() => {
+  checkConnection(false, true, false, false, "Summary");
+});
 </script>
 
 <template>
@@ -109,15 +113,15 @@ const onSubmitCart = () => {
         <div v-else>
           <div v-for="c in listCoursesInCart" class="item-sum">
             <div class="container-item">
-              <img
-                :src="c.image"
-                alt="image of the course"
-              />
+              <img :src="c.image" alt="image of the course" />
               <div class="right-box">
                 <div class="text-rb">
                   <RouterLink :to="'/detail/' + c.id">
                     <div class="title-item">{{ c.title }}</div>
-                    <div class="description-item">{{ c.description.slice(0, 100) }}{{ c.description.length > 103 ? "..." : "" }}</div>
+                    <div class="description-item">
+                      {{ c.description.slice(0, 100)
+                      }}{{ c.description.length > 103 ? "..." : "" }}
+                    </div>
                   </RouterLink>
                 </div>
                 <button
@@ -156,7 +160,11 @@ const onSubmitCart = () => {
           </div>
         </div>
 
-        <button class="bttn bttn-succ" @click="onSubmitCart" data-test="submitCartButton">
+        <button
+          class="bttn bttn-succ"
+          @click="onSubmitCart"
+          data-test="submitCartButton"
+        >
           <div
             class="spinner-border spinner-border-sm"
             role="status"

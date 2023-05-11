@@ -108,14 +108,14 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  // checkConnection(false, true, "Quiz");
+  checkConnection(false, true, false, false, "Quiz");
   store.selectCourse(courseId);
-  // if (
-  //   typeof course.value?.possessed === "boolean" &&
-  //   !course.value?.possessed
-  // ) {
-  //   router.push(`/detail/${courseId}`);
-  // }
+  if (
+    typeof course.value?.possessed === "boolean" &&
+    !course.value?.possessed
+  ) {
+    router.push(`/detail/${courseId}`);
+  }
 });
 
 const isDisabled = (answerId) => {

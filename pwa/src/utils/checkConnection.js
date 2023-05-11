@@ -7,62 +7,63 @@ export const checkConnection = (
   withRedirectOnConnect, //redirigé si connecté et page resgister
   withRedirectOnCatch, //redirigé si on a un mauvais token
   redirectIfNotTeacher, //redirigé si pas role prof
+  redirectIfNotAdmin, //redirigé si pas role Admin
   from
 ) => {
   console.log("debug", from);
-  if (!store.user.isConnected) {
-    const tokenRaw = localStorage.getItem("TOKEN");
+  const tokenRaw = localStorage.getItem("TOKEN");
 
-    if (tokenRaw) {
-      const [id, token] = tokenRaw.split(" ");
+  if (tokenRaw) {
+    const [id, token] = tokenRaw.split(" ");
 
-      axios
-        .get(import.meta.env.VITE_API_URL + "/users/" + id, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(({ data }) => {
-          axios
-            .get(import.meta.env.VITE_API_URL + "/formers")
-            .then(({ data: { ["hydra:member"]: formerRaw } }) => {
-              const formers = formerRaw.map((item) => ({
-                userId: parseInt(
-                  item.userId.split("/")[item.userId.split("/").length - 1]
-                ),
-                isValid: item.valid,
-                status: item.status,
-              }));
+    axios
+      .get(import.meta.env.VITE_API_URL + "/users/" + id, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(({ data }) => {
+        axios
+          .get(import.meta.env.VITE_API_URL + "/formers")
+          .then(({ data: { ["hydra:member"]: formerRaw } }) => {
+            const formers = formerRaw.map((item) => ({
+              userId: parseInt(
+                item.userId.split("/")[item.userId.split("/").length - 1]
+              ),
+              isValid: item.valid,
+              status: item.status,
+            }));
 
-              if (formers.some((item) => item.userId === parseInt(data.id))) {
-                const former = formers.filter(
-                  (item) => item.userId === parseInt(data.id)
-                );
+            if (formers.some((item) => item.userId === parseInt(data.id))) {
+              const former = formers.filter(
+                (item) => item.userId === parseInt(data.id)
+              );
 
-                store.setProf(true, former[0].status);
-              } else if (redirectIfNotTeacher) router.push("/");
-            });
-
-          store.setToken(token);
-
-          store.setConnected(true);
-          store.setValid(data.valid);
-
-          store.setCart();
-
-          store.setUser({
-            ...data,
-            user_id: data.id,
-            isAdmin: data.roles.includes("ROLE_ADMIN"),
+              store.setProf(true, former[0].status);
+            } else if (redirectIfNotTeacher) router.push("/");
           });
 
-          if (withRedirectOnConnect) router.push("/");
-        })
-        .catch(() => {
-          if (withRedirectOnCatch) router.push("/");
+        store.setToken(token);
+
+        store.setConnected(true);
+        store.setValid(data.valid);
+
+        store.setCart();
+
+        store.setUser({
+          ...data,
+          user_id: data.id,
+          isAdmin: data.roles.includes("ROLE_ADMIN"),
         });
-    } else {
-      if (withRedirectOnCatch) router.push("/");
-    }
+
+        if (redirectIfNotAdmin && !data.roles.includes("ROLE_ADMIN"))
+          router.push("/");
+        if (withRedirectOnConnect) router.push("/");
+      })
+      .catch(() => {
+        if (withRedirectOnCatch) router.push("/");
+      });
+  } else {
+    if (withRedirectOnCatch) router.push("/");
   }
 };
