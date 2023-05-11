@@ -182,7 +182,7 @@ const handleSubmit = () => {
       )
       .then(() => {
         toastr.info("Réponses enregistrée", "", {
-          timeout: 3000,
+          timeout: 1000,
         });
 
         init();
