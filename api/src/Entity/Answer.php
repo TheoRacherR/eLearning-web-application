@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("IS_AUTHENTICATED_FULLY")'
 )]
 
 class Answer
