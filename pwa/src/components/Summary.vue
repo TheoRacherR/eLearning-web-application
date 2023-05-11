@@ -13,7 +13,6 @@ const loadingButton = ref(false);
 onMounted(() => {
   let stripeCheckoutId = localStorage.getItem("stripeCheckoutId");
   if (stripeCheckoutId) {
-    console.log(stripeCheckoutId);
     axios
       .get("https://api.stripe.com/v1/checkout/sessions/" + stripeCheckoutId, {
         headers: {
@@ -22,32 +21,35 @@ onMounted(() => {
       })
       .then((res) => {
         if (res.data.status === "complete") {
-          const cart = Object.values(store.listCoursesInCart.list);
-          for (let i = 0; i < cart.length; i++) {
-            axios
-              .post(
-                import.meta.env.VITE_API_URL + "/user_courses",
-                {
-                  account: "users/" + store.user.id,
-                  course: "courses/" + cart[i].id,
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${store.user.token}`,
-                  },
-                }
-              )
-              .then(() => {
-                localStorage.setItem("CART", "[]");
-                localStorage.setItem("stripeCheckoutId", "");
-                store.deleteCart();
-                toastr.success("Vos achats ont été validés !");
+            setTimeout(() => {
+                const cart = Object.values(store.listCoursesInCart.list);
+                console.log(cart)
+                for (let i = 0; i < cart.length; i++) {
+                    axios
+                        .post(
+                            import.meta.env.VITE_API_URL + "/user_courses",
+                            {
+                                account: "users/" + store.user.id,
+                                course: "courses/" + cart[i].id,
+                            },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${store.user.token}`,
+                                },
+                            }
+                        )
+                        .then(() => {
+                            localStorage.setItem("CART", "[]");
+                            localStorage.setItem("stripeCheckoutId", "");
+                            store.deleteCart();
+                            toastr.success("Vos achats ont été validés !");
 
-                const courseId = cart[i].id;
-                listCourses.value[courseId].possessed = true;
-              })
-              .catch((err) => {});
-          }
+                            const courseId = cart[i].id;
+                            listCourses.value[courseId].possessed = true;
+                        })
+                        .catch((err) => {});
+                }
+            }, 2000)
         }
       });
   }
