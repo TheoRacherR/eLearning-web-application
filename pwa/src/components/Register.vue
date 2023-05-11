@@ -8,7 +8,7 @@ import { checkConnection } from "../utils/checkConnection";
 import toastr from "toastr";
 
 onMounted(() => {
-  checkConnection(true, false, false, "register");
+  checkConnection(true, false, false, false, "register");
 });
 
 const loadingButton = ref(false);
@@ -23,13 +23,21 @@ const initialValue = {
 };
 
 const confirmPasswords = () => {
-  if (initialValue.password === initialValue.confirmPassword) { 
+  if (initialValue.password === initialValue.confirmPassword) {
     errorPassword.value = false;
   }
-}
+};
 
 const handleSubmit = () => {
-  if (initialValue.firstname.length > 0 && initialValue.lastname.length > 0 && initialValue.mail.length > 0 && initialValue.password.length > 0 && initialValue.confirmPassword.length > 0 && initialValue.mail.length > 0 && initialValue.password === initialValue.confirmPassword) {
+  if (
+    initialValue.firstname.length > 0 &&
+    initialValue.lastname.length > 0 &&
+    initialValue.mail.length > 0 &&
+    initialValue.password.length > 0 &&
+    initialValue.confirmPassword.length > 0 &&
+    initialValue.mail.length > 0 &&
+    initialValue.password === initialValue.confirmPassword
+  ) {
     loadingButton.value = true;
     axios
       .post(import.meta.env.VITE_API_URL + "/users", {
@@ -47,11 +55,9 @@ const handleSubmit = () => {
       .catch((error) => {
         // Gestion des erreurs
       });
+  } else {
+    errorPassword.value = true;
   }
-  else {
-    errorPassword.value = true
-  }
-
 };
 </script>
 
@@ -127,8 +133,8 @@ const handleSubmit = () => {
   </div>
 </template>
 
-<style lang='scss' scoped>
-  div.erroPwd{
-    color: red;
-  }
+<style lang="scss" scoped>
+div.erroPwd {
+  color: red;
+}
 </style>

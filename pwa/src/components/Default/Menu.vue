@@ -1,11 +1,12 @@
 <script setup>
 import { RouterLink } from "vue-router";
+import router from "../../router";
 import { ref, watchEffect } from "vue";
 
 import { store } from "../../store/store";
-import router from "../../router";
 
 const cartLen = ref(0);
+const teacherStatus = ref("");
 
 const handleLogout = () => {
   router.push("/");
@@ -16,6 +17,9 @@ const handleLogout = () => {
 
 watchEffect(() => {
   cartLen.value = Object.keys(store.cart.list).length;
+});
+watchEffect(() => {
+  teacherStatus.value = store.user.teacherStatus;
 });
 </script>
 
@@ -34,33 +38,29 @@ watchEffect(() => {
         </div>
         <div class="fill"></div>
         <div>
-          <RouterLink to="/list-courses" data-test="allCoursesMenu">Tous les cours</RouterLink>
+          <RouterLink to="/list-courses" data-test="allCoursesMenu"
+            >Tous les cours</RouterLink
+          >
         </div>
         <div class="fill" v-if="store.user.isConnected"></div>
         <div>
-          <RouterLink v-if="store.user.isConnected" data-test="myPurchases" to="/list-mypurchases"
+          <RouterLink
+            v-if="store.user.isConnected"
+            data-test="myPurchases"
+            to="/list-mypurchases"
             >Mes achats</RouterLink
           >
         </div>
 
         <div
           class="fill"
-          v-if="
-            store.user.isConnected && store.user.teacherStatus === 'VALIDATED'
-          "
+          v-if="store.user.isConnected && teacherStatus === 'VALIDATED'"
         ></div>
-        <div
-          v-if="
-            store.user.isConnected && store.user.teacherStatus === 'VALIDATED'
-          "
-        >
+        <div v-if="store.user.isConnected && teacherStatus === 'VALIDATED'">
           <RouterLink to="/db">Mes cours</RouterLink>
         </div>
 
-        <div
-          class="fill"
-          v-if="store.user.isConnected && store.user.isAdmin"
-        ></div>
+        <div class="fill" v-if="store.user.isConnected && store.user.isAdmin"></div>
         <div v-if="store.user.isConnected && store.user.isAdmin">
           <RouterLink to="/db">Dashboard</RouterLink>
         </div>
@@ -137,6 +137,7 @@ nav.navbar-nav {
     padding: 0;
 
     div.item-nav {
+      align-items: center;
       flex: 1;
     }
     //875px
@@ -166,13 +167,19 @@ nav.navbar-nav {
 
       :nth-child(3),
       :nth-child(5),
-      :nth-child(7) {
+      :nth-child(7),
+      :nth-child(9) {
         margin-left: 0.8rem;
       }
 
       > div > a {
         text-decoration: none;
         color: var(--color-text-light);
+      }
+
+      > div > a:hover {
+          text-decoration: underline;
+          color: darkslategray;
       }
     }
 

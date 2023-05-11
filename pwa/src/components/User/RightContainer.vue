@@ -9,11 +9,11 @@ const props = defineProps({
 });
 
 let links = [
-  {
-    name: "Mes achats",
-    link: "mypurchases",
-    icon: "computer",
-  },
+  // {
+  //   name: "Mes achats",
+  //   link: "mypurchases",
+  //   icon: "computer",
+  // },
   {
     name: "Données personnelles",
     link: "personal-data",
@@ -35,12 +35,11 @@ let links = [
     icon: "attach_file",
   },
   {
-      name: "Demande de passange en Professeur",
-      link: "demand-teacher",
-      icon: "school",
-    },
+    name: "Demande de passange en Professeur",
+    link: "demand-teacher",
+    icon: "school",
+  },
 ];
-
 </script>
 
 <template>
@@ -51,8 +50,8 @@ let links = [
           v-if="
             l.link === 'demand-teacher' &&
             store.user.teacherStatus == 'VALIDATED'
-          ">
-        </div>
+          "
+        ></div>
         <div v-else>
           <div v-if="l.link === props.page" class="text highlighted">
             {{ l.name }}

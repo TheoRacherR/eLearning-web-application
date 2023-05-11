@@ -2,6 +2,7 @@ import axios from "axios";
 import router from "./../router";
 import { store } from "../store/store";
 import toastr from "toastr";
+import { initData } from "./initData";
 
 export const login = (mail, password) => {
   return new Promise((resolve, reject) => {
@@ -19,7 +20,7 @@ export const login = (mail, password) => {
                 item.userId.split("/")[item.userId.split("/").length - 1]
               ),
               isValid: item.valid,
-              status: item.status
+              status: item.status,
             }));
 
             const { token, ...user } = data;
@@ -44,6 +45,7 @@ export const login = (mail, password) => {
             // Enregistrement du jeton dans le stockage local
             localStorage.setItem("TOKEN", `${user.user_id} ${token}`);
             // redirection vers la page d'accueil
+            initData();
 
             resolve();
           });
@@ -51,7 +53,6 @@ export const login = (mail, password) => {
       .catch((error) => {
         // Gestion des erreurs
         reject(error);
-
       });
   });
 };

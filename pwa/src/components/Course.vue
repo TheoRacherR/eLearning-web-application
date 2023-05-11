@@ -22,9 +22,9 @@ watch(
   () => {
     location.reload();
   }
-);
+  );
 
-watchEffect(() => {
+  watchEffect(() => {
   courses.value = store.courses.list;
 });
 
@@ -44,49 +44,82 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  checkConnection(false, true, false, "Course page");
+  checkConnection(false, true, false, false, "Course page");
   store.selectCourse(courseId);
-
+  
   if (
     typeof course.value?.possessed === "boolean" &&
     !course.value?.possessed
-  ) {
-    router.push(`/detail/${courseId}`);
-  }
-});
+    ) {
+      router.push(`/detail/${courseId}`);
+    }
+  });
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="wrapper-course-content">
     <h1>{{ course?.title }}</h1>
-    <h2>{{ chapter?.title }}</h2>
-    <QuillEditor ref="editor" :readOnly="true" :toolbar="[]" theme="snow" />
-  </div>
+    <h2>Chapitre n°{{ parseInt(chapIndex)+1 }}: "{{ chapter?.title }}"</h2>
 
-  <button class="bttn bttn-wng quiz-btn" v-if="parseInt(chapIndex) > 0">
-    <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) - 1}`">
-      Chapitre précédent
-    </RouterLink>
-  </button>
-  <button
-    class="bttn bttn-wng quiz-btn"
-    v-if="chapters.length === parseInt(chapIndex) + 1"
-  >
-    <RouterLink :to="`/course/${courseId}/quiz/0`">
-      <va-icon name="last_page" />
-      Faire le Quiz
-    </RouterLink>
-  </button>
-  <button class="bttn bttn-wng quiz-btn" v-else>
-    <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) + 1}`">
-      Chapitre suivant
-    </RouterLink>
-  </button>
+    <div class="group-buttons">
+    <button class="bttn bttn-wng quiz-btn" v-if="parseInt(chapIndex) > 0">
+      <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) - 1}`">
+        <va-icon name="chevron_left" />
+        Chapitre précédent
+      </RouterLink>
+    </button>
+    
+    <button class="bttn bttn-drk quiz-btn go-quiz" v-if="chapters.length === parseInt(chapIndex) + 1">
+      <RouterLink :to="`/course/${courseId}/quiz`">
+        <va-icon name="quiz" />
+        Faire le Quiz
+        <va-icon name="chevron_right" />
+      </RouterLink>
+    </button>
+    
+    <button class="bttn bttn-wng quiz-btn next-chapter" v-else>
+      <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) + 1}`">
+        Chapitre suivant
+        <va-icon name="chevron_right" />
+      </RouterLink>
+    </button>
+    </div>
+
+    <QuillEditor ref="editor" :readOnly="true" :toolbar="[]" theme="snow" />
+
+  
+
+  </div>
 </template>
 
-<style scoped>
-.wrapper {
-  padding: 3vh 3vw;
-  text-align: center;
+<style lang="scss" scoped>
+.wrapper-course-content {
+  // text-align: center;
+  
+  h1 {
+    padding: 3vh 30vw 3vh 30vw;
+    text-align:left;
+    background-color: rgb(168, 156, 139);
+  }
+  h2 {
+    padding: 1vh 30vw 3vh 30vw;
+  }
+
+  div.group-buttons {
+    padding: 3vh 30vw 3vh 30vw;
+    display: flex;
+    // justify-content: space-between;
+  
+    button {
+      a{
+        text-decoration: none;
+        color: white;
+      }
+    }
+  
+    button.next-chapter, button.go-quiz{
+      margin: 0 0 0 auto;
+    }
+  }
 }
 </style>

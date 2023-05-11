@@ -1,10 +1,11 @@
 <script setup>
 import { store } from "../store/store";
-import { ref, watchEffect } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import router from "../router";
 import toastr from "toastr";
 
 import ItemCourse from "./Courses/ItemCourse.vue";
+import { checkConnection } from "../utils/checkConnection";
 
 const items = ref({});
 const validItems = ref({});
@@ -20,6 +21,10 @@ watchEffect(() => {
       };
     }
   }
+});
+
+onMounted(() => {
+  checkConnection(false, true, false, false, "List purchase");
 });
 </script>
 

@@ -23,13 +23,13 @@ const monthCourses = ref({})
 watchEffect(() => {
 
     for (const item in store.users.list) {
-        if (store.users.list[item].roles[0] === 'ROLE_ADMIN') {
+        if (store.users.list[item].roles.includes("ROLE_ADMIN")) {
             userAdmin.value = {
                 ...userAdmin.value,
                 [item]: { ...store.users.list[item] },
             }
         }
-        else if (store.users.list[item].roles[0] === 'ROLE_FORMER') {
+        else if (store.users.list[item].roles.includes('ROLE_FORMER')) {
             userTeacher.value = {
                 ...userTeacher.value,
                 [item]: { ...store.users.list[item] },
@@ -44,7 +44,7 @@ watchEffect(() => {
     }
 
     for (const item in store.courses.list) {
-        let month = store.courses.list[item].created_at.substring(5,7);
+        let month = store.courses.list[item].created_at.getMonth();
 
         month = parseInt(month);
 

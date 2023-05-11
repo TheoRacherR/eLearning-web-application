@@ -53,9 +53,31 @@ watch(
 );
 
 const courses = ref({});
-watchEffect(() => {
+watchEffect(async () => {
   const values = Object.values(store.courses.list);
-  const possessed = values.filter((item) => item.possessed);
+  const {
+    data: { ["hydra:member"]: userCoursesRaw },
+  } = await axios
+    .get(import.meta.env.VITE_API_URL + "/user_courses", {
+      headers: {
+        Authorization: `Bearer ${store.user.token}`,
+      },
+    })
+    .catch((err) => {
+      console.log("debug", err);
+    });
+  const userCoursesUnfiltered = userCoursesRaw.map((item) => ({
+    courseId: item.course.split("/")[2],
+    userId: item.account.split("/")[2],
+  }));
+
+  const userCourses = userCoursesUnfiltered
+    .filter((item) => parseInt(item.userId) === parseInt(userId))
+    .map((item) => parseInt(item.courseId));
+
+  const possessed = values.filter((item) =>
+    userCourses.includes(parseInt(item.id))
+  );
   const object = {};
   possessed.map((item) => (object[item.id] = item));
 

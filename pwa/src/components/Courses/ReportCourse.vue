@@ -1,5 +1,4 @@
 <script setup>
-
 import { store } from "../../store/store.js";
 import toastr from "toastr";
 import { onMounted, watchEffect, watch, computed, ref } from "vue";
@@ -22,31 +21,29 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  checkConnection(false, false, "Detail");
+  checkConnection(false, true, false, false, "Report");
   store.selectCourse(courseId);
 });
 
 const submitReport = () => {
   if (report.value.length > 0) {
-    onLoading.value = true
-    console.log("ok")
+    onLoading.value = true;
+    console.log(courseId);
     axios
       .post(
         import.meta.env.VITE_API_URL + "/course_reports",
         {
-          // course_id: 40,
-          course_id: "courses/" + parseInt(courseId),
-          user_id: "users/" + store.user.id,
+          course: "courses/" + courseId,
           userId: "users/" + store.user.id,
           reason: report.value,
           done: false,
         },
         {
           headers: {
-            Authorization  : `Bearer ${store.user.token}`,
+            Authorization: `Bearer ${store.user.token}`,
           },
         }
-    )
+      )
       .then(() => {
         toastr.success("Signalement envoyé", "", { timeOut: 3000 });
         onLoading.value = false;
@@ -56,17 +53,19 @@ const submitReport = () => {
         console.log(err);
       });
   }
-}
-
+};
 </script>
 
 <template>
   <div class="wrapper">
-    <h1>
-      Signaler le cours "{{ course?.title }}"
-    </h1>
+    <h1>Signaler le cours "{{ course?.title }}"</h1>
     <div class="textarea-report">
-      <textarea name="report" id="report-textarea" placeholder="Renseigner votre signalement ici..." v-model="report"></textarea>
+      <textarea
+        name="report"
+        id="report-textarea"
+        placeholder="Renseigner votre signalement ici..."
+        v-model="report"
+      ></textarea>
       <button class="bttn bttn-dng" @click="submitReport">
         <div
           class="spinner-border spinner-border-sm"
@@ -82,37 +81,35 @@ const submitReport = () => {
 </template>
 
 <style lang="scss" scoped>
-  div.wrapper {
-    padding: 6vh 6vw;
-    // text-align: center;
+div.wrapper {
+  padding: 6vh 6vw;
+  // text-align: center;
 
-    div.textarea-report{
-      margin: 4vh 0;
-      width: 700px;
-      text-align: right;
+  div.textarea-report {
+    margin: 4vh 0;
+    width: 700px;
+    text-align: right;
 
-      textarea {
-        width: 100%;
-        height: 10rem;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #212529;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        border-radius: 0.375rem;
-      }
-      button {
-        // width: 100%;
-        margin-top: 2rem;
-        
-      }
+    textarea {
+      width: 100%;
+      height: 10rem;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0.375rem;
     }
-    
+    button {
+      // width: 100%;
+      margin-top: 2rem;
+    }
   }
+}
 </style>

@@ -35,6 +35,7 @@ const handleSubmit = (courseId, value) => {
       }
     )
     .then(() => {
+      store.courses.list[courseId].valid = value;
       if (value == 1) {
         toastr.success("Cours accepté", "", { timeOut: 3000 });
       } else if (value == 2) {
@@ -90,6 +91,11 @@ const handleSubmit = (courseId, value) => {
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
               <td>
+                <button class="bttn bttn-wng">
+                  <RouterLink :to="`/db/course/page/${c.id}`"
+                    ><va-icon name="last_page"
+                  /></RouterLink>
+                </button>
                 <button class="bttn bttn-succ" @click="handleSubmit(c.id, 1)">
                   <va-icon name="done" />
                 </button>
@@ -130,11 +136,18 @@ div.container-dashboard {
       th,
       td {
         padding: 1rem;
+
+        button {
+          margin-right: 1rem;
+          
+          a{
+            color: #fff;
+
+          }
+        }
       }
 
-      td button {
-        margin-right: 1rem;
-      }
+
 
       td.verifed {
         color: #52b425;

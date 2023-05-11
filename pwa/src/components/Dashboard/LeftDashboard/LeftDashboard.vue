@@ -2,8 +2,9 @@
 import Category from "./Category.vue";
 import { RouterLink } from "vue-router";
 import { store } from "../../../store/store";
-import { ref, watchEffect } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import router from "../../../router";
+import { checkConnection } from "../../../utils/checkConnection";
 
 const itemsCourse = ref({});
 let countInvalidItemCourse = ref(0);
@@ -40,6 +41,9 @@ watchEffect(() => {
   }
 });
 
+onMounted(() => {
+  checkConnection(false, true, false, true, "Left Dashboard");
+});
 </script>
 
 <template>
@@ -48,7 +52,6 @@ watchEffect(() => {
       <h3>Dashboard</h3>
     </RouterLink>
     <div class="fill-title"></div>
-
 
     <!-- Liste pour les professeurs -->
 
@@ -68,7 +71,6 @@ watchEffect(() => {
         <va-icon name="chevron_right" />
       </RouterLink>
     </div>
-
 
     <!-- Liste pour les admins -->
 
@@ -109,7 +111,9 @@ watchEffect(() => {
 
       <RouterLink to="/db/reports-list">
         <div class="container-tab">
-          <va-icon name="warning" size="small" />Signalements ({{ countInvalidItemReport }})
+          <va-icon name="warning" size="small" />Signalements ({{
+            countInvalidItemReport
+          }})
         </div>
         <va-icon name="chevron_right" />
       </RouterLink>

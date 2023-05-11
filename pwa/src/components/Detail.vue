@@ -7,6 +7,8 @@ import axios from "axios";
 import { initData } from "../utils/initData";
 import toastr from "toastr";
 
+import Comment from "./Courses/Comment.vue";
+
 const { user } = store;
 
 const courseId = router.currentRoute.value.params.id;
@@ -15,10 +17,12 @@ const rating = ref(2.5);
 const comment = ref("");
 const commenting = ref(false);
 
+
+const loadingSubmitComment = ref(false);
+
 const items = ref({});
 const validComments = ref({});
 
-const loadingSubmitComment = ref(false);
 
 watchEffect(() => {
   items.value = store.comments.list;
@@ -45,7 +49,7 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  checkConnection(false, false, false, "Detail");
+  checkConnection(false, false, false, false, "Detail");
   store.selectCourse(courseId);
 });
 
@@ -95,7 +99,9 @@ const submitComment = () => {
         },
       })
       .then(() => {
-        toastr.info("Votre commentaire est en cours de validation", "", { timeout: 3000 });
+        toastr.info("Votre commentaire est en cours de validation", "", {
+          timeout: 3000,
+        });
         initData();
         closeCommenting();
         loadingSubmitComment.value = false;
@@ -113,84 +119,83 @@ watch(rating, () => {
 
 <template>
   <div class="wrapper">
-    <h1>{{ course?.title }}</h1>
 
-    <img class="img-fluid" :src="course?.image" alt="Image du cours" style="width: 70%">
+    <div class="presentation">
 
-    <div class="description m-2">{{ course?.description }}</div>
+      <div class="left">
+        <h1>{{ course?.title }}</h1>
+        <h5>{{ course?.description }}</h5>
+        <router-link
+          v-if="course?.possessed && store.user.isConnected"
+          :to="`/course/${courseId}`"
+          class="bttn bttn-drk"
+          data-test="continueCourse"
+          >Reprendre ce cours</router-link>
+        <!-- Ajouter au panier -->
+        <div v-if="store.user.isConnected && !course?.possessed">
+          <button
+            v-if="!Object.keys(store.cart.list).includes(JSON.stringify(courseId))"
+            class="bttn bttn-succ"
+            @click="handleCart"
+          >
+            <va-icon name="add_shopping_cart" /> Ajouter au panier
+          </button>
+          <div
+            class="alreadyInCartDetailP"
+            v-else-if="
+              Object.keys(store.cart.list).includes(JSON.stringify(courseId))
+            "
+          >
+            <p><va-icon name="done" />Ce cours se trouve dans le panier</p>
+          </div>
+        </div>
 
-    <!-- Ajouter au panier -->
-    <div v-if="store.user.isConnected && !course?.possessed">
-      <button
-        v-if="!Object.keys(store.cart.list).includes(courseId.toString())"
-        class="bttn bttn-succ"
-        @click="handleCart"
-      >
-        <va-icon name="add_shopping_cart" /> Ajouter au panier
-      </button>
-      <div
-        class="alreadyInCartDetailP"
-        v-else-if="Object.keys(store.cart.list).includes(courseId.toString())"
-      >
-        <p><va-icon name="done" />Ce cours se trouve dans le panier</p>
+        <button
+          class="bttn bttn-succ"
+          type="submit"
+          v-if="!store.user.isConnected"
+          data-bs-toggle="modal"
+          data-bs-target="#ModalConnection"
+        >
+          Connexion
+        </button>
+      </div>
+
+      <div class="middle"></div>
+      
+      <div class="right">
+        <img v-if="course?.image"
+        class="img-fluid"
+        :src="course?.image"
+        alt="Image du cours"
+        />
       </div>
     </div>
 
+    
 
-    <button
-      class="bttn bttn-succ"
-      type="submit"
-      v-if="!store.user.isConnected"
-      data-bs-toggle="modal"
-      data-bs-target="#ModalConnection"
+
+    
+    
+    <div
+      class="wrapperComment"
+      v-if="
+        store.user.isConnected && commenting && course?.possessed
+      "
     >
-      Connexion
-    </button>
-
-    <router-link
-      v-if="course?.possessed && store.user.isConnected"
-      :to="`/course/${courseId}`"
-      class="bttn bttn-prim-out"
-      data-test="continueCourse"
-      >Reprendre ce cours</router-link
-    >
-    <div class="wrapperCommentsList">
-      <h4>Les commentaires:</h4>
-      <div class="container-comments">
-        <div v-if="Object.values(validComments).length === 0">
-          Il n'y a pas de commentaires
-        </div>
-        <div v-for="com in validComments" class="item-comment">
-          <div class="top-com">
-            <!--<img src="https://via.placeholder.com/40x40" alt="">-->
-            <div class="text-topc">
-              <div>{{ com.firstname }} {{ com.lastname }}</div>
-              <div class="stars-com">
-                <div style="margin: auto 0">
-                  {{ com.star }}
-                </div>
-                <va-icon name="star" />
-              </div>
-            </div>
-          </div>
-
-          <div class="main-com">
-            {{ com.content.slice(0, 100) }}
-            {{ com.content.length > 103 ? "..." : "" }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Commentaire -->
-    <div class="wrapperComment" v-if="
-      store.user.isConnected && commenting //&& course?.possessed
-    ">
       <vue3-star-ratings v-model="rating" />
-      <textarea rows="5" v-model="comment" placeholder="Rentrez votre commentaire ici"></textarea>
+      <textarea
+        rows="5"
+        v-model="comment"
+        placeholder="Rentrez votre commentaire ici"
+      ></textarea>
 
       <div class="cont-form-comment">
-        <button v-if="comment.length > 0" class="bttn bttn-prim" @click="submitComment">
+        <button
+          v-if="comment.length > 0"
+          class="bttn bttn-prim"
+          @click="submitComment"
+        >
           <div
             class="spinner-border spinner-border-sm"
             role="status"
@@ -200,39 +205,81 @@ watch(rating, () => {
           </div>
           Valider le commentaire
         </button>
-        <button v-else class="bttn bttn-prim">
-          Valider le commentaire
-        </button>
+        <button v-else class="bttn bttn-prim">Valider le commentaire</button>
         <button class="bttn bttn-prim-out" @click="closeCommenting">
           Annuler
         </button>
       </div>
-
     </div>
 
-    <div class="leave-comment" v-else-if="
-      store.user.isConnected && !commenting //&& course?.possessed
-    ">
+    <div
+      class="leave-comment"
+      v-else-if="
+        store.user.isConnected && !commenting && course?.possessed
+      "
+    >
       <button class="bttn bttn-prim" @click="handleComment">
         Laisser un commentaire
       </button>
     </div>
 
-    <div class="report-container" v-if="store.user.isConnected && course?.possessed">
-      <button class="bttn bttn-dng">
-        <va-icon name="warning"></va-icon>
-        Signaler ce cours
-      </button>
+
+    <!-- Commentaire -->
+    <div class="wrapperCommentsList">
+          <h4>Les commentaires:</h4>
+        <Comment :items="validComments"/>
     </div>
 
+    <div class="report-container" v-if="store.user.isConnected && course?.possessed
+      ">
+      <RouterLink :to="`/report/${courseId}`">
+        <button class="bttn bttn-dng">
+          <va-icon name="warning"></va-icon>
+          Signaler ce cours
+        </button>
+      </RouterLink>
+    </div>
 
   </div>
 </template>
 
 <style lang="scss" scoped>
 div.wrapper {
-  padding: 6vh 3vw 3vh 3vw;
+  padding: 0 0 3vh 0;
   text-align: center;
+
+  div.presentation{
+    display: flex;
+    justify-content: space-between;
+    padding: 6vh 30vw 5rem 30vw;
+    margin-bottom: 5rem;
+    background-color: #e2e2e2;
+
+    div.left{
+      flex: 3;
+      text-align: left;
+
+      h1 {
+        font-weight: bold;
+      }
+      a, button{
+        margin-top: 2rem;
+      }
+    }
+
+    div.middle{
+      flex: 1;
+    }
+
+    div.right{
+      flex: 3;
+      img {
+        width: 100%;
+      }
+
+    }
+
+  }
 
   div.description {
     margin-bottom: 5vh;
@@ -242,19 +289,19 @@ div.wrapper {
     // background-color: rgb(94, 138, 29);
     color: #2ecc71;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1rem 1rem 1rem 0;
     max-width: 20rem;
   }
 
   div.report-container {
-    margin: 5vh auto;
+    margin: 15vh auto 0 auto;
     text-align: right;
     width: 50%;
   }
 
   div.wrapperCommentsList {
     margin: 10vh auto 3vh auto;
-    width: 50%;
+    width: 40vw;
     text-align: left;
 
     div.container-comments {
@@ -294,13 +341,16 @@ div.wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 40vw;
+    margin: 0 auto;
 
     textarea {
-      width: 26rem;
+      width: 100%;
       padding: 1rem;
     }
 
     div.cont-form-comment {
+      margin-left: auto;
       button {
         margin-top: 1rem;
       }
@@ -312,14 +362,13 @@ div.wrapper {
         width: 8rem;
       }
     }
-
-
   }
 
-  div.leave-comment{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  div.leave-comment {
+    width: 40vw;
+    margin: 0 auto;
+
+    text-align: left;
   }
 }
 </style>

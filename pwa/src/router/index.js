@@ -11,6 +11,18 @@ const router = createRouter({
       component: HomeView,
     },
 
+    {
+      path: "/reset_password",
+      name: "reset_password",
+      component: () => import("../components/ResetPassword.vue")
+    },
+
+    {
+      path: "/forgot-password",
+      name: "forgot",
+      component: () => import("../components/ForgotPassword.vue")
+    },
+
     //Page de backoffice
     {
       path: "/db",
@@ -130,11 +142,11 @@ const router = createRouter({
     },
 
     //Page de backoffice à supprimer
-    {
-      path: "/dashboard",
-      name: "dashboard",
-      component: () => import("../components/Dashboard.vue"),
-    },
+    // {
+    //   path: "/dashboard",
+    //   name: "dashboard",
+    //   component: () => import("../components/Dashboard.vue"),
+    // },
 
     //Inscription
     {
@@ -169,9 +181,14 @@ const router = createRouter({
       component: () => import("../components/Course.vue"),
     },
     {
-      path: "/course/:id/quiz/:questionIndex",
+      path: "/course/:id/quiz",
       name: "course_quiz",
       component: () => import("../components/Quiz.vue"),
+    },
+    {
+      path: "/course/:id/quiz/finals",
+      name: "result_quiz",
+      component: () => import("../components/ResultsQuiz.vue"),
     },
 
     //Liste de tous les courses
@@ -220,21 +237,21 @@ const router = createRouter({
       name: "user-confidentiality",
       component: () => import("../components/User/Confidentiality.vue"),
     },
-    {
-      path: "/user/newsletter",
-      name: "user-newsletter",
-      component: () => import("../components/User/Newsletter.vue"),
-    },
-    {
-      path: "/user/mypayment",
-      name: "user-mypayment",
-      component: () => import("../components/User/Payment.vue"),
-    },
-    {
-      path: "/user/mypurchases",
-      name: "user-mypurchases",
-      component: () => import("../components/User/Purchases.vue"),
-    },
+    // {
+    //   path: "/user/newsletter",
+    //   name: "user-newsletter",
+    //   component: () => import("../components/User/Newsletter.vue"),
+    // },
+    // {
+    //   path: "/user/mypayment",
+    //   name: "user-mypayment",
+    //   component: () => import("../components/User/Payment.vue"),
+    // },
+    // {
+    //   path: "/user/mypurchases",
+    //   name: "user-mypurchases",
+    //   component: () => import("../components/User/Purchases.vue"),
+    // },
     {
       path: "/user/demand-teacher",
       name: "user-demand-teacher",

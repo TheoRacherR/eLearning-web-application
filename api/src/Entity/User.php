@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\DeleteUserController;
+use App\Controller\getUserByTokenController;
 use App\Controller\RequestPasswordController;
 use App\Controller\UpdateUserController;
 use App\Controller\ValidateAccountController;
@@ -38,6 +39,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Get(
     security: '(is_granted("IS_AUTHENTICATED_FULLY") and object === user) or (is_granted("ROLE_ADMIN"))'
+)]
+#[Post(
+    uriTemplate: '/user/getByToken',
+    defaults: ['identifiedBy' => 'token'],
+    controller: getUserByTokenController::class,
+    openapiContext: ['parameters' => [
+        ['name' => 'token', 'in' => 'query', 'required' => true]
+    ]],
+    read: false,
+    name: 'getByToken'
 )]
 #[Get(
     uriTemplate: '/user/validate',

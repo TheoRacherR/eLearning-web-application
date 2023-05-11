@@ -8,6 +8,7 @@ import toastr from "toastr";
 
 const loadingButtonLogin = ref(false);
 const loadingButtonSignup = ref(false);
+let switchForgetPassword = false;
 
 const props = defineProps({
   closeModal: {
@@ -28,7 +29,7 @@ let errorShown = ref(false);
 let errorMessage = ref("");
 
 onMounted(() => {
-  checkConnection(false, false, false, "login");
+  checkConnection(false, false, false, false, "login");
 });
 
 const handleSubmit = () => {
@@ -45,6 +46,7 @@ const handleSubmit = () => {
       toastr.success("Connecté", "", { timeOut: 3000 });
     })
     .catch((err) => {
+      loadingButtonLogin.value = false;
       console.log("debug", err, err.response);
 
       errorShown.value = true;
@@ -58,6 +60,11 @@ const navigateRegister = () => {
   loadingButtonSignup.value = false;
   router.push("/register");
 };
+
+const handleForgetPassword = () => {
+    props.closeModal();
+    router.push("/forgot-password/");
+}
 </script>
 
 <template>
@@ -87,6 +94,9 @@ const navigateRegister = () => {
         v-model="initialValue.password"
       />
     </div>
+      <div class="form-group mb-3">
+          <button type="button" class="btn btn-warning" @click="handleForgetPassword">Mot de passe oublié ?</button>
+      </div>
   </div>
 
   <div class="modal-footer">

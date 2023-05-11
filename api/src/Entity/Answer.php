@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 
 #[GetCollection(
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("IS_AUTHENTICATED_FULLY")'
 )]
 
 #[Get(
@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 
 #[Post(
-    security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_FORMER")'
+    security: 'is_granted("IS_AUTHENTICATED_FULLY")'
 )]
 
 #[Put(
@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN")'
+    security: 'is_granted("IS_AUTHENTICATED_FULLY")'
 )]
 
 class Answer

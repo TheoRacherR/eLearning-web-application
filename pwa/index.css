@@ -8,9 +8,10 @@
 
 }
 
-div#app > main {
+div#app>main {
     min-height: 100vh;
 }
+
 div#app {
     overflow-x: hidden;
 }
@@ -36,8 +37,9 @@ button.bttn {
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
-    border-radius: 6px;
-  }
+    border-radius: 0.325rem;
+}
+
 a.bttn {
     border: none;
     color: inherit;
@@ -53,9 +55,11 @@ a.bttn {
     -moz-transition: all 0.3s;
     transition: all 0.3s;
     text-decoration: none;
+    border-radius: 0.325rem;
 }
 
-button.bttn:after, a.bttn:after {
+button.bttn:after,
+a.bttn:after {
     content: '';
     position: absolute;
     z-index: -1;
@@ -64,13 +68,14 @@ button.bttn:after, a.bttn:after {
     transition: all 0.3s;
 }
 
-button.bttn:before, a.bttn:before {
+button.bttn:before,
+a.bttn:before {
     speak: none;
     text-transform: none;
     line-height: 1;
     position: relative;
     -webkit-font-smoothing: antialiased;
-    background: rgba(0,0,0,0.15);
+    background: rgba(0, 0, 0, 0.15);
     position: absolute;
     height: 100%;
     left: 0;
@@ -81,24 +86,28 @@ button.bttn:before, a.bttn:before {
 }
 
 /* Primary button */
-button.bttn-prim, a.bttn-prim {
+button.bttn-prim,
+a.bttn-prim {
     background: #154EC1;
     color: #fff;
 }
 
-button.bttn-prim:hover, a.bttn-prim:hover {
+button.bttn-prim:hover,
+a.bttn-prim:hover {
     background: #0c2e74;
     color: #fff;
 }
 
-button.bttn-prim:active, a.bttn-prim:active {
+button.bttn-prim:active,
+a.bttn-prim:active {
     background: #154EC1;
     color: #fff;
     top: 2px;
 }
 
 /* Outline Primary button */
-button.bttn-prim-out, a.bttn-prim-out {
+button.bttn-prim-out,
+a.bttn-prim-out {
     background: transparent;
     color: #154EC1;
     outline: 1px solid #154EC1;
@@ -106,12 +115,14 @@ button.bttn-prim-out, a.bttn-prim-out {
 
 }
 
-button.bttn-prim-out:hover, a.bttn-prim-out:hover {
+button.bttn-prim-out:hover,
+a.bttn-prim-out:hover {
     background: #0000002f;
     color: #154EC1;
 }
 
-button.bttn-prim-out:active, a.bttn-prim-out:active {
+button.bttn-prim-out:active,
+a.bttn-prim-out:active {
     background: #0000002f;
     color: #154EC1;
     top: 2px;
@@ -119,24 +130,28 @@ button.bttn-prim-out:active, a.bttn-prim-out:active {
 
 
 /* Success button */
-button.bttn-succ, a.bttn-succ {
+button.bttn-succ,
+a.bttn-succ {
     background: #2ecc71;
     color: #fff;
 }
 
-button.bttn-succ:hover, a.bttn-succ:hover {
+button.bttn-succ:hover,
+a.bttn-succ:hover {
     background: #27ae60;
     color: #fff;
 }
 
-button.bttn-succ:active, a.bttn-succ:active {
+button.bttn-succ:active,
+a.bttn-succ:active {
     background: #27ae60;
     color: #fff;
     top: 2px;
 }
 
 /* Outline Success button */
-button.bttn-succ-out, a.bttn-succ-out {
+button.bttn-succ-out,
+a.bttn-succ-out {
     background: transparent;
     color: #2ecc71;
     outline: 1px solid #2ecc71;
@@ -144,36 +159,42 @@ button.bttn-succ-out, a.bttn-succ-out {
 
 }
 
-button.bttn-succ-out:hover, a.bttn-succ-out:hover {
+button.bttn-succ-out:hover,
+a.bttn-succ-out:hover {
     background: #0000002f;
     color: #2ecc71;
 }
 
-button.bttn-succ-out:active, a.bttn-succ-out:active {
+button.bttn-succ-out:active,
+a.bttn-succ-out:active {
     background: #0000002f;
     color: #2ecc71;
     top: 2px;
 }
 
 /* Danger button */
-button.bttn-dng, a.bttn-dng {
+button.bttn-dng,
+a.bttn-dng {
     background: #e74c3c;
     color: #fff;
 }
 
-button.bttn-dng:hover, a.bttn-dng:hover {
+button.bttn-dng:hover,
+a.bttn-dng:hover {
     background: #c0392b;
     color: #fff;
 }
 
-button.bttn-dng:active, a.bttn-dng:active {
+button.bttn-dng:active,
+a.bttn-dng:active {
     background: #c0392b;
     color: #fff;
     top: 2px;
 }
 
 /* Outline Danger button */
-button.bttn-dng-out, a.bttn-dng-out {
+button.bttn-dng-out,
+a.bttn-dng-out {
     background: transparent;
     color: #e74c3c;
     outline: 1px solid #e74c3c;
@@ -181,12 +202,14 @@ button.bttn-dng-out, a.bttn-dng-out {
 
 }
 
-button.bttn-dng-out:hover, a.bttn-dng-out:hover {
+button.bttn-dng-out:hover,
+a.bttn-dng-out:hover {
     background: #0000002f;
     color: #e74c3c;
 }
 
-button.bttn-dng-out:active, a.bttn-dng-out:active {
+button.bttn-dng-out:active,
+a.bttn-dng-out:active {
     background: #0000002f;
     color: #e74c3c;
     top: 2px;
@@ -194,24 +217,28 @@ button.bttn-dng-out:active, a.bttn-dng-out:active {
 
 
 /* Warning button */
-button.bttn-wng, a.bttn-wng {
+button.bttn-wng,
+a.bttn-wng {
     background: #e7b93c;
     color: #fff;
 }
 
-button.bttn-wng:hover, a.bttn-wng:hover {
+button.bttn-wng:hover,
+a.bttn-wng:hover {
     background: #c09d2b;
     color: #fff;
 }
 
-button.bttn-wng:active, a.bttn-wng:active {
+button.bttn-wng:active,
+a.bttn-wng:active {
     background: #c09d2b;
     color: #fff;
     top: 2px;
 }
 
 /* Outline Warning button */
-button.bttn-wng-out, a.bttn-wng-out {
+button.bttn-wng-out,
+a.bttn-wng-out {
     background: transparent;
     color: #e7b93c;
     outline: 1px solid #e7b93c;
@@ -219,86 +246,100 @@ button.bttn-wng-out, a.bttn-wng-out {
 
 }
 
-button.bttn-wng-out:hover, a.bttn-wng-out:hover {
+button.bttn-wng-out:hover,
+a.bttn-wng-out:hover {
     background: #0000002f;
     color: #e7b93c;
 }
 
-button.bttn-wng-out:active, a.bttn-wng-out:active {
+button.bttn-wng-out:active,
+a.bttn-wng-out:active {
     background: #0000002f;
     color: #e7b93c;
     top: 2px;
 }
 
 /* Dark button */
-button.bttn-drk, a.bttn-drk {
+button.bttn-drk,
+a.bttn-drk {
     background: #34495e;
     color: #fff;
 }
 
-button.bttn-drk:hover, a.bttn-drk:hover {
+button.bttn-drk:hover,
+a.bttn-drk:hover {
     background: #2c3e50;
     color: #fff;
 }
 
-button.bttn-drk:active, a.bttn-drk:active {
+button.bttn-drk:active,
+a.bttn-drk:active {
     background: #2c3e50;
     color: #fff;
     top: 2px;
 }
 
 /* Outline Dark button */
-button.bttn-drk-out, a.bttn-drk-out {
+button.bttn-drk-out,
+a.bttn-drk-out {
     background: transparent;
     color: #34495e;
     outline: 1px solid #34495e;
     outline-offset: -1px;
 }
 
-button.bttn-drk-out:hover, a.bttn-drk-out:hover {
+button.bttn-drk-out:hover,
+a.bttn-drk-out:hover {
     background: #0000002f;
     color: #34495e;
 
 }
 
-button.bttn-drk-out:active, a.bttn-drk-out:active {
+button.bttn-drk-out:active,
+a.bttn-drk-out:active {
     background: #0000002f;
     color: #34495e;
     top: 2px;
 }
 
 /* White button */
-button.bttn-yt, a.bttn-yt {
+button.bttn-yt,
+a.bttn-yt {
     background: #ffffff;
     color: #000000;
 }
 
-button.bttn-yt:hover, a.bttn-yt:hover {
+button.bttn-yt:hover,
+a.bttn-yt:hover {
     background: #d6d6d6;
     color: #000000;
 }
 
-button.bttn-yt:active, a.bttn-yt:active {
+button.bttn-yt:active,
+a.bttn-yt:active {
     background: #d6d6d6;
     color: #000000;
     top: 2px;
 }
 
 /* Outline White button */
-button.bttn-yt-out, a.bttn-yt-out {
+button.bttn-yt-out,
+a.bttn-yt-out {
     background: transparent;
     color: #ffffff;
     outline: 1px solid #ffffff;
     outline-offset: -1px;
 }
 
-button.bttn-yt-out:hover, a.bttn-yt-out:hover {
+button.bttn-yt-out:hover,
+a.bttn-yt-out:hover {
     background: #0000002f;
     color: #ffffff;
 
 }
 
-button.bttn-yt-out:active, a.bttn-yt-out:active {
+button.bttn-yt-out:active,
+a.bttn-yt-out:active {
     background: #0000002f;
     color: #ffffff;
     top: 2px;
@@ -306,7 +347,8 @@ button.bttn-yt-out:active, a.bttn-yt-out:active {
 
 /* Button Close */
 
-button.bttn-close, a.bttn-close {
+button.bttn-close,
+a.bttn-close {
     border: none;
     color: inherit;
     background: none;
@@ -333,12 +375,12 @@ input.innput {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border-radius: 6px;
+    border-radius: 0.325rem;
     transition: border-color 0.15s ease-in-out,
-      box-shadow 0.15s ease-in-out;
+        box-shadow 0.15s ease-in-out;
     margin-top: 1rem;
     margin-bottom: 1rem;
-  }
+}
 
 
 
@@ -363,10 +405,25 @@ input.innput {
     background-color: #F89406 !important;
 }
 
-div.ql-container{
+div.ql-container {
     height: 10rem;
 }
 
 .input-item {
     margin: 0.5rem;
+}
+
+div.wrapper-course-content div.ql-toolbar.ql-snow {
+    display: none;
+}
+
+div.wrapper-course-content div.ql-container.ql-snow.ql-disabled {
+    border: none;
+    height: auto;
+}
+
+div.wrapper-course-content div.ql-container.ql-snow.ql-disabled div.ql-editor.ql-blank {
+    margin: 0 30vw;
+    padding: 2rem;
+    background-color: rgb(236, 236, 236);
 }

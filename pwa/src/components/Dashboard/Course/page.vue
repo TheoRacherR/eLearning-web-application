@@ -61,9 +61,39 @@ watchEffect(() => {
     chapters.value = JSON.parse(
       validItems.value[courseId.value].sequence
     ).chapters;
-    questions.value = JSON.parse(
+    const questionsData = JSON.parse(
       validItems.value[courseId.value].sequence
     )?.questions;
+
+    const promises =
+      questionsData &&
+      questionsData.map((item) =>
+        axios.get(
+          import.meta.env.VITE_API_URL + "/questions/" + item.questionId,
+          {
+            headers: {
+              Authorization: `Bearer ${store.user.token}`,
+            },
+          }
+        )
+      );
+
+    promises &&
+      Promise.all(promises).then((responses) => {
+        const questionsRes = responses.map((response) => response.data);
+
+        questionsRes.map((item) => {
+          console.log("debug", item);
+
+          questions.value[item.id] = {
+            question: JSON.parse(item.settings).content,
+            answer1: JSON.parse(item.settings).answers[0],
+            answer2: JSON.parse(item.settings).answers[1],
+            answer3: JSON.parse(item.settings).answers[2],
+            answer4: JSON.parse(item.settings).answers[3],
+          };
+        });
+      });
 
     nbChapter.value = Object.values(
       JSON.parse(validItems.value[courseId.value].sequence).chapters
@@ -93,43 +123,17 @@ onMounted(() => {
   }
 });
 
-const generateQuestions = async () => {
-  const obj = JSON.parse(validItems.value[courseId.value].sequence)[
-    "questions"
-  ];
-  for (const quest in obj) {
-    axios
-      .get(import.meta.env.VITE_API_URL + "/questions/" + quest, {
-        headers: {
-          Authorization: `Bearer ${store.user.token}`,
-        },
-      })
-      .then((data) => {
-        console.log(JSON.parse(data.data.settings).answers[0]);
-        questions.value[data.data.id] = {
-          question: JSON.parse(data.data.settings).content,
-          answer1: JSON.parse(data.data.settings).answers[0],
-          answer2: JSON.parse(data.data.settings).answers[1],
-          answer3: JSON.parse(data.data.settings).answers[2],
-          answer4: JSON.parse(data.data.settings).answers[3],
-        };
-        console.log(questions.value);
-      });
-  }
-  questionsGenerated.value = true;
-};
-
 const handleChangeImage = (event) => {
-    const selectedfile = event.target.files;
-    if (selectedfile.length > 0) {
-        const [imageFile] = selectedfile;
-        const fileReader = new FileReader();
-        fileReader.onload = () => {
-            image = fileReader.result;
-        };
-        fileReader.readAsDataURL(imageFile);
-    }
-}
+  const selectedfile = event.target.files;
+  if (selectedfile.length > 0) {
+    const [imageFile] = selectedfile;
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      image = fileReader.result;
+    };
+    fileReader.readAsDataURL(imageFile);
+  }
+};
 
 const handleSubmitCourse = async () => {
   if (
@@ -141,21 +145,22 @@ const handleSubmitCourse = async () => {
   ) {
     submitting.value = true;
     const data = {
-        title: course.value.title,
-        description: course.value.description,
-        price: Number(course.value.price),
-        image: image,
-        updatedAt: "NOW",
-        sequence: JSON.stringify({
-            ["chapters"]: chapters.value,
-            ["questions"]: questions.value,
-        })
-    }
+      title: course.value.title,
+      description: course.value.description,
+      price: Number(course.value.price),
+      image: image,
+      updatedAt: "NOW",
+      sequence: JSON.stringify({
+        ["chapters"]: chapters.value,
+        ["questions"]: JSON.parse(validItems.value[courseId.value].sequence)
+          ?.questions,
+      }),
+    };
     axios
       .patch(
         import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          ...data
+          ...data,
         },
         {
           headers: {
@@ -164,7 +169,7 @@ const handleSubmitCourse = async () => {
         }
       )
       .then((res) => {
-          console.log(res)
+        console.log(res);
         toastr.success("Cours modifié", "", { timeOut: 3000 });
         submitting.value = false;
       })
@@ -195,7 +200,8 @@ const deleteAQuestion = async (index, questionId) => {
             updatedAt: "NOW",
             sequence: JSON.stringify({
               chapters: chapters.value,
-              questions: questions.value,
+              questions: JSON.parse(validItems.value[courseId.value].sequence)
+                ?.questions,
             }),
           },
           {
@@ -228,11 +234,11 @@ const addNewChapter = async () => {
       .patch(
         import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          valid: 0,
           updatedAt: "NOW",
           sequence: JSON.stringify({
             chapters: chapters.value,
-            questions: questions.value,
+            questions: JSON.parse(validItems.value[courseId.value].sequence)
+              ?.questions,
           }),
         },
         {
@@ -257,9 +263,43 @@ const addNewChapter = async () => {
 };
 
 const deleteAChapter = async (id) => {
-  delete chapters.value[id];
-  console.log(chapters.value);
-  console.log("deleted");
+  if (Object.values(chapters.value).length - 1 > 0) {
+    delete chapters.value[id];
+    axios
+      .patch(
+        import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
+        {
+          valid: 0,
+          updatedAt: "NOW",
+          sequence: JSON.stringify({
+            chapters: chapters.value,
+            questions: JSON.parse(validItems.value[courseId.value].sequence)
+              ?.questions,
+          }),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${store.user.token}`,
+          },
+        }
+      )
+      .then(() => {
+        toastr.success("Chapitre supprimé", "", { timeOut: 3000 });
+
+        chapterTitle.value = "";
+        document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
+        chapter.value = "";
+        nbChapter.value = nbChapter.value + 1;
+        chapterEditorOn.value = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    toastr.warning("Vous devez avoir au minimum 1 chapitre", "", {
+      timeOut: 3000,
+    });
+  }
 };
 
 const cancelEditor = async () => {
@@ -317,7 +357,12 @@ const checkNumber = () => {
         <div class="secondline">
           <div class="input-item">
             <label for="formFile">Image du cours à renseigner</label>
-            <input class="form-control innput" type="file" id="formFile" v-on:change="handleChangeImage" />
+            <input
+              class="form-control innput"
+              type="file"
+              id="formFile"
+              v-on:change="handleChangeImage"
+            />
           </div>
           <div class="input-item">
             <label :for="course.description">Description du cours</label>
@@ -416,10 +461,6 @@ const checkNumber = () => {
         </button>
 
         <div class="list-course">
-          <button class="bttn bttn-drk quiz-btn" @click="generateQuestions">
-            <va-icon name="refresh" />
-            Rafraichir les questions
-          </button>
           <div v-for:="(item, index) in questions" class="itemss">
             <div>
               <div>Question : "{{ item.question }}"</div>
