@@ -18,7 +18,6 @@ watchEffect(() => {
 
   let count = 0
 
-  console.log(Object.keys(items.value).length)
   for (let j = Object.keys(items.value).length-1; j > 0; j--) {
     if (items.value[Object.keys(items.value)[j]].valid === 1) {
       validItems.value = {
