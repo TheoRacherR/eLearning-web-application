@@ -11,6 +11,18 @@ const router = createRouter({
       component: HomeView,
     },
 
+    {
+      path: "/reset_password",
+      name: "reset_password",
+      component: () => import("../components/ResetPassword.vue")
+    },
+
+    {
+      path: "/forgot-password",
+      name: "forgot",
+      component: () => import("../components/ForgotPassword.vue")
+    },
+
     //Page de backoffice
     {
       path: "/db",

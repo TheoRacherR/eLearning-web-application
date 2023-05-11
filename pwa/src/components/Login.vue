@@ -8,6 +8,7 @@ import toastr from "toastr";
 
 const loadingButtonLogin = ref(false);
 const loadingButtonSignup = ref(false);
+let switchForgetPassword = false;
 
 const props = defineProps({
   closeModal: {
@@ -59,6 +60,11 @@ const navigateRegister = () => {
   loadingButtonSignup.value = false;
   router.push("/register");
 };
+
+const handleForgetPassword = () => {
+    props.closeModal();
+    router.push("/forgot-password/");
+}
 </script>
 
 <template>
@@ -88,6 +94,9 @@ const navigateRegister = () => {
         v-model="initialValue.password"
       />
     </div>
+      <div class="form-group mb-3">
+          <button type="button" class="btn btn-warning" @click="handleForgetPassword">Mot de passe oublié ?</button>
+      </div>
   </div>
 
   <div class="modal-footer">

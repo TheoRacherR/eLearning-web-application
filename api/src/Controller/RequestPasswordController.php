@@ -35,7 +35,7 @@ class RequestPasswordController extends AbstractController
             $this->manager->persist($user);
             $this->manager->flush();
 
-            $link = 'http://localhost:8080/reset_password?token=' . $user->getToken();
+            $link = 'http://learn.matthieucmp.eu/reset_password?token=' . $user->getToken();
             $mail = (new Email())
                 ->from('campagne.matthieu@gmail.com')
                 ->to($user->getMail())
@@ -43,6 +43,7 @@ class RequestPasswordController extends AbstractController
                 ->html(
                     'Cliquez sur le lien suivant pour réinitialiser votre mot de passe : <a href="' . $link . '">Réinitialisez votre mot de passe</a>'
                 );
+            $this->mailer->send($mail);
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), '404');
         }
