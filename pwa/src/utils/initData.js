@@ -46,8 +46,8 @@ const getCourses = () => {
                 stripeProductId: item.stripeProductId,
                 stripePriceId: item.stripePriceId,
                 sequence: item.sequence,
-                created_at: item.createdAt,
-                updated_at: item.updated_at,
+                created_at: new Date(item.createdAt),
+                updated_at: new Date(item.updated_at),
               };
             });
 
@@ -85,8 +85,8 @@ const getUsers = () => {
                 mail: item.mail,
                 firstname: item.firstname,
                 lastname: item.lastname,
-                created_at: item.created_at,
-                updated_at: item.updated_at,
+                created_at: new Date(item.createdAt),
+                updated_at: new Date(item.updatedAt),
                 last_activity: item.last_activity,
                 valid: item.valid,
                 ban: item.ban,
@@ -140,8 +140,8 @@ const getComments = () => {
                 course_id: item.course.split("/")[2],
                 content: item.content,
                 star: item.star,
-                created_at: item.created_at,
-                updated_at: item.updated_at,
+                created_at: new Date(item.createdAt),
+                updated_at: new Date(item.updatedAt),
                 valid: item.valid,
                 firstname: usr.firstname,
                 lastname: usr.lastname,

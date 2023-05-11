@@ -15,7 +15,7 @@ watchEffect(() => {
     if (items.value[item].valid === 1 && !items.value[item].possessed) {
       validItems.value = {
         ...validItems.value,
-        [Object.values(items.value).length - item]: { ...items.value[item] },
+        [parseInt(Object.keys(items.value).at(-1)) - item]: { ...items.value[item] },
       };
     }
   }
