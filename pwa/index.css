@@ -412,3 +412,18 @@ div.ql-container {
 .input-item {
     margin: 0.5rem;
 }
+
+div.wrapper-course-content div.ql-toolbar.ql-snow {
+    display: none;
+}
+
+div.wrapper-course-content div.ql-container.ql-snow.ql-disabled {
+    border: none;
+    height: auto;
+}
+
+div.wrapper-course-content div.ql-container.ql-snow.ql-disabled div.ql-editor.ql-blank {
+    margin: 0 30vw;
+    padding: 2rem;
+    background-color: rgb(236, 236, 236);
+}

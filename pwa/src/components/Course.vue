@@ -57,24 +57,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="wrapper-course-content">
     <h1>{{ course?.title }}</h1>
-    <h2>Chapitre n°{{ chapter?.id }}: "{{ chapter?.title }}"</h2>
-    <!--<QuillEditor ref="editor" :readOnly="true" :toolbar="[]" theme="snow" />-->
-    <div class="course-content-chapter">
-      <span v-if="chapter?.content">{{ chapter.content }}</span>
-      <span v-else style="font-style: italic;">Il n'y a pas de contenu pour le moment</span>
-    </div>
-  </div>
+    <h2>Chapitre n°{{ parseInt(chapIndex)+1 }}: "{{ chapter?.title }}"</h2>
 
-  <div class="group-buttons">
+    <div class="group-buttons">
     <button class="bttn bttn-wng quiz-btn" v-if="parseInt(chapIndex) > 0">
       <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) - 1}`">
         <va-icon name="chevron_left" />
         Chapitre précédent
       </RouterLink>
     </button>
-
+    
     <button class="bttn bttn-drk quiz-btn go-quiz" v-if="chapters.length === parseInt(chapIndex) + 1">
       <RouterLink :to="`/course/${courseId}/quiz`">
         <va-icon name="quiz" />
@@ -82,21 +76,24 @@ onMounted(() => {
         <va-icon name="chevron_right" />
       </RouterLink>
     </button>
-
+    
     <button class="bttn bttn-wng quiz-btn next-chapter" v-else>
       <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) + 1}`">
         Chapitre suivant
         <va-icon name="chevron_right" />
       </RouterLink>
     </button>
+    </div>
 
-    
+    <QuillEditor ref="editor" :readOnly="true" :toolbar="[]" theme="snow" />
+
+  
 
   </div>
 </template>
 
 <style lang="scss" scoped>
-.wrapper {
+.wrapper-course-content {
   // text-align: center;
   
   h1 {
@@ -107,27 +104,22 @@ onMounted(() => {
   h2 {
     padding: 1vh 30vw 3vh 30vw;
   }
-  div.course-content-chapter {
-    margin: 0 30vw;
-    padding: 2rem;
-    background-color: rgb(236, 236, 236);
-  }
 
-}
-div.group-buttons {
-  padding: 3vh 30vw 3vh 30vw;
-  display: flex;
-  // justify-content: space-between;
-
-  button {
-    a{
-      text-decoration: none;
-      color: white;
+  div.group-buttons {
+    padding: 3vh 30vw 3vh 30vw;
+    display: flex;
+    // justify-content: space-between;
+  
+    button {
+      a{
+        text-decoration: none;
+        color: white;
+      }
     }
-  }
-
-  button.next-chapter, button.go-quiz{
-    margin: 0 0 0 auto;
+  
+    button.next-chapter, button.go-quiz{
+      margin: 0 0 0 auto;
+    }
   }
 }
 </style>
