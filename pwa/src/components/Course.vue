@@ -68,16 +68,14 @@ onMounted(() => {
   </div>
 
   <div class="group-buttons">
-    <button class="bttn bttn-wng quiz-btn" >
-    <!--v-if="parseInt(chapIndex) > 0"-->
+    <button class="bttn bttn-wng quiz-btn" v-if="parseInt(chapIndex) > 0">
       <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) - 1}`">
         <va-icon name="chevron_left" />
         Chapitre précédent
       </RouterLink>
     </button>
 
-    <button class="bttn bttn-drk quiz-btn">
-    <!--v-if="chapters.length === parseInt(chapIndex) + 1"-->
+    <button class="bttn bttn-drk quiz-btn go-quiz" v-if="chapters.length === parseInt(chapIndex) + 1">
       <RouterLink :to="`/course/${courseId}/quiz`">
         <va-icon name="quiz" />
         Faire le Quiz
@@ -85,13 +83,14 @@ onMounted(() => {
       </RouterLink>
     </button>
 
-    <!--<button class="bttn bttn-wng quiz-btn" v-else>
-    
+    <button class="bttn bttn-wng quiz-btn next-chapter" v-else>
       <RouterLink :to="`/course/${courseId}/${parseInt(chapIndex) + 1}`">
         Chapitre suivant
         <va-icon name="chevron_right" />
       </RouterLink>
-    </button>-->
+    </button>
+
+    
 
   </div>
 </template>
@@ -118,13 +117,17 @@ onMounted(() => {
 div.group-buttons {
   padding: 3vh 30vw 3rem 30vw;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
 
   button {
     a{
       text-decoration: none;
       color: white;
     }
+  }
+
+  button.next-chapter, button.go-quiz{
+    margin: 0 0 0 auto;
   }
 }
 </style>
