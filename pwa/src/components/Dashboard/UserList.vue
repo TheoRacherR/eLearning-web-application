@@ -16,24 +16,18 @@ watchEffect(() => {
 
 const getRole = (roles) => {
   let role = "";
+  console.log(roles)
 
-  roles.map((item) => {
-    switch (item) {
-      case "ROLE_USER":
-        role += "User";
-        break;
-      case "ROLE_FORMER":
-        role += "Teacher";
-        break;
-      case "ROLE_ADMIN":
-        role += "Admin ";
-        break;
-      default:
-        role = "-";
-        break;
-    }
-  });
-
+  if (roles.includes("ROLE_ADMIN")) {
+    role = "Admin"
+  }
+  else if (roles.includes("ROLE_FORMER")) {
+    role = "Professeur"
+  }
+  else {
+    role = "Utilisateur"
+  }
+   
   return role;
 };
 

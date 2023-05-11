@@ -34,7 +34,6 @@ watchEffect(() => {
             break;
         }
     }
-    console.log(validItemsComments.value)
 })
 
 </script>

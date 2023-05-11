@@ -55,8 +55,8 @@ div.box-container {
         width: 100%;
 
         div.box-left > img {
-            width: 250px;
-            height: 250px;
+            width: 150px;
+            height: 150px;
             object-fit: cover;
         }
 

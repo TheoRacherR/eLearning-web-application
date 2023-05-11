@@ -222,10 +222,12 @@ watch(rating, () => {
       class="report-container"
       v-if="store.user.isConnected && course?.possessed"
     >
+    <RouterLink :to="`/report/${courseId}`">
       <button class="bttn bttn-dng">
         <va-icon name="warning"></va-icon>
         Signaler ce cours
       </button>
+    </RouterLink>
     </div>
   </div>
 </template>
