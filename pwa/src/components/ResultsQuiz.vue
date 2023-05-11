@@ -49,10 +49,12 @@ watchEffect(() => {
 
         console.log("debug", body);
 
-        axios.post(import.meta.env.VITE_API_URL + "/quiz/submit", body, {
+        axios.post(import.meta.env.VITE_API_URL + "/quiz/submit/", body, {
           headers: {
             Authorization: `Bearer ${store.user.token}`,
           },
+        }).then(({data}) => {
+            console.log(data)
         });
       });
   }
