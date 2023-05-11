@@ -66,8 +66,8 @@ div.box-container > div.bc-main > div.box-left {
 
 
 div.box-container > div.bc-main > div.box-right > img {
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
 }
 
