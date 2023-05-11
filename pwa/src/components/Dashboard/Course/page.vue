@@ -229,7 +229,6 @@ const addNewChapter = async () => {
       .patch(
         import.meta.env.VITE_API_URL + "/courses/" + courseId.value,
         {
-          valid: 0,
           updatedAt: "NOW",
           sequence: JSON.stringify({
             chapters: chapters.value,

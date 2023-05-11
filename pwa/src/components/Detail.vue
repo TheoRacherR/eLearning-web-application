@@ -121,7 +121,7 @@ watch(rating, () => {
   <div class="wrapper">
     <h1>{{ course?.title }}</h1>
 
-    <img v-if="course.image"
+    <img v-if="course?.image"
       class="img-fluid"
       :src="course?.image"
       alt="Image du cours"

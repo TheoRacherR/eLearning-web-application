@@ -44,7 +44,7 @@ watchEffect(() => {
     }
 
     for (const item in store.courses.list) {
-        let month = store.courses.list[item].created_at.substring(5,7);
+        let month = store.courses.list[item].created_at.getMonth();
 
         month = parseInt(month);
 

@@ -91,6 +91,11 @@ const handleSubmit = (courseId, value) => {
               <td class="waiting" v-else><va-icon name="hourglass_empty" /></td>
 
               <td>
+                <button class="bttn bttn-wng">
+                  <RouterLink :to="`/db/course/page/${c.id}`"
+                    ><va-icon name="last_page"
+                  /></RouterLink>
+                </button>
                 <button class="bttn bttn-succ" @click="handleSubmit(c.id, 1)">
                   <va-icon name="done" />
                 </button>
@@ -135,6 +140,7 @@ div.container-dashboard {
 
       td button {
         margin-right: 1rem;
+        color: #fff;
       }
 
       td.verifed {
