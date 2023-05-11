@@ -76,7 +76,7 @@ class Course
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: UserCourse::class, orphanRemoval: true)]
     private Collection $userCourses;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $image = null;
 
     #[ORM\Column]
