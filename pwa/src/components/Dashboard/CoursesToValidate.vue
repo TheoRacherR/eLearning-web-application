@@ -136,12 +136,18 @@ div.container-dashboard {
       th,
       td {
         padding: 1rem;
+
+        button {
+          margin-right: 1rem;
+          
+          a{
+            color: #fff;
+
+          }
+        }
       }
 
-      td button {
-        margin-right: 1rem;
-        color: #fff;
-      }
+
 
       td.verifed {
         color: #52b425;
