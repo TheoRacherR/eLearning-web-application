@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
+    "cypress": "^12.10.0",
     "esbuild": "^0.13.4",
     "vite": "^4.0.0",
     "vue-cli-plugin-vuestic-ui": "~1.0.11"
