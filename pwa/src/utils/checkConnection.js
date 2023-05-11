@@ -10,7 +10,6 @@ export const checkConnection = (
   redirectIfNotAdmin, //redirigé si pas role Admin
   from
 ) => {
-  // console.log("debug", from);
   const tokenRaw = localStorage.getItem("TOKEN");
 
   if (tokenRaw) {
@@ -40,6 +39,13 @@ export const checkConnection = (
               );
 
               store.setProf(true, former[0].status);
+
+              if (
+                redirectIfNotAdmin &&
+                !data.roles.includes("ROLE_ADMIN") &&
+                former[0].status !== "VALIDATED"
+              )
+                router.push("/");
             } else if (redirectIfNotTeacher) router.push("/");
           });
 
@@ -56,8 +62,6 @@ export const checkConnection = (
           isAdmin: data.roles.includes("ROLE_ADMIN"),
         });
 
-        if (redirectIfNotAdmin && !data.roles.includes("ROLE_ADMIN"))
-          router.push("/");
         if (withRedirectOnConnect) router.push("/");
       })
       .catch(() => {
