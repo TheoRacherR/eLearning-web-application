@@ -28,7 +28,7 @@ let errorShown = ref(false);
 let errorMessage = ref("");
 
 onMounted(() => {
-  checkConnection(false, false, false, "login");
+  checkConnection(false, false, false, false, "login");
 });
 
 const handleSubmit = () => {
@@ -45,6 +45,7 @@ const handleSubmit = () => {
       toastr.success("Connecté", "", { timeOut: 3000 });
     })
     .catch((err) => {
+      loadingButtonLogin.value = false;
       console.log("debug", err, err.response);
 
       errorShown.value = true;

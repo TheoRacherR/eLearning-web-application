@@ -45,7 +45,7 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  checkConnection(false, false, false, "Detail");
+  checkConnection(false, false, false, false, "Detail");
   store.selectCourse(courseId);
 });
 
@@ -95,7 +95,9 @@ const submitComment = () => {
         },
       })
       .then(() => {
-        toastr.info("Votre commentaire est en cours de validation", "", { timeout: 3000 });
+        toastr.info("Votre commentaire est en cours de validation", "", {
+          timeout: 3000,
+        });
         initData();
         closeCommenting();
         loadingSubmitComment.value = false;
@@ -115,7 +117,12 @@ watch(rating, () => {
   <div class="wrapper">
     <h1>{{ course?.title }}</h1>
 
-    <img class="img-fluid" :src="course?.image" alt="Image du cours" style="width: 70%">
+    <img
+      class="img-fluid"
+      :src="course?.image"
+      alt="Image du cours"
+      style="width: 70%"
+    />
 
     <div class="description m-2">{{ course?.description }}</div>
 
@@ -135,7 +142,6 @@ watch(rating, () => {
         <p><va-icon name="done" />Ce cours se trouve dans le panier</p>
       </div>
     </div>
-
 
     <button
       class="bttn bttn-succ"
@@ -183,14 +189,25 @@ watch(rating, () => {
     </div>
 
     <!-- Commentaire -->
-    <div class="wrapperComment" v-if="
-      store.user.isConnected && commenting //&& course?.possessed
-    ">
+    <div
+      class="wrapperComment"
+      v-if="
+        store.user.isConnected && commenting //&& course?.possessed
+      "
+    >
       <vue3-star-ratings v-model="rating" />
-      <textarea rows="5" v-model="comment" placeholder="Rentrez votre commentaire ici"></textarea>
+      <textarea
+        rows="5"
+        v-model="comment"
+        placeholder="Rentrez votre commentaire ici"
+      ></textarea>
 
       <div class="cont-form-comment">
-        <button v-if="comment.length > 0" class="bttn bttn-prim" @click="submitComment">
+        <button
+          v-if="comment.length > 0"
+          class="bttn bttn-prim"
+          @click="submitComment"
+        >
           <div
             class="spinner-border spinner-border-sm"
             role="status"
@@ -200,32 +217,33 @@ watch(rating, () => {
           </div>
           Valider le commentaire
         </button>
-        <button v-else class="bttn bttn-prim">
-          Valider le commentaire
-        </button>
+        <button v-else class="bttn bttn-prim">Valider le commentaire</button>
         <button class="bttn bttn-prim-out" @click="closeCommenting">
           Annuler
         </button>
       </div>
-
     </div>
 
-    <div class="leave-comment" v-else-if="
-      store.user.isConnected && !commenting //&& course?.possessed
-    ">
+    <div
+      class="leave-comment"
+      v-else-if="
+        store.user.isConnected && !commenting //&& course?.possessed
+      "
+    >
       <button class="bttn bttn-prim" @click="handleComment">
         Laisser un commentaire
       </button>
     </div>
 
-    <div class="report-container" v-if="store.user.isConnected && course?.possessed">
+    <div
+      class="report-container"
+      v-if="store.user.isConnected && course?.possessed"
+    >
       <button class="bttn bttn-dng">
         <va-icon name="warning"></va-icon>
         Signaler ce cours
       </button>
     </div>
-
-
   </div>
 </template>
 
@@ -312,11 +330,9 @@ div.wrapper {
         width: 8rem;
       }
     }
-
-
   }
 
-  div.leave-comment{
+  div.leave-comment {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -3,6 +3,7 @@ import axios from "axios";
 import router from "../router";
 import { computed, onMounted, ref, watchEffect } from "vue";
 import { store } from "../store/store";
+import { checkConnection } from "../utils/checkConnection";
 
 const { id: courseId } = router.currentRoute.value.params;
 
@@ -61,14 +62,14 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  // checkConnection(false, true, "Quiz");
+  checkConnection(false, true, false, false, "Quiz results");
   store.selectCourse(courseId);
-  // if (
-  //   typeof course.value?.possessed === "boolean" &&
-  //   !course.value?.possessed
-  // ) {
-  //   router.push(`/detail/${courseId}`);
-  // }
+  if (
+    typeof course.value?.possessed === "boolean" &&
+    !course.value?.possessed
+  ) {
+    router.push(`/detail/${courseId}`);
+  }
 });
 </script>
 

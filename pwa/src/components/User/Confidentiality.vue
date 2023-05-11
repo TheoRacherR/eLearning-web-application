@@ -1,7 +1,12 @@
 <script setup>
 import RightContainer from "./RightContainer.vue";
 import router from "../../router";
+import { onMounted } from "vue";
+import { checkConnection } from "../../utils/checkConnection";
 
+onMounted(() => {
+  checkConnection(false, true, false, false, "Confidentiality");
+});
 </script>
 
 <template>
@@ -9,12 +14,16 @@ import router from "../../router";
     <div class="main-container">
       <h3>Les politiques de confidentialité du site</h3>
 
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta quaerat quas laborum illum officia, possimus ratione obcaecati voluptate libero, tempora quibusdam ipsa nostrum. Consectetur tenetur eveniet corrupti reiciendis ab mollitia!
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, nostrum ipsam. Qui eligendi, quidem iure nulla tempora exercitationem atque iusto molestiae alias itaque ullam voluptatem sapiente, ipsum recusandae aut voluptatum?
-      
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta quaerat
+      quas laborum illum officia, possimus ratione obcaecati voluptate libero,
+      tempora quibusdam ipsa nostrum. Consectetur tenetur eveniet corrupti
+      reiciendis ab mollitia! Lorem ipsum dolor sit amet consectetur adipisicing
+      elit. Optio, nostrum ipsam. Qui eligendi, quidem iure nulla tempora
+      exercitationem atque iusto molestiae alias itaque ullam voluptatem
+      sapiente, ipsum recusandae aut voluptatum?
     </div>
 
-    <RightContainer page="confidentiality"/>
+    <RightContainer page="confidentiality" />
   </div>
 </template>
 

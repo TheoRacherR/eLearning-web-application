@@ -5,6 +5,7 @@ import RightContainer from "./RightContainer.vue";
 import toastr from "toastr";
 import router from "../../router";
 import { store } from "../../store/store";
+import { checkConnection } from "../../utils/checkConnection";
 
 const user = ref({});
 
@@ -41,6 +42,10 @@ onMounted(async () => {
       mail: userRaw.mail,
     };
   }
+});
+
+onMounted(() => {
+  checkConnection(false, true, false, false, "User page");
 });
 
 watch(

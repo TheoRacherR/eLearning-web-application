@@ -4,7 +4,6 @@ import { Modal } from "bootstrap";
 import { RouterView } from "vue-router";
 import router from "./router";
 
-
 import Footer from "./components/Default/Footer.vue";
 import Menu from "./components/Default/Menu.vue";
 import LoginView from "./views/LoginView.vue";
@@ -41,7 +40,7 @@ const links2 = [
   },
   {
     title: "Mes achats",
-    link: "/user/mypurchases",
+    link: "/list-mypurchases",
   },
   {
     title: "Notre politique de confidentialité",
@@ -49,18 +48,20 @@ const links2 = [
   },
 ];
 watch(() => {
-  if (router.currentRoute.value.path.length === 1 || router.currentRoute.value.path.substring(0, 3) !== "/db") {
+  if (
+    router.currentRoute.value.path.length === 1 ||
+    router.currentRoute.value.path.substring(0, 3) !== "/db"
+  ) {
     displayFooter.value = true;
-  }
-  else {
+  } else {
     displayFooter.value = false;
   }
-})
+});
 </script>
 
 <template>
   <header>
-    <Menu/>
+    <Menu />
 
     <div
       class="modal fade"
@@ -81,7 +82,7 @@ watch(() => {
               aria-label="Close"
             ></button>
           </div>
-          <LoginView :closeModal="closeModal"/>
+          <LoginView :closeModal="closeModal" />
         </div>
       </div>
     </div>
@@ -90,7 +91,6 @@ watch(() => {
   <main>
     <Suspense> <RouterView /></Suspense>
   </main>
-
 
   <Cookie />
 

@@ -57,7 +57,7 @@ const toggleMenu = () => {
 };
 
 onMounted(() => {
-  checkConnection(false, true, false, "dashboard");
+  checkConnection(false, true, false, false, "dashboard");
 });
 </script>
 

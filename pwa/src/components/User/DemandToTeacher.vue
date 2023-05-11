@@ -5,6 +5,7 @@ import RightContainer from "./RightContainer.vue";
 import toastr from "toastr";
 import router from "../../router";
 import { listUsers, store } from "../../store/store";
+import { checkConnection } from "../../utils/checkConnection";
 
 const former = ref({});
 
@@ -28,6 +29,10 @@ onMounted(() => {
     accountBankName: "",
     accountIban: "",
   };
+});
+
+onMounted(() => {
+  checkConnection(false, true, false, false, "Demandteacher");
 });
 
 const handleSubmit = () => {
@@ -273,14 +278,20 @@ const checkSize = (e) => {
         <input
           v-if="ownerValid !== 'false'"
           class="innput valid"
-          @input="focusOnNext('name'); checkSize('name')"
+          @input="
+            focusOnNext('name');
+            checkSize('name');
+          "
           v-model="former.accountOwner"
           placeholder="Exemple: M.DUPOND Jean"
         />
         <input
           v-else
           class="innput invalid"
-          @input="focusOnNext('name'); checkSize('name')"
+          @input="
+            focusOnNext('name');
+            checkSize('name');
+          "
           v-model="former.accountOwner"
           placeholder="Exemple: M.DUPOND Jean"
         />
@@ -325,6 +336,15 @@ const checkSize = (e) => {
     >
       <h3>Demande de passage en rôle professeur</h3>
       Votre demande a été refusé.
+    </div>
+    <div
+      class="main-container"
+      v-else-if="
+        store.user.isTeacher && store.user.teacherStatus === 'VALIDATED'
+      "
+    >
+      <h3>Demande de passage en rôle professeur</h3>
+      Vous êtes déjà prof
     </div>
 
     <RightContainer page="demand-teacher" />

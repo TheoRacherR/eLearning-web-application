@@ -130,11 +130,11 @@ const router = createRouter({
     },
 
     //Page de backoffice à supprimer
-    {
-      path: "/dashboard",
-      name: "dashboard",
-      component: () => import("../components/Dashboard.vue"),
-    },
+    // {
+    //   path: "/dashboard",
+    //   name: "dashboard",
+    //   component: () => import("../components/Dashboard.vue"),
+    // },
 
     //Inscription
     {
@@ -225,21 +225,21 @@ const router = createRouter({
       name: "user-confidentiality",
       component: () => import("../components/User/Confidentiality.vue"),
     },
-    {
-      path: "/user/newsletter",
-      name: "user-newsletter",
-      component: () => import("../components/User/Newsletter.vue"),
-    },
-    {
-      path: "/user/mypayment",
-      name: "user-mypayment",
-      component: () => import("../components/User/Payment.vue"),
-    },
-    {
-      path: "/user/mypurchases",
-      name: "user-mypurchases",
-      component: () => import("../components/User/Purchases.vue"),
-    },
+    // {
+    //   path: "/user/newsletter",
+    //   name: "user-newsletter",
+    //   component: () => import("../components/User/Newsletter.vue"),
+    // },
+    // {
+    //   path: "/user/mypayment",
+    //   name: "user-mypayment",
+    //   component: () => import("../components/User/Payment.vue"),
+    // },
+    // {
+    //   path: "/user/mypurchases",
+    //   name: "user-mypurchases",
+    //   component: () => import("../components/User/Purchases.vue"),
+    // },
     {
       path: "/user/demand-teacher",
       name: "user-demand-teacher",
