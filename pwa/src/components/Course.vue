@@ -100,12 +100,12 @@ onMounted(() => {
   // text-align: center;
   
   h1 {
-    padding: 3vh 30vw 3rem 30vw;
+    padding: 3vh 30vw 3vh 30vw;
     text-align:left;
     background-color: rgb(168, 156, 139);
   }
   h2 {
-    padding: 1vh 30vw 3rem 30vw;
+    padding: 1vh 30vw 3vh 30vw;
   }
   div.course-content-chapter {
     margin: 0 30vw;
@@ -115,7 +115,7 @@ onMounted(() => {
 
 }
 div.group-buttons {
-  padding: 3vh 30vw 3rem 30vw;
+  padding: 3vh 30vw 3vh 30vw;
   display: flex;
   // justify-content: space-between;
 
