@@ -23,7 +23,7 @@ watchEffect(() => {
     if (items.value[item].course_id == courseId) {
       validItems.value = {
         ...validItems.value,
-        [Object.values(items.value).length - item]: { ...items.value[item] },
+        [parseInt(Object.keys(items.value).at(-1)) - item]: { ...items.value[item] },
       };
     }
   }

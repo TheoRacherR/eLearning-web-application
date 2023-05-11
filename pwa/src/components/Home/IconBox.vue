@@ -33,7 +33,7 @@ div.tb-container {
     width: 100%;
     /* background-color: blue; */
     justify-content: space-around;
-    margin-bottom: 7rem;
+    /* margin-bottom: 7rem; */
 }
 
 div.tb-container div.tbc-item {

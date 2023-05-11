@@ -7,6 +7,8 @@ import axios from "axios";
 import { initData } from "../utils/initData";
 import toastr from "toastr";
 
+import Comment from "./Courses/Comment.vue";
+
 const { user } = store;
 
 const courseId = router.currentRoute.value.params.id;
@@ -15,10 +17,12 @@ const rating = ref(2.5);
 const comment = ref("");
 const commenting = ref(false);
 
+
+const loadingSubmitComment = ref(false);
+
 const items = ref({});
 const validComments = ref({});
 
-const loadingSubmitComment = ref(false);
 
 watchEffect(() => {
   items.value = store.comments.list;
@@ -154,34 +158,11 @@ watch(rating, () => {
       data-test="continueCourse"
       >Reprendre ce cours</router-link
     >
+
     <div class="wrapperCommentsList">
-      <h4>Les commentaires:</h4>
-      <div class="container-comments">
-        <div v-if="Object.values(validComments).length === 0">
-          Il n'y a pas de commentaires
-        </div>
-        <div v-for="com in validComments" class="item-comment">
-          <div class="top-com">
-            <!--<img src="https://via.placeholder.com/40x40" alt="">-->
-            <div class="text-topc">
-              <div>{{ com.firstname }} {{ com.lastname }}</div>
-              <div class="stars-com">
-                <div style="margin: auto 0">
-                  {{ com.star }}
-                </div>
-                <va-icon name="star" />
-              </div>
-            </div>
-          </div>
-
-          <div class="main-com">
-            {{ com.content.slice(0, 100) }}
-            {{ com.content.length > 103 ? "..." : "" }}
-          </div>
-        </div>
-      </div>
+          <h4>Les commentaires:</h4>
+        <Comment :items="validComments"/>
     </div>
-
     <!-- Commentaire -->
     <div class="wrapperComment" v-if="
       store.user.isConnected && commenting //&& course?.possessed

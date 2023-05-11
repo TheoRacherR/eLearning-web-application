@@ -27,7 +27,7 @@ watchEffect(() => {
     
     validItems.value = {
       ...validItems.value,
-      [Object.values(items.value).length - item]: { ...items.value[item], title: course.value.title },
+      [parseInt(Object.keys(items.value).at(-1)) - item]: { ...items.value[item], title: course.value.title },
     };
   }
 
