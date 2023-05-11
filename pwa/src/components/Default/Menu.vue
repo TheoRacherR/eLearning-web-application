@@ -62,10 +62,7 @@ watchEffect(() => {
           <RouterLink to="/db">Mes cours</RouterLink>
         </div>
 
-        <div
-          class="fill"
-          v-if="store.user.isConnected && store.user.isAdmin"
-        ></div>
+        <div class="fill" v-if="store.user.isConnected && store.user.isAdmin"></div>
         <div v-if="store.user.isConnected && store.user.isAdmin">
           <RouterLink to="/db">Dashboard</RouterLink>
         </div>
@@ -172,13 +169,19 @@ nav.navbar-nav {
 
       :nth-child(3),
       :nth-child(5),
-      :nth-child(7) {
+      :nth-child(7),
+      :nth-child(9) {
         margin-left: 0.8rem;
       }
 
       > div > a {
         text-decoration: none;
         color: var(--color-text-light);
+      }
+
+      > div > a:hover {
+          text-decoration: underline;
+          color: darkslategray;
       }
     }
 
