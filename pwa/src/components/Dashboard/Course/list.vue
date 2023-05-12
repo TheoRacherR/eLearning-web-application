@@ -53,7 +53,7 @@ const deleteCourse = (courseId) => {
               <th>Description</th>
               <th>Valide</th>
               <th>Prix</th>
-              <th>Nombre d'achat</th>
+              <!--<th>Nombre d'achat</th>-->
               <th>Actions</th>
             </tr>
           </thead>
@@ -73,7 +73,7 @@ const deleteCourse = (courseId) => {
               </td>
               <td class="refused" v-else><va-icon name="close" /></td>
               <td>{{ course.price }} €</td>
-              <td>0</td>
+              <!--<td>0</td>-->
 
               <td>
                 <button class="bttn bttn-wng">
