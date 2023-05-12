@@ -17,12 +17,10 @@ const rating = ref(2.5);
 const comment = ref("");
 const commenting = ref(false);
 
-
 const loadingSubmitComment = ref(false);
 
 const items = ref({});
 const validComments = ref({});
-
 
 watchEffect(() => {
   items.value = store.comments.list;
@@ -119,9 +117,7 @@ watch(rating, () => {
 
 <template>
   <div class="wrapper">
-
     <div class="presentation">
-
       <div class="left">
         <h1>{{ course?.title }}</h1>
         <h5>{{ course?.description }}</h5>
@@ -130,11 +126,12 @@ watch(rating, () => {
           :to="`/course/${courseId}`"
           class="bttn bttn-drk"
           data-test="continueCourse"
-          >Reprendre ce cours</router-link>
+          >Reprendre ce cours</router-link
+        >
         <!-- Ajouter au panier -->
         <div v-if="store.user.isConnected && !course?.possessed">
           <button
-            v-if="!Object.keys(store.cart.list).includes(JSON.stringify(courseId))"
+            v-if="!Object.keys(store.cart.list).includes(courseId.toString())"
             class="bttn bttn-succ"
             @click="handleCart"
           >
@@ -143,7 +140,7 @@ watch(rating, () => {
           <div
             class="alreadyInCartDetailP"
             v-else-if="
-              Object.keys(store.cart.list).includes(JSON.stringify(courseId))
+              Object.keys(store.cart.list).includes(courseId.toString())
             "
           >
             <p><va-icon name="done" />Ce cours se trouve dans le panier</p>
@@ -162,26 +159,20 @@ watch(rating, () => {
       </div>
 
       <div class="middle"></div>
-      
+
       <div class="right">
-        <img v-if="course?.image"
-        class="img-fluid"
-        :src="course?.image"
-        alt="Image du cours"
+        <img
+          v-if="course?.image"
+          class="img-fluid"
+          :src="course?.image"
+          alt="Image du cours"
         />
       </div>
     </div>
 
-    
-
-
-    
-    
     <div
       class="wrapperComment"
-      v-if="
-        store.user.isConnected && commenting && course?.possessed
-      "
+      v-if="store.user.isConnected && commenting && course?.possessed"
     >
       <vue3-star-ratings v-model="rating" />
       <textarea
@@ -214,24 +205,23 @@ watch(rating, () => {
 
     <div
       class="leave-comment"
-      v-else-if="
-        store.user.isConnected && !commenting && course?.possessed
-      "
+      v-else-if="store.user.isConnected && !commenting && course?.possessed"
     >
       <button class="bttn bttn-prim" @click="handleComment">
         Laisser un commentaire
       </button>
     </div>
 
-
     <!-- Commentaire -->
     <div class="wrapperCommentsList">
-          <h4>Les commentaires:</h4>
-        <Comment :items="validComments"/>
+      <h4>Les commentaires:</h4>
+      <Comment :items="validComments" />
     </div>
 
-    <div class="report-container" v-if="store.user.isConnected && course?.possessed
-      ">
+    <div
+      class="report-container"
+      v-if="store.user.isConnected && course?.possessed"
+    >
       <RouterLink :to="`/report/${courseId}`">
         <button class="bttn bttn-dng">
           <va-icon name="warning"></va-icon>
@@ -239,7 +229,6 @@ watch(rating, () => {
         </button>
       </RouterLink>
     </div>
-
   </div>
 </template>
 
@@ -248,37 +237,36 @@ div.wrapper {
   padding: 0 0 3vh 0;
   text-align: center;
 
-  div.presentation{
+  div.presentation {
     display: flex;
     justify-content: space-between;
     padding: 6vh 30vw 5rem 30vw;
     margin-bottom: 5rem;
     background-color: #e2e2e2;
 
-    div.left{
+    div.left {
       flex: 3;
       text-align: left;
 
       h1 {
         font-weight: bold;
       }
-      a, button{
+      a,
+      button {
         margin-top: 2rem;
       }
     }
 
-    div.middle{
+    div.middle {
       flex: 1;
     }
 
-    div.right{
+    div.right {
       flex: 3;
       img {
         width: 100%;
       }
-
     }
-
   }
 
   div.description {
