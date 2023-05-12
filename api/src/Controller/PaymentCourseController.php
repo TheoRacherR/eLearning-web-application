@@ -32,7 +32,7 @@ class PaymentCourseController extends AbstractController
             $tab[] = ['price' => $product->priceId, 'quantity' => 1];
         }
         $link = $stripe->checkout->sessions->create([
-            'success_url' => 'http://localhost:8080/summary',
+            'success_url' => 'http://learn.matthieucmp.eu/summary',
             'line_items' => [
                 $tab
             ],
