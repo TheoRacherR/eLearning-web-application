@@ -86,6 +86,7 @@ watchEffect(() => {
           console.log("debug", item);
 
           questions.value[item.id] = {
+            questionId: item.id,
             question: JSON.parse(item.settings).content,
             answer1: JSON.parse(item.settings).answers[0],
             answer2: JSON.parse(item.settings).answers[1],
@@ -190,7 +191,12 @@ const deleteAQuestion = async (index, questionId) => {
       },
     })
     .then(() => {
-      questions.value.splice(index, 1);
+      delete questions.value[questionId];
+
+      console.log(
+        "debug",
+        JSON.parse(validItems.value[courseId.value].sequence)?.questions
+      );
 
       axios
         .patch(
@@ -200,8 +206,11 @@ const deleteAQuestion = async (index, questionId) => {
             updatedAt: "NOW",
             sequence: JSON.stringify({
               chapters: chapters.value,
-              questions: JSON.parse(validItems.value[courseId.value].sequence)
-                ?.questions,
+              questions: JSON.parse(
+                validItems.value[courseId.value].sequence
+              )?.questions.filter(
+                (item) => item.questionId !== parseInt(questionId)
+              ),
             }),
           },
           {
