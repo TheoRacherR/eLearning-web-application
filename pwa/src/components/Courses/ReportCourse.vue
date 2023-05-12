@@ -28,7 +28,6 @@ onMounted(() => {
 const submitReport = () => {
   if (report.value.length > 0) {
     onLoading.value = true;
-    console.log(courseId);
     axios
       .post(
         import.meta.env.VITE_API_URL + "/course_reports",

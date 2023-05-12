@@ -174,7 +174,6 @@ const addNewChapter = async () => {
         content: chapter.value.getHTML(),
       },
     };
-    console.log(chapters.value);
     chapterTitle.value = "";
     document.getElementsByClassName("ql-editor")[0].childNodes[0].remove();
     chapter.value = "";
@@ -199,7 +198,6 @@ const editAChapter = async () => {
 
 const deleteAChapter = async (id) => {
   delete chapters.value["chapters"][id];
-  console.log(chapters.value);
   console.log("deleted");
 };
 
