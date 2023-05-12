@@ -34,13 +34,13 @@ const modules = [Autoplay, Pagination]
                 <div class="cont">
                     <h4>{{ cont.title }}</h4>
                     <p>{{ cont.description.slice(0, 100) }}{{ cont.description.length > 103 ? "..." : "" }}</p>
-                    
+
                 </div>
-                <img v-if="cont.image !== null" src="../../../public/not-found.png" alt="not found image">
+                <img v-if="!cont.image" src="../../../public/not-found.png" alt="not found image">
                 <img v-else :src="cont.image" alt="image">
             </RouterLink>
 
-                
+
             </swiper-slide>
         </swiper>
     </div>
@@ -55,15 +55,15 @@ div.container {
 
     a {
         text-decoration: none;
-        
+
         div.cont {
-    
+
             color: black;
             h4, p{
                 letter-spacing: 1px;
             }
         }
-    
+
         img {
             width: 400px;
             height: 400px;
