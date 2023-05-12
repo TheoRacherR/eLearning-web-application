@@ -21,7 +21,6 @@ watchEffect(() => {
       };
     }
   }
-  console.log(validItems)
 });
 </script>
 

@@ -18,9 +18,7 @@ watchEffect(() => {
 
     coursesList.value = store.courses.list;
     for (const i in coursesList.value) {
-      // console.log(coursesList.value[i].id)
       if (coursesList.value[i].id == parseInt(items.value[item].course_id)) {
-        console.log("first")
         course.value = coursesList.value[i];
       }
     }
@@ -31,7 +29,6 @@ watchEffect(() => {
     };
   }
 
-  console.log(validItems)
 
 });
 

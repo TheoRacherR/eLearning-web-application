@@ -23,7 +23,6 @@ onMounted(() => {
         if (res.data.status === "complete") {
             setTimeout(() => {
                 const cart = Object.values(store.listCoursesInCart.list);
-                console.log(cart)
                 for (let i = 0; i < cart.length; i++) {
                     axios
                         .post(
