@@ -121,7 +121,7 @@ const handleSubmit = async () => {
             store.courses.list[courseId].sequence = JSON.stringify(
               course.value.sequence
             );
-              toastr.success("Question ajouté au cours", "", { timeOut: 3000 });
+            toastr.success("Question ajouté au cours", "", { timeOut: 3000 });
             resetQuestion();
           });
       })
@@ -192,7 +192,7 @@ const isDisabled = (answerId) => {
             <label :for="question.answer_1.label">Réponse 1</label>
             <input
               class="innput"
-              maxlength="20"
+              maxlength="70"
               v-model="question.answer_1.label"
             />
             <input
@@ -205,7 +205,7 @@ const isDisabled = (answerId) => {
             <label :for="question.answer_2.label">Réponse 2</label>
             <input
               class="innput"
-              maxlength="20"
+              maxlength="70"
               v-model="question.answer_2.label"
             />
             <input
@@ -218,7 +218,7 @@ const isDisabled = (answerId) => {
             <label :for="question.answer_3.label">Réponse 3</label>
             <input
               class="innput"
-              maxlength="20"
+              maxlength="70"
               v-model="question.answer_3.label"
             />
             <input
@@ -231,7 +231,7 @@ const isDisabled = (answerId) => {
             <label :for="question.answer_4.label">Réponse 4</label>
             <input
               class="innput"
-              maxlength="20"
+              maxlength="70"
               v-model="question.answer_4.label"
             />
             <input
@@ -246,7 +246,9 @@ const isDisabled = (answerId) => {
       </div>
 
       <button class="bttn bttn-drk back-btn">
-        <RouterLink :to="`/db/course/page/${courseId}`"> <va-icon name="chevron_left"/>Revenir au cours </RouterLink>
+        <RouterLink :to="`/db/course/page/${courseId}`">
+          <va-icon name="chevron_left" />Revenir au cours
+        </RouterLink>
       </button>
     </div>
   </div>
